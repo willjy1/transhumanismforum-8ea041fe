@@ -117,7 +117,7 @@ const Resources = () => {
     {
       title: "William Joy",
       author: "William Joy",
-      description: "Insights on technology, entrepreneurship, and the future of human-computer interaction from a pioneering computer scientist.",
+      description: "Reflections on the human mind and technology.",
       url: "https://williamjoy.ca",
       category: "Technology"
     }
