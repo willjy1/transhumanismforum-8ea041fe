@@ -5,8 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { UserPlus, Check, MapPin, Globe, Edit, MessageCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 interface Profile {
   id: string;
@@ -177,7 +176,7 @@ const Profile = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-4xl mx-auto px-12 py-16">
               <div className="animate-pulse space-y-8">
@@ -199,7 +198,7 @@ const Profile = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-4xl mx-auto px-12 py-16 text-center">
               <h1 className="text-2xl font-light text-muted-foreground mb-4">User not found</h1>
@@ -222,7 +221,7 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-12 py-16">

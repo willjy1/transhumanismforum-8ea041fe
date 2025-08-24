@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 import CleanPostCard from '@/components/CleanPostCard';
 
 interface Post {
@@ -127,9 +126,8 @@ const CleanForum = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-4xl mx-auto px-12 py-20">
               <div className="space-y-8">
@@ -157,12 +155,11 @@ const CleanForum = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="flex">
-        <MinimalSidebar />
-        <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-12 py-20">
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 flex">
+        <div className="flex-1 max-w-4xl">
+          <div className="p-12">
             
             {/* Minimal Header */}
             <div className="space-y-3 mb-20">
@@ -264,7 +261,7 @@ const CleanForum = () => {
             </div>
             
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

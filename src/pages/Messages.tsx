@@ -1,13 +1,9 @@
 import React from 'react';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 const Messages = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <div className="flex">
-        <MinimalSidebar />
+    <div className="flex min-h-screen bg-white">
         <main className="flex-1">
           <div className="max-w-4xl mx-auto p-6">
             <div className="text-center py-16">

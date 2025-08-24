@@ -1,6 +1,5 @@
 import React from 'react';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 const Library = () => {
   const concepts = [
@@ -23,9 +22,8 @@ const Library = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         <main className="flex-1">
           <div className="max-w-2xl mx-auto px-8 py-16">
             <h1 className="text-3xl font-light tracking-tight mb-3">

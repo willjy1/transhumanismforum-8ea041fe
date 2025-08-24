@@ -1,6 +1,5 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
-import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 
 const Events = () => {

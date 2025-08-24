@@ -11,8 +11,7 @@ import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { PostVoting } from '@/components/PostVoting';
 import { CommentsSection } from '@/components/CommentsSection';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Post {
@@ -245,7 +244,7 @@ const PostDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-4xl mx-auto px-8 py-12">
               <div className="animate-pulse space-y-8">
@@ -268,7 +267,7 @@ const PostDetail = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-4xl mx-auto px-8 py-12 text-center">
               <h1 className="text-2xl font-light mb-4">Post not found</h1>
@@ -316,7 +315,7 @@ const PostDetail = () => {
       <Header />
       
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-8 py-16">

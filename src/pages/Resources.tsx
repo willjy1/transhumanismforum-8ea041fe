@@ -1,8 +1,8 @@
 import React from 'react';
-import { TrendingUp } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 
-const BestOf = () => {
+const Resources = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -12,21 +12,19 @@ const BestOf = () => {
             
             <div className="space-y-3 mb-16">
               <h1 className="text-large font-light">
-                Best Of
+                Resources
               </h1>
-              <p className="text-muted-foreground">
-                The most insightful discussions and valuable contributions to transhumanist discourse
-              </p>
             </div>
 
             <div className="space-y-8">
               <div className="text-center py-20">
-                <h2 className="text-xl font-light mb-4">No Content Available</h2>
+                <h2 className="text-xl font-light mb-4">No Resources Available</h2>
                 <p className="text-muted-foreground">
-                  Featured content will appear here as the community grows.
+                  Educational resources and materials will be added here.
                 </p>
               </div>
             </div>
+            
           </div>
         </div>
       </div>
@@ -34,4 +32,4 @@ const BestOf = () => {
   );
 };
 
-export default BestOf;
+export default Resources;

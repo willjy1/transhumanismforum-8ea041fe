@@ -2,7 +2,6 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 
 const Index = () => {
@@ -18,8 +17,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-      
       <div className="flex">
         <Sidebar />
         

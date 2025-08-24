@@ -10,8 +10,7 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 interface Category {
   id: string;
@@ -112,7 +111,7 @@ const CreatePost = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-2xl mx-auto px-8 py-16">
               <div className="text-center">
@@ -131,7 +130,7 @@ const CreatePost = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         <main className="flex-1">
           <div className="max-w-2xl mx-auto px-8 py-16">
             {/* Header */}

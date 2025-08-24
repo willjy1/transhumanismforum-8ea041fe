@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ExternalLink, ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 interface Thinker {
   id: string;
@@ -43,7 +43,7 @@ const Thinkers = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-2xl mx-auto px-8 py-16">
               <div className="space-y-16">
@@ -69,7 +69,7 @@ const Thinkers = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         <main className="flex-1">
           {/* Minimal Header */}
           <div className="max-w-2xl mx-auto px-8 pt-16 pb-12">

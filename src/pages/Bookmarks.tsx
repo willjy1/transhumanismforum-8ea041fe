@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 import PostCard from '@/components/PostCard';
 
 interface BookmarkedPost {
@@ -102,31 +101,29 @@ const Bookmarks = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <MinimalSidebar />
-          <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-8 py-16">
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <div className="flex-1 flex">
+          <div className="flex-1 max-w-4xl">
+            <div className="p-6">
               <div className="space-y-4">
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="h-32 bg-muted rounded-lg animate-pulse"></div>
                 ))}
               </div>
             </div>
-          </main>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="flex">
-        <MinimalSidebar />
-        <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-8 py-16">
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 flex">
+        <div className="flex-1 max-w-4xl">
+          <div className="p-6">
             {/* Header */}
             <div className="mb-8">
               <button 
@@ -176,7 +173,7 @@ const Bookmarks = () => {
               )}
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

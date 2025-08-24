@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 import RichTextEditor from '@/components/RichTextEditor';
 
 interface Category {
@@ -120,9 +120,8 @@ const CreatePostRich = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-background">
-        <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-2xl mx-auto px-8 py-16">
               <div className="text-center">
@@ -139,9 +138,8 @@ const CreatePostRich = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-8 py-16">
             {/* Header */}

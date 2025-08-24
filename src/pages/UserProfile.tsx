@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Profile {
@@ -272,7 +272,7 @@ const UserProfile = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-5xl mx-auto px-8 py-16">
               <div className="animate-pulse space-y-8">
@@ -296,7 +296,7 @@ const UserProfile = () => {
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
-          <MinimalSidebar />
+          <Sidebar />
           <main className="flex-1">
             <div className="max-w-5xl mx-auto px-8 py-16 text-center">
               <h1 className="text-3xl font-light mb-6">User not found</h1>
@@ -322,7 +322,7 @@ const UserProfile = () => {
       <Header />
       
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         
         <main className="flex-1">
           <div className="max-w-5xl mx-auto px-8 py-20">
