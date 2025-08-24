@@ -1,220 +1,171 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { ArrowUpRight, Heart, Bookmark, MessageCircle, Share, UserPlus, Check } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+import { MessageCircle, Clock, User, Hash, Pin } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
+import VoteButtons from './VoteButtons';
 
-interface CleanPostCardProps {
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    votes_score: number;
-    view_count: number;
-    created_at: string;
-    author_id: string;
-    categories: { name: string; color: string } | null;
-    profiles: { username: string; full_name: string | null; avatar_url?: string | null; bio?: string | null } | null;
-    comment_count: number;
+interface Post {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  author_id: string;
+  votes_score: number;
+  view_count: number;
+  is_pinned: boolean;
+  category_id: string | null;
+  profiles?: {
+    username: string;
+    full_name: string;
   };
-  onVote: (postId: string, voteType: number) => void;
+  categories?: {
+    name: string;
+    color: string;
+  };
 }
 
-const CleanPostCard: React.FC<CleanPostCardProps> = ({ post, onVote }) => {
-  const { user } = useAuth();
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [followLoading, setFollowLoading] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
+interface PostCardProps {
+  post: Post;
+  commentCount?: number;
+}
+
+const CleanPostCard = ({ post, commentCount = 0 }: PostCardProps) => {
+  const [localCommentCount, setLocalCommentCount] = useState(commentCount);
 
   useEffect(() => {
-    if (user && post.author_id) {
-      checkFollowStatus();
+    if (commentCount === 0) {
+      fetchCommentCount();
     }
-  }, [user, post.author_id]);
+  }, [post.id, commentCount]);
 
-  const checkFollowStatus = async () => {
-    if (!user || !post.author_id) return;
-    
+  const fetchCommentCount = async () => {
     try {
-      const { data } = await supabase
-        .from('follows')
-        .select('id')
-        .eq('follower_id', user.id)
-        .eq('following_id', post.author_id)
-        .single();
-      
-      setIsFollowing(!!data);
+      const { count, error } = await supabase
+        .from('comments')
+        .select('id', { count: 'exact', head: true })
+        .eq('post_id', post.id);
+
+      if (error) throw error;
+      setLocalCommentCount(count || 0);
     } catch (error) {
-      // Not following
+      console.error('Error fetching comment count:', error);
     }
   };
 
-  const handleFollow = async () => {
-    if (!user || !post.author_id || followLoading) return;
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    setFollowLoading(true);
-    try {
-      if (isFollowing) {
-        await supabase
-          .from('follows')
-          .delete()
-          .eq('follower_id', user.id)
-          .eq('following_id', post.author_id);
-        setIsFollowing(false);
-      } else {
-        await supabase
-          .from('follows')
-          .insert({
-            follower_id: user.id,
-            following_id: post.author_id
-          });
-        setIsFollowing(true);
-      }
-    } catch (error) {
-      console.error('Error following/unfollowing:', error);
-    } finally {
-      setFollowLoading(false);
-    }
+    if (diffDays === 1) return '1 day ago';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.ceil(diffDays / 30)} months ago`;
+    return `${Math.ceil(diffDays / 365)} years ago`;
   };
 
-  const truncateContent = (content: string, maxLength: number = 250) => {
+  const getExcerpt = (content: string, maxLength: number = 200) => {
     if (content.length <= maxLength) return content;
-    return content.slice(0, maxLength).trim() + '...';
+    return content.substring(0, maxLength).replace(/\s+\S*$/, '') + '...';
   };
-
-  const authorName = post.profiles?.full_name || post.profiles?.username || 'Anonymous';
-  const canFollow = user && post.author_id && user.id !== post.author_id;
 
   return (
-    <article className="group py-16 border-b border-border/30 last:border-b-0 hover-lift crisp-transition">
-      <div className="space-y-8">
-        
-        {/* Author info - Prominent like Substack */}
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <Link 
-              to={`/profile/${post.profiles?.username}`}
-              className="flex items-center gap-4 group/author"
-            >
-              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center group-hover/author:bg-muted/80 crisp-transition">
-                {post.profiles?.avatar_url ? (
-                  <img 
-                    src={post.profiles.avatar_url} 
-                    alt={authorName}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <span className="font-medium text-sm">
-                    {authorName.slice(0, 2).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div>
-                <div className="font-medium group-hover/author:text-accent crisp-transition">
-                  {authorName}
-                </div>
-                <div className="text-sm text-muted-foreground font-mono">
-                  {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                </div>
-              </div>
-            </Link>
-          </div>
+    <Card className="group border-border hover:border-accent/50 crisp-transition">
+      <CardContent className="p-0">
+        <div className="flex gap-4 p-6">
+          {/* Vote buttons */}
+          <VoteButtons 
+            postId={post.id} 
+            initialScore={post.votes_score || 0}
+            className="pt-1"
+          />
           
-          {canFollow && (
-            <Button
-              variant={isFollowing ? "outline" : "default"}
-              size="sm"
-              onClick={handleFollow}
-              disabled={followLoading}
-              className="crisp-transition"
-            >
-              {isFollowing ? (
-                <>
-                  <Check className="h-3 w-3 mr-2" />
-                  Following
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-3 w-3 mr-2" />
-                  Follow
-                </>
+          {/* Main content */}
+          <div className="flex-1 min-w-0 space-y-3">
+            {/* Header with category and pinned status */}
+            <div className="flex items-center gap-3 flex-wrap">
+              {post.is_pinned && (
+                <Badge variant="secondary" className="bg-accent/10 text-accent border-accent/20">
+                  <Pin className="h-3 w-3 mr-1" />
+                  Pinned
+                </Badge>
               )}
-            </Button>
-          )}
-        </div>
-
-        {/* Post content */}
-        <div className="space-y-6">
-          <Link 
-            to={`/posts/${post.id}`}
-            className="block group/content"
-          >
-            <h2 className="text-2xl font-light leading-tight mb-4 group-hover/content:text-accent crisp-transition">
-              {post.title}
-            </h2>
-            
-            <p className="text-muted-foreground leading-relaxed text-lg font-light">
-              {truncateContent(post.content)}
-            </p>
-          </Link>
-
-          {/* Category tag */}
-          {post.categories && (
-            <div className="inline-block">
-              <span className="px-3 py-1 text-xs font-mono bg-muted/50 text-muted-foreground rounded-full border border-border/30">
-                {post.categories.name}
-              </span>
+              
+              {post.categories && (
+                <Badge 
+                  variant="outline" 
+                  className="border-opacity-50"
+                  style={{ 
+                    borderColor: post.categories.color,
+                    color: post.categories.color,
+                    backgroundColor: `${post.categories.color}10`
+                  }}
+                >
+                  <Hash className="h-3 w-3 mr-1" />
+                  {post.categories.name}
+                </Badge>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Social actions - Substack-style */}
-        <div className="flex items-center justify-between pt-4 border-t border-border/20">
-          <div className="flex items-center gap-6">
-            <button 
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground crisp-transition group/like"
-            >
-              <Heart className="h-4 w-4 group-hover/like:scale-110 crisp-transition" />
-              <span className="font-mono tabular-nums">{post.votes_score}</span>
-            </button>
-            
-            <Link 
-              to={`/posts/${post.id}`}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground crisp-transition group/comment"
-            >
-              <MessageCircle className="h-4 w-4 group-hover/comment:scale-110 crisp-transition" />
-              <span className="font-mono tabular-nums">{post.comment_count}</span>
-            </Link>
-            
-            <button 
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground crisp-transition group/bookmark"
-            >
-              <Bookmark className="h-4 w-4 group-hover/bookmark:scale-110 crisp-transition" />
-            </button>
-            
-            <button 
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground crisp-transition group/share"
-            >
-              <Share className="h-4 w-4 group-hover/share:scale-110 crisp-transition" />
-            </button>
-          </div>
-          
-          <div className="flex items-center gap-4 text-sm text-muted-foreground font-mono">
-            <span>{post.view_count} views</span>
-            <Link 
-              to={`/posts/${post.id}`}
-              className="inline-flex items-center hover:text-foreground crisp-transition group/read"
-            >
-              <span>Read more</span>
-              <ArrowUpRight className="h-3 w-3 ml-1 group-hover/read:translate-x-0.5 group-hover/read:-translate-y-0.5 crisp-transition" />
-            </Link>
+            {/* Title */}
+            <div>
+              <Link 
+                to={`/forum/post/${post.id}`}
+                className="block group-hover:text-accent crisp-transition"
+              >
+                <h2 className="text-xl font-medium leading-tight line-clamp-2">
+                  {post.title}
+                </h2>
+              </Link>
+            </div>
+
+            {/* Content preview */}
+            <div className="text-muted-foreground leading-relaxed">
+              <p className="line-clamp-3">
+                {getExcerpt(post.content)}
+              </p>
+            </div>
+
+            {/* Footer metadata */}
+            <div className="flex items-center justify-between pt-2 border-t border-border/50">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <User className="h-3 w-3" />
+                  <Link 
+                    to={`/profile/${post.profiles?.username || 'unknown'}`}
+                    className="hover:text-accent crisp-transition"
+                  >
+                    {post.profiles?.full_name || post.profiles?.username || 'Unknown User'}
+                  </Link>
+                </div>
+                
+                <div className="flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  <time dateTime={post.created_at}>
+                    {formatDate(post.created_at)}
+                  </time>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <MessageCircle className="h-3 w-3" />
+                  <span>{localCommentCount} {localCommentCount === 1 ? 'comment' : 'comments'}</span>
+                </div>
+                
+                <div className="text-xs">
+                  {post.view_count || 0} views
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 };
 

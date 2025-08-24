@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Hash, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/Header';
 import MinimalSidebar from '@/components/MinimalSidebar';
 
@@ -24,66 +25,107 @@ const CreatePost = () => {
   const [content, setContent] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-      return;
-    }
     fetchCategories();
-  }, [user, navigate]);
+  }, []);
 
   const fetchCategories = async () => {
     try {
       const { data, error } = await supabase
         .from('categories')
         .select('*')
-        .order('name');
+        .order('name', { ascending: true });
 
       if (error) throw error;
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load categories",
+        variant: "destructive",
+      });
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to create a post",
+        variant: "destructive",
+      });
+      navigate('/auth');
+      return;
+    }
 
-    setLoading(true);
+    if (!title.trim() || !content.trim()) {
+      toast({
+        title: "Required fields missing",
+        description: "Please fill in both title and content",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const { error } = await supabase
         .from('posts')
         .insert({
-          title,
-          content,
-          author_id: user.id,
+          title: title.trim(),
+          content: content.trim(),
           category_id: categoryId || null,
+          author_id: user.id,
         });
 
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Your post has been created successfully!",
+        title: "Post created successfully",
+        description: "Your post has been published to the forum",
       });
-
-      navigate('/');
-    } catch (error) {
+      
+      navigate('/forum');
+    } catch (error: any) {
       console.error('Error creating post:', error);
       toast({
-        title: "Error",
-        description: "Failed to create post. Please try again.",
+        title: "Error creating post",
+        description: error.message || "Failed to create post",
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex">
+          <MinimalSidebar />
+          <main className="flex-1">
+            <div className="max-w-2xl mx-auto px-8 py-16">
+              <div className="text-center">
+                <h1 className="text-2xl font-light mb-4">Authentication Required</h1>
+                <p className="text-muted-foreground mb-8">Please sign in to create a post.</p>
+                <Button onClick={() => navigate('/auth')}>Sign In</Button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -91,81 +133,112 @@ const CreatePost = () => {
       <div className="flex">
         <MinimalSidebar />
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-12 py-16">
-            {/* Minimal header */}
-            <div className="mb-16">
-              <h1 className="text-display font-light tracking-tight mb-4">Write</h1>
-              <p className="text-muted-foreground font-light">Share your thoughts on transhumanism and the future of intelligence</p>
+          <div className="max-w-2xl mx-auto px-8 py-16">
+            {/* Header */}
+            <div className="mb-8">
+              <button 
+                onClick={() => navigate('/forum')}
+                className="flex items-center text-muted-foreground hover:text-foreground mb-6 crisp-transition"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Forum
+              </button>
+              
+              <h1 className="text-3xl font-light tracking-tight mb-3">
+                Create Post
+              </h1>
+              <p className="text-muted-foreground">
+                Share insights on human enhancement, consciousness, AI, and the future of life
+              </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-12">
-              {/* Title - Large, prominent like Substack */}
-              <div className="space-y-2">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                  placeholder="Post title..."
-                  className="w-full text-4xl font-light placeholder:text-muted-foreground/50 
-                           bg-transparent border-0 outline-0 focus:outline-0 resize-none
-                           leading-tight tracking-tight"
-                />
-              </div>
+            {/* Post Form */}
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg font-medium">
+                  <BookOpen className="h-5 w-5" />
+                  New Discussion
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <Label htmlFor="title" className="text-sm font-medium">Title</Label>
+                    <Input
+                      id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="What's your post about?"
+                      className="text-base"
+                      maxLength={200}
+                    />
+                    <div className="text-xs text-muted-foreground text-right">
+                      {title.length}/200 characters
+                    </div>
+                  </div>
 
-              {/* Category selection - Minimal */}
-              {categories.length > 0 && (
-                <div className="space-y-3">
-                  <Label htmlFor="category" className="text-sm font-light text-muted-foreground">
-                    Category
-                  </Label>
-                  <Select value={categoryId} onValueChange={setCategoryId}>
-                    <SelectTrigger className="w-fit border-border/30 hover:border-border crisp-transition">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+                  {/* Category */}
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium flex items-center gap-2">
+                      <Hash className="h-4 w-4" />
+                      Category
+                    </Label>
+                    <Select value={categoryId} onValueChange={setCategoryId}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category (optional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            <div className="flex items-center gap-2">
+                              <div 
+                                className="w-3 h-3 rounded-full" 
+                                style={{ backgroundColor: category.color }}
+                              />
+                              <span>{category.name}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-              {/* Content - Clean, distraction-free */}
-              <div className="space-y-2">
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  required
-                  placeholder="Start writing..."
-                  className="w-full min-h-[400px] text-lg leading-relaxed 
-                           placeholder:text-muted-foreground/50 bg-transparent 
-                           border-0 outline-0 focus:outline-0 resize-none font-light"
-                />
-              </div>
+                  {/* Content */}
+                  <div className="space-y-2">
+                    <Label htmlFor="content" className="text-sm font-medium">Content</Label>
+                    <Textarea
+                      id="content"
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      placeholder="Share your thoughts, research, analysis..."
+                      className="min-h-[300px] text-base leading-relaxed resize-y"
+                      maxLength={10000}
+                    />
+                    <div className="text-xs text-muted-foreground text-right">
+                      {content.length}/10,000 characters
+                    </div>
+                  </div>
 
-              {/* Actions - Minimal, right-aligned */}
-              <div className="flex items-center justify-between pt-8 border-t border-border/30">
-                <Button 
-                  type="button" 
-                  variant="ghost" 
-                  onClick={() => navigate('/')}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Cancel
-                </Button>
-                <Button 
-                  type="submit" 
-                  disabled={loading}
-                  className="bg-foreground text-background hover:bg-foreground/90 crisp-transition"
-                >
-                  {loading ? 'Publishing...' : 'Publish'}
-                </Button>
-              </div>
-            </form>
+                  {/* Submit */}
+                  <div className="flex justify-end gap-3 pt-4 border-t border-border">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => navigate('/forum')}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting || !title.trim() || !content.trim()}
+                    >
+                      {isSubmitting ? 'Publishing...' : 'Publish Post'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </main>
       </div>
