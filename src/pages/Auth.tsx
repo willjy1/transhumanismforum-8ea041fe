@@ -39,16 +39,8 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-medium text-gray-900 mb-4">
-            The Transhumanist Forum
-          </h1>
-          <p className="text-gray-600 mt-2">
-            Advancing human potential through technology and rational discourse
-          </p>
-        </div>
 
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
