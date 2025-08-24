@@ -157,9 +157,6 @@ const CreatePostRich = () => {
               <h1 className="text-3xl font-light tracking-tight mb-3">
                 Create Post
               </h1>
-              <p className="text-muted-foreground">
-                Share insights on human enhancement, consciousness, AI, and the future of life
-              </p>
             </div>
 
             {/* Post Form */}
@@ -216,9 +213,6 @@ const CreatePostRich = () => {
                       placeholder="Write..."
                       className="min-h-[400px]"
                     />
-                    <div className="text-xs text-muted-foreground text-right">
-                      Rich text editor with formatting options
-                    </div>
                   </div>
 
                   {/* Submit */}
