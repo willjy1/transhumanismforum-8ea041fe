@@ -85,16 +85,10 @@ const Sidebar = () => {
             Library
           </h3>
           <NavItem
-            to="/sequences"
-            icon={<BookOpen className="h-4 w-4" />}
-            label="Sequences"
-            isActive={isActive('/sequences')}
-          />
-          <NavItem
-            to="/concepts"
+            to="/library"
             icon={<Zap className="h-4 w-4" />}
             label="Concepts"
-            isActive={isActive('/concepts')}
+            isActive={isActive('/library')}
           />
           <NavItem
             to="/best-of"

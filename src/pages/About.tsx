@@ -1,22 +1,21 @@
 import React from 'react';
 import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="flex">
-        <MinimalSidebar />
-        <main className="flex-1">
-          <div className="max-w-3xl mx-auto px-8 py-16">
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
+      <div className="flex-1 flex">
+        <div className="flex-1 max-w-3xl">
+          <div className="p-8">
             
             {/* Header */}
             <div className="mb-16">
               <h1 className="text-5xl font-normal mb-6">About</h1>
-              <p className="serif text-xl text-muted-foreground leading-relaxed">
-                A forum dedicated to rigorous discussion of human enhancement, artificial intelligence, 
-                and the technological transformation of our species.
+              <p className="serif text-lg text-muted-foreground leading-relaxed mb-12 max-w-lg mx-auto">
+                A forum for rigorous discussion of human enhancement, consciousness, 
+                artificial intelligence, and the future of life itself.
               </p>
             </div>
             
@@ -94,7 +93,7 @@ const About = () => {
             </section>
 
           </div>
-        </main>
+        </div>
       </div>
     </div>
   );

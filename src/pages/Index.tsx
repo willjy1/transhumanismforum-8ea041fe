@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import Sidebar from '@/components/Sidebar';
 
 const Index = () => {
   const { loading, user } = useAuth();
@@ -21,7 +21,7 @@ const Index = () => {
       <Header />
       
       <div className="flex">
-        <MinimalSidebar />
+        <Sidebar />
         
         <div className="flex-1">
           <div className="min-h-[90vh] flex items-center justify-center">
