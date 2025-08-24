@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Bookmark, BookmarkCheck, Flag, Share, Eye, Calendar, User2 } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Flag, Share, Eye, Calendar, User } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import Header from '@/components/Header';
-import MinimalSidebar from '@/components/MinimalSidebar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { PostVoting } from '@/components/PostVoting';
 import { CommentsSection } from '@/components/CommentsSection';
+import Header from '@/components/Header';
+import MinimalSidebar from '@/components/MinimalSidebar';
 import { formatDistanceToNow } from 'date-fns';
 
-interface PostData {
+interface Post {
   id: string;
   title: string;
   content: string;
@@ -37,27 +38,47 @@ interface PostData {
   };
 }
 
+interface RelatedPost {
+  id: string;
+  title: string;
+  votes_score: number;
+  created_at: string;
+  profiles?: {
+    username: string;
+  };
+}
+
 const PostDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [post, setPost] = useState<PostData | null>(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const navigate = useNavigate();
+  
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [relatedPosts, setRelatedPosts] = useState<RelatedPost[]>([]);
 
   useEffect(() => {
     if (id) {
       fetchPost();
       trackView();
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (user && post) {
       checkBookmarkStatus();
     }
-  }, [id, user]);
+  }, [user, post]);
+
+  useEffect(() => {
+    if (post) {
+      fetchRelatedPosts();
+    }
+  }, [post]);
 
   const fetchPost = async () => {
-    if (!id) return;
-
     try {
       const { data, error } = await supabase
         .from('posts')
@@ -71,58 +92,79 @@ const PostDetail = () => {
 
       if (error) throw error;
       setPost(data);
-    } catch (error: any) {
+
+      // Update view count
+      await supabase
+        .from('posts')
+        .update({ view_count: (data.view_count || 0) + 1 })
+        .eq('id', id);
+
+    } catch (error) {
       console.error('Error fetching post:', error);
-      setError('Post not found');
+      toast({
+        title: "Error loading post",
+        description: "The post could not be found.",
+        variant: "destructive"
+      });
+      navigate('/forum');
     } finally {
       setLoading(false);
     }
   };
 
   const trackView = async () => {
-    if (!id) return;
+    if (!user) return;
 
     try {
-      // Record view
-      await supabase.from('post_views').insert({
-        post_id: id,
-        user_id: user?.id || null,
-        ip_address: null, // Could be populated server-side
-        user_agent: navigator.userAgent
-      });
-
-      // Increment view count
-      const { data: currentPost } = await supabase
-        .from('posts')
-        .select('view_count')
-        .eq('id', id)
-        .single();
-
-      if (currentPost) {
-        await supabase
-          .from('posts')
-          .update({ view_count: (currentPost.view_count || 0) + 1 })
-          .eq('id', id);
-      }
+      await supabase
+        .from('post_views')
+        .insert({
+          post_id: id,
+          user_id: user.id,
+          ip_address: null,
+          user_agent: navigator.userAgent
+        });
     } catch (error) {
-      console.error('Error tracking view:', error);
+      // Ignore errors for view tracking
+    }
+  };
+
+  const fetchRelatedPosts = async () => {
+    if (!post) return;
+
+    try {
+      let query = supabase
+        .from('posts')
+        .select('id, title, votes_score, created_at, profiles(username)')
+        .neq('id', id)
+        .order('votes_score', { ascending: false })
+        .limit(5);
+
+      if (post.category_id) {
+        query = query.eq('category_id', post.category_id);
+      }
+
+      const { data } = await query;
+      setRelatedPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching related posts:', error);
     }
   };
 
   const checkBookmarkStatus = async () => {
-    if (!user || !id) return;
+    if (!user || !post) return;
 
     try {
       const { data } = await supabase
         .from('bookmarks')
         .select('id')
         .eq('user_id', user.id)
-        .eq('post_id', id)
-        .single();
+        .eq('post_id', post.id)
+        .maybeSingle();
 
       setIsBookmarked(!!data);
     } catch (error) {
-      // Not bookmarked
+      console.error('Error checking bookmark status:', error);
     }
   };
 
@@ -142,13 +184,18 @@ const PostDetail = () => {
           .from('bookmarks')
           .delete()
           .eq('user_id', user.id)
-          .eq('post_id', id);
+          .eq('post_id', post!.id);
+        
         setIsBookmarked(false);
         toast({ title: "Bookmark removed" });
       } else {
         await supabase
           .from('bookmarks')
-          .insert({ user_id: user.id, post_id: id });
+          .insert({
+            user_id: user.id,
+            post_id: post!.id
+          });
+        
         setIsBookmarked(true);
         toast({ title: "Post bookmarked" });
       }
@@ -156,26 +203,40 @@ const PostDetail = () => {
       console.error('Error toggling bookmark:', error);
       toast({
         title: "Error",
-        description: "Failed to update bookmark",
+        description: "Could not update bookmark",
         variant: "destructive"
       });
     }
   };
 
   const sharePost = async () => {
+    const url = window.location.href;
+    
     if (navigator.share) {
       try {
         await navigator.share({
           title: post?.title,
-          url: window.location.href
+          text: `Check out this discussion: ${post?.title}`,
+          url
         });
       } catch (error) {
-        // User cancelled or error occurred
+        // Fallback to clipboard
+        copyToClipboard(url);
       }
     } else {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(window.location.href);
+      copyToClipboard(url);
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
       toast({ title: "Link copied to clipboard" });
+    } catch (error) {
+      toast({
+        title: "Could not copy link",
+        variant: "destructive"
+      });
     }
   };
 
@@ -186,15 +247,13 @@ const PostDetail = () => {
         <div className="flex">
           <MinimalSidebar />
           <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-6 py-8">
-              <div className="animate-pulse space-y-6">
-                <div className="h-4 bg-muted rounded w-24"></div>
+            <div className="max-w-4xl mx-auto px-8 py-12">
+              <div className="animate-pulse space-y-8">
                 <div className="h-8 bg-muted rounded w-3/4"></div>
-                <div className="h-4 bg-muted rounded w-1/3"></div>
-                <div className="space-y-3">
-                  <div className="h-4 bg-muted rounded"></div>
+                <div className="space-y-4">
                   <div className="h-4 bg-muted rounded"></div>
                   <div className="h-4 bg-muted rounded w-5/6"></div>
+                  <div className="h-4 bg-muted rounded w-4/6"></div>
                 </div>
               </div>
             </div>
@@ -204,23 +263,17 @@ const PostDetail = () => {
     );
   }
 
-  if (error || !post) {
+  if (!post) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
           <MinimalSidebar />
           <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-6 py-8">
-              <div className="text-center py-16">
-                <h1 className="text-2xl font-light text-muted-foreground mb-4">
-                  {error || 'Post not found'}
-                </h1>
-                <Button onClick={() => navigate('/forum')} variant="outline">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Forum
-                </Button>
-              </div>
+            <div className="max-w-4xl mx-auto px-8 py-12 text-center">
+              <h1 className="text-2xl font-light mb-4">Post not found</h1>
+              <p className="text-muted-foreground mb-8">The post you're looking for doesn't exist.</p>
+              <Button onClick={() => navigate('/forum')}>Back to Forum</Button>
             </div>
           </main>
         </div>
@@ -228,22 +281,51 @@ const PostDetail = () => {
     );
   }
 
-  const authorName = post.profiles?.full_name || post.profiles?.username || 'Unknown';
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true });
+  const authorName = post.profiles?.full_name || post.profiles?.username || 'Unknown';
+  const excerpt = post.content.substring(0, 160) + '...';
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{post.title} | Beyond Humanity</title>
+        <meta name="description" content={excerpt} />
+        <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={excerpt} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={window.location.href} />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={post.title} />
+        <meta name="twitter:description" content={excerpt} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": post.title,
+            "description": excerpt,
+            "author": {
+              "@type": "Person",
+              "name": authorName
+            },
+            "datePublished": post.created_at,
+            "dateModified": post.updated_at
+          })}
+        </script>
+      </Helmet>
+
       <Header />
+      
       <div className="flex">
         <MinimalSidebar />
+        
         <main className="flex-1">
-          <article className="max-w-4xl mx-auto px-6 py-8">
+          <div className="max-w-4xl mx-auto px-8 py-16">
             {/* Navigation */}
-            <div className="mb-8">
+            <div className="mb-12">
               <Button 
                 variant="ghost" 
                 onClick={() => navigate('/forum')}
-                className="text-muted-foreground hover:text-foreground -ml-4"
+                className="text-muted-foreground hover:text-foreground -ml-3"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Forum
@@ -251,130 +333,142 @@ const PostDetail = () => {
             </div>
 
             {/* Post Header */}
-            <div className="space-y-6 mb-12">
-              {/* Category and status */}
-              <div className="flex items-center gap-3">
-                {post.is_pinned && (
-                  <Badge variant="secondary" className="bg-accent/10 text-accent">
-                    Pinned
-                  </Badge>
-                )}
-                {post.categories && (
-                  <Badge 
-                    variant="outline"
-                    style={{ 
-                      borderColor: post.categories.color,
-                      color: post.categories.color,
-                      backgroundColor: `${post.categories.color}10`
-                    }}
-                  >
-                    {post.categories.name}
-                  </Badge>
-                )}
-              </div>
+            <div className="space-y-12">
+              <div className="space-y-8">
+                {/* Category and status badges */}
+                <div className="flex items-center gap-3">
+                  {post.is_pinned && (
+                    <Badge variant="secondary" className="bg-accent/10 text-accent">
+                      Pinned
+                    </Badge>
+                  )}
+                  {post.categories && (
+                    <Badge 
+                      variant="outline" 
+                      style={{ 
+                        borderColor: post.categories.color,
+                        color: post.categories.color,
+                        backgroundColor: `${post.categories.color}15`
+                      }}
+                    >
+                      {post.categories.name}
+                    </Badge>
+                  )}
+                </div>
 
-              {/* Title */}
-              <h1 className="text-4xl font-light tracking-tight leading-tight">
-                {post.title}
-              </h1>
+                {/* Title */}
+                <h1 className="text-5xl font-light leading-tight tracking-tight">
+                  {post.title}
+                </h1>
 
-              {/* Author and meta */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  <Link 
-                    to={`/profile/${post.profiles?.username}`}
-                    className="flex items-center gap-3 group"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                      <User2 className="h-5 w-5 text-accent" />
-                    </div>
-                    <div>
-                      <div className="font-medium group-hover:text-accent crisp-transition">
-                        {authorName}
+                {/* Meta info */}
+                <div className="flex items-center justify-between py-8 border-y border-border/30">
+                  <div className="flex items-center gap-8">
+                    <Link 
+                      to={`/profile/${post.profiles?.username}`}
+                      className="flex items-center gap-4 hover:text-accent crisp-transition group"
+                    >
+                      <Avatar className="h-12 w-12">
+                        <AvatarFallback className="text-lg">
+                          {authorName.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1">
+                        <div className="text-lg font-light group-hover:text-accent crisp-transition">
+                          {authorName}
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          {post.profiles?.karma || 0} karma
+                        </div>
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        {post.profiles?.karma || 0} karma
+                    </Link>
+
+                    <div className="text-muted-foreground space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        <time>{timeAgo}</time>
                       </div>
-                    </div>
-                  </Link>
-
-                  <Separator orientation="vertical" className="h-8" />
-
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <time>{timeAgo}</time>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Eye className="h-4 w-4" />
-                      <span>{post.view_count || 0} views</span>
+                      <div className="flex items-center gap-2">
+                        <Eye className="h-4 w-4" />
+                        <span>{post.view_count || 0} views</span>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center gap-3">
+                    <PostVoting 
+                      postId={post.id} 
+                      initialScore={post.votes_score || 0}
+                      className="flex-row gap-4 border border-border/50 rounded-lg px-4 py-2"
+                    />
+                    
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      onClick={toggleBookmark}
+                      className="gap-2"
+                    >
+                      {isBookmarked ? (
+                        <BookmarkCheck className="h-5 w-5" />
+                      ) : (
+                        <Bookmark className="h-5 w-5" />
+                      )}
+                    </Button>
+                    
+                    <Button
+                      variant="ghost"
+                      size="lg"
+                      onClick={sharePost}
+                      className="gap-2"
+                    >
+                      <Share className="h-5 w-5" />
+                    </Button>
+                  </div>
                 </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={toggleBookmark}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    {isBookmarked ? (
-                      <BookmarkCheck className="h-4 w-4" />
-                    ) : (
-                      <Bookmark className="h-4 w-4" />
-                    )}
-                  </Button>
-                  
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={sharePost}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <Share className="h-4 w-4" />
-                  </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <Flag className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            {/* Post Content */}
-            <div className="flex gap-8 mb-12">
-              {/* Voting */}
-              <div className="flex-shrink-0">
-                <PostVoting 
-                  postId={post.id} 
-                  initialScore={post.votes_score}
-                  className="sticky top-24"
-                />
               </div>
 
               {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="prose prose-lg prose-neutral max-w-none">
-                  {post.content.split('\n').map((paragraph, index) => (
-                    <p key={index} className="mb-6 leading-relaxed text-foreground">
-                      {paragraph || '\u00A0'}
-                    </p>
-                  ))}
-                </div>
+              <div className="prose prose-neutral prose-xl max-w-none dark:prose-invert">
+                {post.content.split('\n').map((paragraph, index) => (
+                  <p key={index} className="mb-8 leading-relaxed font-light">
+                    {paragraph || '\u00A0'}
+                  </p>
+                ))}
               </div>
-            </div>
 
-            {/* Comments */}
-            <div className="border-t border-border pt-12">
-              <CommentsSection postId={post.id} />
+              {/* Comments */}
+              <div className="pt-16 border-t border-border/30">
+                <CommentsSection postId={post.id} />
+              </div>
+
+              {/* Related Posts */}
+              {relatedPosts.length > 0 && (
+                <div className="pt-16 border-t border-border/30">
+                  <h3 className="text-xl font-light mb-8">Related Discussions</h3>
+                  <div className="grid gap-6">
+                    {relatedPosts.map((relatedPost) => (
+                      <Card key={relatedPost.id} className="p-6 hover:border-accent/50 crisp-transition">
+                        <Link 
+                          to={`/post/${relatedPost.id}`}
+                          className="block hover:text-accent crisp-transition"
+                        >
+                          <h4 className="text-lg font-light mb-3 line-clamp-2">
+                            {relatedPost.title}
+                          </h4>
+                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                            <span>{relatedPost.profiles?.username}</span>
+                            <span>•</span>
+                            <span>{relatedPost.votes_score} points</span>
+                          </div>
+                        </Link>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </article>
+          </div>
         </main>
       </div>
     </div>

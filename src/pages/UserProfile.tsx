@@ -1,34 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { 
-  User2, 
-  MapPin, 
-  Globe, 
-  Calendar, 
-  MessageSquare, 
-  FileText, 
-  Star,
-  UserPlus,
-  UserCheck,
-  Bookmark,
-  Award,
-  TrendingUp
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
+import { Calendar, MapPin, ExternalLink, Users, FileText, MessageSquare, Heart, BookOpen, Plus } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import MinimalSidebar from '@/components/MinimalSidebar';
-import CleanPostCard from '@/components/CleanPostCard';
 import { formatDistanceToNow } from 'date-fns';
 
-interface UserProfile {
+interface Profile {
   id: string;
   username: string;
   full_name?: string;
@@ -42,7 +29,7 @@ interface UserProfile {
   comment_count: number;
 }
 
-interface UserPost {
+interface Post {
   id: string;
   title: string;
   content: string;
@@ -55,51 +42,68 @@ interface UserPost {
   };
 }
 
+interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  votes_score: number;
+  posts: {
+    id: string;
+    title: string;
+  };
+}
+
 const UserProfile = () => {
   const { username } = useParams<{ username: string }>();
   const { user } = useAuth();
   const { toast } = useToast();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [posts, setPosts] = useState<UserPost[]>([]);
-  const [bookmarks, setBookmarks] = useState<UserPost[]>([]);
+  
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [sequences, setSequences] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('posts');
 
   useEffect(() => {
     if (username) {
       fetchProfile();
-      fetchUserPosts();
-      checkFollowStatus();
-      fetchFollowCounts();
     }
-  }, [username, user]);
+  }, [username]);
 
   useEffect(() => {
-    if (activeTab === 'bookmarks' && profile && user?.id === profile.id) {
-      fetchBookmarks();
+    if (profile && user) {
+      checkFollowStatus();
+      fetchCounts();
     }
-  }, [activeTab, profile, user]);
+  }, [profile, user]);
 
   const fetchProfile = async () => {
-    if (!username) return;
-
     try {
-      const { data, error } = await supabase
+      const { data: profileData, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('username', username)
         .single();
 
       if (error) throw error;
-      setProfile(data);
+      setProfile(profileData);
+
+      // Fetch user's posts, comments, and sequences in parallel
+      await Promise.all([
+        fetchUserPosts(profileData.id),
+        fetchUserComments(profileData.id),
+        fetchUserSequences(profileData.id)
+      ]);
+
     } catch (error) {
       console.error('Error fetching profile:', error);
       toast({
         title: "Profile not found",
-        description: "The requested user profile could not be found.",
+        description: "The user profile could not be found.",
         variant: "destructive"
       });
     } finally {
@@ -107,31 +111,17 @@ const UserProfile = () => {
     }
   };
 
-  const fetchUserPosts = async () => {
-    if (!username) return;
-
+  const fetchUserPosts = async (userId: string) => {
     try {
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('username', username)
-        .single();
-
-      if (!profileData) return;
-
       const { data, error } = await supabase
         .from('posts')
         .select(`
-          id,
-          title,
-          content,
-          created_at,
-          votes_score,
-          view_count,
+          id, title, content, created_at, votes_score, view_count,
           categories(name, color)
         `)
-        .eq('author_id', profileData.id)
-        .order('created_at', { ascending: false });
+        .eq('author_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10);
 
       if (error) throw error;
       setPosts(data || []);
@@ -140,32 +130,38 @@ const UserProfile = () => {
     }
   };
 
-  const fetchBookmarks = async () => {
-    if (!profile || !user || user.id !== profile.id) return;
-
+  const fetchUserComments = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from('bookmarks')
+        .from('comments')
         .select(`
-          posts:posts!inner(
-            id,
-            title,
-            content,
-            created_at,
-            votes_score,
-            view_count,
-            categories(name, color)
-          )
+          id, content, created_at, votes_score,
+          posts(id, title)
         `)
-        .eq('user_id', user.id)
+        .eq('author_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setComments(data || []);
+    } catch (error) {
+      console.error('Error fetching user comments:', error);
+    }
+  };
+
+  const fetchUserSequences = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('sequences')
+        .select('*')
+        .eq('author_id', userId)
+        .eq('is_published', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      
-      const bookmarkedPosts = data?.map(item => item.posts).filter(Boolean) || [];
-      setBookmarks(bookmarkedPosts as UserPost[]);
+      setSequences(data || []);
     } catch (error) {
-      console.error('Error fetching bookmarks:', error);
+      console.error('Error fetching user sequences:', error);
     }
   };
 
@@ -178,38 +174,47 @@ const UserProfile = () => {
         .select('id')
         .eq('follower_id', user.id)
         .eq('following_id', profile.id)
-        .single();
+        .maybeSingle();
 
       setIsFollowing(!!data);
     } catch (error) {
-      // Not following
+      console.error('Error checking follow status:', error);
     }
   };
 
-  const fetchFollowCounts = async () => {
+  const fetchCounts = async () => {
     if (!profile) return;
 
     try {
-      const [followersResult, followingResult] = await Promise.all([
+      const [followersRes, followingRes] = await Promise.all([
         supabase
           .from('follows')
-          .select('id', { count: 'exact', head: true })
+          .select('*', { count: 'exact', head: true })
           .eq('following_id', profile.id),
         supabase
           .from('follows')
-          .select('id', { count: 'exact', head: true })
+          .select('*', { count: 'exact', head: true })
           .eq('follower_id', profile.id)
       ]);
 
-      setFollowerCount(followersResult.count || 0);
-      setFollowingCount(followingResult.count || 0);
+      setFollowerCount(followersRes.count || 0);
+      setFollowingCount(followingRes.count || 0);
     } catch (error) {
       console.error('Error fetching follow counts:', error);
     }
   };
 
   const toggleFollow = async () => {
-    if (!user || !profile || user.id === profile.id) return;
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "You must be signed in to follow users",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!profile || user.id === profile.id) return;
 
     try {
       if (isFollowing) {
@@ -233,15 +238,33 @@ const UserProfile = () => {
         setIsFollowing(true);
         setFollowerCount(prev => prev + 1);
         toast({ title: "Following user" });
+
+        // Create notification
+        await supabase
+          .from('notifications')
+          .insert({
+            user_id: profile.id,
+            type: 'follow',
+            title: 'New follower',
+            content: `${user.email?.split('@')[0] || 'Someone'} started following you`,
+            related_user_id: user.id
+          });
       }
     } catch (error) {
       console.error('Error toggling follow:', error);
       toast({
         title: "Error",
-        description: "Failed to update follow status",
+        description: "Could not update follow status",
         variant: "destructive"
       });
     }
+  };
+
+  const sendMessage = () => {
+    toast({
+      title: "Messages feature coming soon",
+      description: "Direct messaging will be available soon"
+    });
   };
 
   if (loading) {
@@ -251,11 +274,15 @@ const UserProfile = () => {
         <div className="flex">
           <MinimalSidebar />
           <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-6 py-8">
-              <div className="animate-pulse space-y-6">
-                <div className="h-32 bg-muted rounded"></div>
-                <div className="h-8 bg-muted rounded w-1/3"></div>
-                <div className="h-4 bg-muted rounded w-1/2"></div>
+            <div className="max-w-5xl mx-auto px-8 py-16">
+              <div className="animate-pulse space-y-8">
+                <div className="flex items-start gap-8">
+                  <div className="h-32 w-32 bg-muted rounded-full"></div>
+                  <div className="space-y-4 flex-1">
+                    <div className="h-10 bg-muted rounded w-1/2"></div>
+                    <div className="h-6 bg-muted rounded w-3/4"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </main>
@@ -271,16 +298,10 @@ const UserProfile = () => {
         <div className="flex">
           <MinimalSidebar />
           <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-6 py-8">
-              <div className="text-center py-16">
-                <User2 className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                <h1 className="text-2xl font-light text-muted-foreground mb-2">
-                  User not found
-                </h1>
-                <p className="text-muted-foreground">
-                  The requested user profile does not exist.
-                </p>
-              </div>
+            <div className="max-w-5xl mx-auto px-8 py-16 text-center">
+              <h1 className="text-3xl font-light mb-6">User not found</h1>
+              <p className="text-muted-foreground text-lg mb-8">The user profile you're looking for doesn't exist.</p>
+              <Button onClick={() => window.history.back()}>Go Back</Button>
             </div>
           </main>
         </div>
@@ -293,224 +314,264 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{profile.full_name || profile.username} | Beyond Humanity</title>
+        <meta name="description" content={profile.bio || `Profile of ${profile.full_name || profile.username}`} />
+      </Helmet>
+
       <Header />
+      
       <div className="flex">
         <MinimalSidebar />
+        
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-6 py-8">
+          <div className="max-w-5xl mx-auto px-8 py-20">
             {/* Profile Header */}
-            <Card className="p-8 mb-8">
-              <div className="flex items-start gap-6">
-                {/* Avatar */}
-                <Avatar className="w-24 h-24">
-                  <AvatarFallback className="text-2xl font-light bg-accent/10 text-accent">
+            <div className="space-y-12 mb-16">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10">
+                <Avatar className="h-32 w-32">
+                  <AvatarFallback className="text-4xl">
                     {(profile.full_name || profile.username).charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
 
-                {/* Profile Info */}
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <h1 className="text-3xl font-light tracking-tight">
-                        {profile.full_name || profile.username}
-                      </h1>
-                      {profile.full_name && (
-                        <p className="text-muted-foreground">@{profile.username}</p>
-                      )}
-                    </div>
-
-                    {/* Follow Button */}
-                    {!isOwnProfile && user && (
-                      <Button
-                        onClick={toggleFollow}
-                        variant={isFollowing ? "outline" : "default"}
-                        className="gap-2"
-                      >
-                        {isFollowing ? (
-                          <>
-                            <UserCheck className="h-4 w-4" />
-                            Following
-                          </>
-                        ) : (
-                          <>
-                            <UserPlus className="h-4 w-4" />
-                            Follow
-                          </>
-                        )}
-                      </Button>
+                <div className="flex-1 space-y-6">
+                  <div className="space-y-3">
+                    <h1 className="text-5xl font-light tracking-tight">
+                      {profile.full_name || profile.username}
+                    </h1>
+                    {profile.full_name && (
+                      <p className="text-2xl text-muted-foreground font-light">@{profile.username}</p>
                     )}
                   </div>
 
-                  {/* Bio */}
                   {profile.bio && (
-                    <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                    <p className="text-xl leading-relaxed font-light max-w-3xl text-muted-foreground">
                       {profile.bio}
                     </p>
                   )}
 
-                  {/* Meta info */}
-                  <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-8 text-lg text-muted-foreground">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="h-5 w-5" />
+                      <span>Joined {joinDate}</span>
+                    </div>
+                    
                     {profile.location && (
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
+                      <div className="flex items-center gap-3">
+                        <MapPin className="h-5 w-5" />
                         <span>{profile.location}</span>
                       </div>
                     )}
+                    
                     {profile.website_url && (
-                      <div className="flex items-center gap-1">
-                        <Globe className="h-4 w-4" />
-                        <a 
-                          href={profile.website_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="hover:text-accent crisp-transition"
-                        >
-                          Website
-                        </a>
-                      </div>
+                      <a 
+                        href={profile.website_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 hover:text-accent crisp-transition"
+                      >
+                        <ExternalLink className="h-5 w-5" />
+                        <span>Website</span>
+                      </a>
                     )}
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>Joined {joinDate}</span>
-                    </div>
                   </div>
+                </div>
 
-                  {/* Stats */}
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <Award className="h-4 w-4 text-accent" />
-                      <span className="font-medium">{profile.karma}</span>
-                      <span className="text-muted-foreground text-sm">karma</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <FileText className="h-4 w-4" />
-                      <span className="font-medium">{posts.length}</span>
-                      <span className="text-muted-foreground text-sm">posts</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4" />
-                      <span className="font-medium">{profile.comment_count}</span>
-                      <span className="text-muted-foreground text-sm">comments</span>
-                    </div>
-                    <Separator orientation="vertical" className="h-4" />
-                    <div className="flex items-center gap-4">
-                      <span className="text-sm">
-                        <span className="font-medium">{followerCount}</span>{' '}
-                        <span className="text-muted-foreground">followers</span>
-                      </span>
-                      <span className="text-sm">
-                        <span className="font-medium">{followingCount}</span>{' '}
-                        <span className="text-muted-foreground">following</span>
-                      </span>
-                    </div>
-                  </div>
+                <div className="flex flex-col gap-4">
+                  {!isOwnProfile && user && (
+                    <>
+                      <Button
+                        onClick={toggleFollow}
+                        variant={isFollowing ? "outline" : "default"}
+                        size="lg"
+                        className="gap-3 px-8"
+                      >
+                        <Users className="h-5 w-5" />
+                        {isFollowing ? 'Unfollow' : 'Follow'}
+                      </Button>
+                      
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={sendMessage}
+                        className="gap-3 px-8"
+                      >
+                        <MessageSquare className="h-5 w-5" />
+                        Message
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
-            </Card>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-8 py-8 border-y border-border/30">
+                <div className="text-center">
+                  <div className="text-3xl font-light">{profile.karma || 0}</div>
+                  <div className="text-lg text-muted-foreground">Karma</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-light">{profile.post_count || 0}</div>
+                  <div className="text-lg text-muted-foreground">Posts</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-light">{profile.comment_count || 0}</div>
+                  <div className="text-lg text-muted-foreground">Comments</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-light">{followerCount}</div>
+                  <div className="text-lg text-muted-foreground">Followers</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-light">{followingCount}</div>
+                  <div className="text-lg text-muted-foreground">Following</div>
+                </div>
+              </div>
+            </div>
 
             {/* Content Tabs */}
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="posts" className="gap-2">
-                  <FileText className="h-4 w-4" />
-                  Posts ({posts.length})
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-12">
+              <TabsList className="grid w-full grid-cols-3 h-14">
+                <TabsTrigger value="posts" className="gap-3 text-lg">
+                  <FileText className="h-5 w-5" />
+                  Posts
                 </TabsTrigger>
-                <TabsTrigger value="activity" className="gap-2">
-                  <TrendingUp className="h-4 w-4" />
-                  Activity
+                <TabsTrigger value="comments" className="gap-3 text-lg">
+                  <MessageSquare className="h-5 w-5" />
+                  Comments
                 </TabsTrigger>
-                {isOwnProfile && (
-                  <TabsTrigger value="bookmarks" className="gap-2">
-                    <Bookmark className="h-4 w-4" />
-                    Bookmarks
-                  </TabsTrigger>
-                )}
+                <TabsTrigger value="sequences" className="gap-3 text-lg">
+                  <BookOpen className="h-5 w-5" />
+                  Sequences
+                </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="posts" className="mt-6">
+              <TabsContent value="posts" className="space-y-8">
                 {posts.length > 0 ? (
-                  <div className="space-y-4">
-                    {posts.map((post) => (
-                        <CleanPostCard 
-                          key={post.id} 
-                          post={{
-                            ...post,
-                            author_id: profile.id,
-                            is_pinned: false,
-                            category_id: null,
-                            updated_at: post.created_at,
-                            profiles: {
-                              username: profile.username,
-                              full_name: profile.full_name
-                            }
-                          }} 
-                        />
-                    ))}
-                  </div>
+                  posts.map((post) => (
+                    <Card key={post.id} className="p-8 hover:border-accent/50 crisp-transition">
+                      <div className="space-y-6">
+                        <div className="flex items-start justify-between gap-6">
+                          <Link 
+                            to={`/post/${post.id}`}
+                            className="block hover:text-accent crisp-transition flex-1"
+                          >
+                            <h3 className="text-2xl font-light mb-4 line-clamp-2">
+                              {post.title}
+                            </h3>
+                            <p className="text-muted-foreground text-lg leading-relaxed line-clamp-3">
+                              {post.content.substring(0, 300)}...
+                            </p>
+                          </Link>
+                          
+                          {post.categories && (
+                            <Badge 
+                              variant="outline" 
+                              className="text-base px-4 py-2"
+                              style={{ 
+                                borderColor: post.categories.color,
+                                color: post.categories.color,
+                                backgroundColor: `${post.categories.color}15`
+                              }}
+                            >
+                              {post.categories.name}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        <div className="flex items-center gap-8 text-lg text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Heart className="h-4 w-4" />
+                            <span>{post.votes_score} points</span>
+                          </div>
+                          <span>{post.view_count} views</span>
+                          <time>{formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}</time>
+                        </div>
+                      </div>
+                    </Card>
+                  ))
                 ) : (
                   <div className="text-center py-16">
-                    <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                      No posts yet
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {isOwnProfile 
-                        ? "You haven't written any posts yet. Share your thoughts!" 
-                        : "This user hasn't written any posts yet."
-                      }
-                    </p>
+                    <p className="text-xl text-muted-foreground">No posts yet.</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="comments" className="space-y-8">
+                {comments.length > 0 ? (
+                  comments.map((comment) => (
+                    <Card key={comment.id} className="p-8 hover:border-accent/50 crisp-transition">
+                      <div className="space-y-6">
+                        <div className="text-lg text-muted-foreground">
+                          Comment on{' '}
+                          <Link 
+                            to={`/post/${comment.posts.id}`}
+                            className="text-accent hover:underline font-medium"
+                          >
+                            {comment.posts.title}
+                          </Link>
+                        </div>
+                        
+                        <p className="text-lg leading-relaxed">
+                          {comment.content}
+                        </p>
+                        
+                        <div className="flex items-center gap-8 text-lg text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Heart className="h-4 w-4" />
+                            <span>{comment.votes_score} points</span>
+                          </div>
+                          <time>{formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}</time>
+                        </div>
+                      </div>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-16">
+                    <p className="text-xl text-muted-foreground">No comments yet.</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="sequences" className="space-y-8">
+                {sequences.length > 0 ? (
+                  sequences.map((sequence: any) => (
+                    <Card key={sequence.id} className="p-8 hover:border-accent/50 crisp-transition">
+                      <div className="space-y-6">
+                        <Link 
+                          to={`/sequences/${sequence.id}`}
+                          className="block hover:text-accent crisp-transition"
+                        >
+                          <h3 className="text-2xl font-light mb-4">
+                            {sequence.title}
+                          </h3>
+                          <p className="text-muted-foreground text-lg leading-relaxed">
+                            {sequence.description}
+                          </p>
+                        </Link>
+                        
+                        <div className="flex items-center gap-8 text-lg text-muted-foreground">
+                          <span>{sequence.view_count || 0} views</span>
+                          <time>{formatDistanceToNow(new Date(sequence.created_at), { addSuffix: true })}</time>
+                        </div>
+                      </div>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-16">
+                    <p className="text-xl text-muted-foreground mb-6">No sequences yet.</p>
                     {isOwnProfile && (
-                      <Link to="/create-post">
-                        <Button className="mt-4">Write Your First Post</Button>
-                      </Link>
+                      <Button size="lg" asChild>
+                        <Link to="/sequences/create">
+                          <Plus className="h-5 w-5 mr-3" />
+                          Create Your First Sequence
+                        </Link>
+                      </Button>
                     )}
                   </div>
                 )}
               </TabsContent>
-
-              <TabsContent value="activity" className="mt-6">
-                <div className="text-center py-16">
-                  <TrendingUp className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                    Activity Feed
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Activity tracking coming soon
-                  </p>
-                </div>
-              </TabsContent>
-
-              {isOwnProfile && (
-                <TabsContent value="bookmarks" className="mt-6">
-                  {bookmarks.length > 0 ? (
-                    <div className="space-y-4">
-                      {bookmarks.map((post) => (
-                          <CleanPostCard 
-                            key={post.id} 
-                            post={{
-                              ...post,
-                              author_id: 'unknown',
-                              is_pinned: false,
-                              category_id: null,
-                              updated_at: post.created_at
-                            }} 
-                          />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-16">
-                      <Bookmark className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                        No bookmarks yet
-                      </h3>
-                      <p className="text-muted-foreground">
-                        Posts you bookmark will appear here for easy access
-                      </p>
-                    </div>
-                  )}
-                </TabsContent>
-              )}
             </Tabs>
           </div>
         </main>
