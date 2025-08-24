@@ -43,10 +43,10 @@ const Auth = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Mind Nexus Forum
+            TranshumanForum
           </h1>
           <p className="text-muted-foreground mt-2">
-            A forum for transhumanist ideas and discussion
+            Advancing human potential through technology and rational discourse
           </p>
         </div>
 

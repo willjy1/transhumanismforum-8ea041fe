@@ -21,7 +21,7 @@ const Navbar = () => {
             <Link to="/" className="flex items-center space-x-2">
               <Brain className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Mind Nexus
+                TranshumanForum
               </span>
             </Link>
             
