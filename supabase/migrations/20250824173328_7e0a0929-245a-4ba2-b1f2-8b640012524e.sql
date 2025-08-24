@@ -1,0 +1,3 @@
+-- Add David Pearce to featured thinkers
+INSERT INTO public.featured_thinkers (name, bio, photo_url, website_url, key_works, quotes, field_of_expertise, display_order) VALUES
+  ('David Pearce', 'British transhumanist philosopher and co-founder of Humanity+, known for The Hedonistic Imperative and his advocacy for using biotechnology to eliminate suffering in all sentient life.', null, 'https://www.hedweb.com', ARRAY['The Hedonistic Imperative', 'Can Biotechnology Abolish Suffering?', 'The Abolitionist Project'], ARRAY['The biological program makes us victims of the moment. We are addicted to the present tense, to our immediate hopes and fears. Yet in principle we can transcend this bondage.'], 'Negative Utilitarianism & Suffering Abolition', 6);

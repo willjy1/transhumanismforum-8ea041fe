@@ -8,6 +8,10 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Thinkers from "./pages/Thinkers";
 import CreatePost from "./pages/CreatePost";
+import Messages from "./pages/Messages";
+import Sequences from "./pages/Sequences";
+import Concepts from "./pages/Concepts";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +28,10 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/thinkers" element={<Thinkers />} />
             <Route path="/create-post" element={<CreatePost />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/sequences" element={<Sequences />} />
+            <Route path="/concepts" element={<Concepts />} />
+            <Route path="/about" element={<About />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
