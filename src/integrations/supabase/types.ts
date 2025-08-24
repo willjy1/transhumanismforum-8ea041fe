@@ -103,7 +103,6 @@ export type Database = {
           key_works: string[] | null
           name: string
           photo_url: string | null
-          quotes: string[] | null
           website_url: string | null
         }
         Insert: {
@@ -115,7 +114,6 @@ export type Database = {
           key_works?: string[] | null
           name: string
           photo_url?: string | null
-          quotes?: string[] | null
           website_url?: string | null
         }
         Update: {
@@ -127,7 +125,6 @@ export type Database = {
           key_works?: string[] | null
           name?: string
           photo_url?: string | null
-          quotes?: string[] | null
           website_url?: string | null
         }
         Relationships: []
