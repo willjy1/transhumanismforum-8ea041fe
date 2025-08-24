@@ -374,13 +374,15 @@ const UserProfile = () => {
                 <div className="flex flex-col gap-4">
                   {isOwnProfile ? (
                     <Button
-                      onClick={() => setShowEditDialog(true)}
+                      asChild
                       variant="outline"
                       size="lg"
                       className="gap-3 px-8"
                     >
-                      <Edit className="h-5 w-5" />
-                      Edit Profile
+                      <Link to="/edit-profile">
+                        <Edit className="h-5 w-5" />
+                        Edit Profile
+                      </Link>
                     </Button>
                   ) : (
                     user && (

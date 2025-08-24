@@ -1,33 +1,34 @@
 import React, { useState, useRef } from 'react';
-import { Camera, Upload, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
+import { Upload, Camera, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AvatarUploadProps {
   currentAvatarUrl?: string;
-  onAvatarUpdate: (newAvatarUrl: string | null) => void;
-  size?: 'sm' | 'md' | 'lg';
+  onAvatarUpdate: (newAvatarUrl: string) => void;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const AvatarUpload: React.FC<AvatarUploadProps> = ({
   currentAvatarUrl,
   onAvatarUpdate,
-  size = 'md',
-  className
+  className,
+  size = 'md'
 }) => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const sizeClasses = {
     sm: 'h-16 w-16',
-    md: 'h-24 w-24', 
+    md: 'h-24 w-24',
     lg: 'h-32 w-32'
   };
 
@@ -42,36 +43,28 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
         throw new Error('Please select an image file');
       }
 
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        throw new Error('Please select an image smaller than 2MB');
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        throw new Error('Image size must be less than 5MB');
       }
 
-      // Delete existing avatar if it exists
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/avatar.${fileExt}`;
+
+      // Delete old avatar if it exists
       if (currentAvatarUrl) {
-        try {
-          const oldPath = currentAvatarUrl.split('/').pop();
-          if (oldPath) {
-            await supabase.storage
-              .from('avatars')
-              .remove([`${user.id}/${oldPath}`]);
-          }
-        } catch (error) {
-          console.warn('Could not delete old avatar:', error);
+        const oldPath = currentAvatarUrl.split('/').pop();
+        if (oldPath) {
+          await supabase.storage.from('avatars').remove([`${user.id}/${oldPath}`]);
         }
       }
 
       // Upload new avatar
-      const timestamp = Date.now();
-      const fileExt = file.name.split('.').pop();
-      const fileName = `avatar_${timestamp}.${fileExt}`;
-      const filePath = `${user.id}/${fileName}`;
-
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: false
+        .upload(fileName, file, {
+          upsert: true,
+          contentType: file.type
         });
 
       if (uploadError) throw uploadError;
@@ -79,30 +72,31 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
       // Get public URL
       const { data } = supabase.storage
         .from('avatars')
-        .getPublicUrl(filePath);
+        .getPublicUrl(fileName);
 
-      const publicUrl = data.publicUrl;
+      const newAvatarUrl = data.publicUrl;
 
-      // Update profile
+      // Update profile in database
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl })
+        .update({ avatar_url: newAvatarUrl })
         .eq('id', user.id);
 
       if (updateError) throw updateError;
 
-      onAvatarUpdate(publicUrl);
-      
+      onAvatarUpdate(newAvatarUrl);
+      setPreviewUrl(null);
+
       toast({
         title: "Success",
         description: "Profile picture updated successfully!"
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading avatar:', error);
       toast({
-        title: "Upload Error",
-        description: error instanceof Error ? error.message : "Failed to upload image",
+        title: "Error",
+        description: error.message || "Failed to upload profile picture",
         variant: "destructive"
       });
     } finally {
@@ -110,18 +104,30 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
     }
   };
 
-  const deleteAvatar = async () => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Show preview
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewUrl(objectUrl);
+      
+      // Upload immediately
+      uploadAvatar(file);
+    }
+  };
+
+  const removeAvatar = async () => {
     if (!user || !currentAvatarUrl) return;
 
     try {
-      setDeleting(true);
+      setUploading(true);
 
-      // Delete from storage
-      const path = currentAvatarUrl.split('/').pop();
-      if (path) {
+      // Remove from storage
+      const fileName = currentAvatarUrl.split('/').pop();
+      if (fileName) {
         await supabase.storage
           .from('avatars')
-          .remove([`${user.id}/${path}`]);
+          .remove([`${user.id}/${fileName}`]);
       }
 
       // Update profile
@@ -132,86 +138,70 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
 
       if (error) throw error;
 
-      onAvatarUpdate(null);
-      
+      onAvatarUpdate('');
+      setPreviewUrl(null);
+
       toast({
         title: "Success",
-        description: "Profile picture removed successfully!"
+        description: "Profile picture removed"
       });
 
-    } catch (error) {
-      console.error('Error deleting avatar:', error);
+    } catch (error: any) {
+      console.error('Error removing avatar:', error);
       toast({
-        title: "Delete Error",
+        title: "Error",
         description: "Failed to remove profile picture",
         variant: "destructive"
       });
     } finally {
-      setDeleting(false);
+      setUploading(false);
     }
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      uploadAvatar(file);
-    }
-    // Clear input so same file can be selected again
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const getUserInitials = () => {
-    if (!user) return '?';
-    const name = user.user_metadata?.full_name || user.email || '';
-    return name.slice(0, 2).toUpperCase();
-  };
+  const displayUrl = previewUrl || currentAvatarUrl;
+  const initials = user?.user_metadata?.full_name?.[0] || user?.email?.[0] || '?';
 
   return (
-    <div className={cn("relative group", className)}>
-      <Avatar className={cn(sizeClasses[size], "transition-opacity group-hover:opacity-75")}>
-        <AvatarImage src={currentAvatarUrl || undefined} />
-        <AvatarFallback className="bg-muted text-muted-foreground">
-          {getUserInitials()}
+    <div className={cn('relative group', className)}>
+      <Avatar className={cn(sizeClasses[size], 'cursor-pointer transition-all duration-200 group-hover:ring-2 group-hover:ring-primary/50')}>
+        <AvatarImage src={displayUrl} alt="Profile picture" />
+        <AvatarFallback className="text-lg font-medium">
+          {initials.toUpperCase()}
         </AvatarFallback>
       </Avatar>
-      
-      {/* Upload/Delete buttons overlay */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="flex gap-2">
+
+      {/* Overlay with buttons */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/50 rounded-full">
+        <div className="flex gap-1">
           <Button
             size="sm"
             variant="secondary"
+            className="h-8 w-8 p-0"
             onClick={() => fileInputRef.current?.click()}
-            disabled={uploading || deleting}
-            className="h-8 w-8 p-0 bg-black/50 hover:bg-black/70 text-white"
+            disabled={uploading}
           >
             {uploading ? (
-              <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+              <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
             ) : (
               <Camera className="h-4 w-4" />
             )}
           </Button>
-          
+
           {currentAvatarUrl && (
             <Button
               size="sm"
-              variant="secondary"
-              onClick={deleteAvatar}
-              disabled={uploading || deleting}
-              className="h-8 w-8 p-0 bg-black/50 hover:bg-black/70 text-white"
+              variant="destructive"
+              className="h-8 w-8 p-0"
+              onClick={removeAvatar}
+              disabled={uploading}
             >
-              {deleting ? (
-                <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
-              ) : (
-                <Trash2 className="h-4 w-4" />
-              )}
+              <X className="h-4 w-4" />
             </Button>
           )}
         </div>
       </div>
 
+      {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
@@ -219,6 +209,20 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({
         onChange={handleFileSelect}
         className="hidden"
       />
+
+      {/* Upload button for smaller sizes */}
+      {size === 'sm' && (
+        <Button
+          size="sm"
+          variant="outline"
+          className="mt-2 w-full"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+        >
+          <Upload className="h-4 w-4 mr-2" />
+          {uploading ? 'Uploading...' : 'Upload'}
+        </Button>
+      )}
     </div>
   );
 };

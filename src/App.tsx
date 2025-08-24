@@ -26,6 +26,7 @@ import Forum from "./pages/Forum";
 import PostDetail from "./pages/PostDetail";
 import Notes from "./pages/Notes";
 import NotFound from "./pages/NotFound";
+import EditProfile from "./pages/EditProfile";
 import ArtPreview from "./pages/ArtPreview";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
               <Route path="/about" element={<About />} />
               <Route path="/community" element={<Community />} />
               <Route path="/notes" element={<Notes />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
               <Route path="/events" element={<Events />} />
               <Route path="/best-of" element={<BestOf />} />
               <Route path="/resources" element={<Resources />} />
