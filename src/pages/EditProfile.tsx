@@ -40,8 +40,11 @@ const EditProfile = () => {
   useEffect(() => {
     if (user) {
       fetchProfile();
+    } else if (user === null) {
+      // User is not authenticated, redirect to auth page
+      navigate('/auth');
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const fetchProfile = async () => {
     if (!user) return;
