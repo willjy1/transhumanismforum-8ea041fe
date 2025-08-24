@@ -35,7 +35,7 @@ const Index = () => {
                     Beyond
                     <br />
                     <span className="relative">
-                      Human
+                      Humanity
                       <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-accent animate-scale-in" 
                            style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
                       </div>
