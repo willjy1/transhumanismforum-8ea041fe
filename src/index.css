@@ -8,101 +8,104 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Clean, modern design system */
+    /* Academic design system - high contrast, readable */
     --background: 0 0% 100%;
-    --foreground: 222 84% 4.9%;
+    --foreground: 0 0% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 84% 4.9%;
+    --card-foreground: 0 0% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 4.9%;
+    --popover-foreground: 0 0% 13%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 84% 4.9%;
-    --primary-glow: 217 91% 70%;
+    --primary: 0 0% 13%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 0 0% 40%;
 
-    --secondary: 210 40% 98%;
-    --secondary-foreground: 222.2 84% 4.9%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 13%;
 
-    --muted: 210 40% 98%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 98%;
+    --muted-foreground: 0 0% 46%;
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 220 13% 18%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 217 91% 60%;
+    --border: 0 0% 89%;
+    --input: 0 0% 96%;
+    --ring: 0 0% 13%;
 
-    --radius: 6px;
+    --radius: 2px;
 
-    /* Subtle visual elements */
+    /* Minimal visual elements */
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
     --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+    --shadow-medium: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
+    --shadow-large: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222.2 84% 4.9%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 210 40% 98%;
-    --sidebar-accent-foreground: 222.2 84% 4.9%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-foreground: 0 0% 3%;
+    --sidebar-primary: 0 0% 3%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 97%;
+    --sidebar-accent-foreground: 0 0% 3%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 3%;
 
     /* Animation */
-    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-crisp: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    /* Clean dark theme */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Academic dark theme - high contrast for readability */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 222.2 84% 4.9%;
-    --primary-glow: 217 91% 70%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 7%;
+    --primary-glow: 0 0% 70%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 11%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 217 91% 60%;
-    --accent-foreground: 222.2 84% 4.9%;
+    --accent: 220 13% 82%;
+    --accent-foreground: 0 0% 7%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 95%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 217 91% 60%;
+    --border: 0 0% 15%;
+    --input: 0 0% 11%;
+    --ring: 0 0% 83%;
 
-    --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.8);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.3), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
-    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -4px hsl(0 0% 0% / 0.4);
+    /* Dark theme shadows */
+    --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 1px 3px 0 hsl(0 0% 0% / 0.4);
+    --shadow-large: 0 4px 6px -1px hsl(0 0% 0% / 0.5);
 
     /* Dark sidebar */
-    --sidebar-background: 222.2 84% 4.9%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 217.2 32.6% 17.5%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-ring: 217 91% 60%;
+    --sidebar-background: 0 0% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 0 0% 9%;
+    --sidebar-accent: 0 0% 14.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 14.9%;
+    --sidebar-ring: 0 0% 83.1%;
   }
 }
 
@@ -141,60 +144,75 @@ All colors MUST be HSL.
     transition: var(--transition-smooth);
   }
 
-  /* Clean typography with subtle hierarchy */
+  /* Enhanced typography with better hierarchy */
   .text-display {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    font-weight: 600;
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    font-weight: 300;
   }
 
   .text-hero {
-    font-size: clamp(2rem, 5vw, 3rem);
-    line-height: 1.2;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .text-large {
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.15;
     letter-spacing: -0.015em;
+    font-weight: 300;
+  }
+
+  .text-body {
+    font-size: 1.125rem;
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  .text-caption {
+    font-size: 0.875rem;
+    line-height: 1.5;
     font-weight: 500;
   }
 
-  /* Subtle interactive effects */
-  .hover-lift {
-    transition: var(--transition-smooth);
+  .serif {
+    font-family: "Merriweather", Georgia, Times, serif;
   }
-  
-  .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
+
+  /* Enhanced hover effects */
+  .hover-lift {
+    @apply smooth-transition hover:-translate-y-1 hover:shadow-medium;
+  }
+
+  .hover-glow {
+    @apply smooth-transition hover:shadow-large;
+  }
+
+  .hover-accent {
+    @apply crisp-transition hover:text-accent hover:bg-accent/5;
   }
 
   .interactive-card {
-    @apply bg-card border border-border rounded-lg p-6 hover-lift cursor-pointer;
-    transition: var(--transition-smooth);
+    @apply bg-card border border-border rounded-lg p-6 hover-lift hover:border-accent/20 smooth-transition cursor-pointer;
   }
 
-  .interactive-card:hover {
-    border-color: hsl(var(--primary) / 0.3);
-  }
-
-  /* Enhanced reading experience */
+  /* Reading optimizations */
   .prose {
-    max-width: 68ch;
-    line-height: 1.6;
+    max-width: 70ch;
+    line-height: 1.7;
   }
 
   .prose h1, .prose h2, .prose h3, .prose h4 {
     font-weight: 600;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    line-height: 1.3;
+    line-height: 1.25;
   }
 
   .prose p {
     margin-bottom: 1.25rem;
-    color: hsl(var(--muted-foreground));
-  }
-
-  /* Focus states */
-  .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background;
   }
 }

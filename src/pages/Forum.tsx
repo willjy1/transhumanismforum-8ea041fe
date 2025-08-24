@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
-import { Plus } from 'lucide-react';
 import PostCard from '@/components/PostCard';
 import PostSearch from '@/components/PostSearch';
+import QuickTakes from '@/components/QuickTakes';
 import ActivityFeed from '@/components/ActivityFeed';
 import Sidebar from '@/components/Sidebar';
 
@@ -203,26 +203,7 @@ const Forum = () => {
       <div className="flex-1 flex">
         {/* Posts Column */}
         <div className="flex-1 max-w-4xl">
-          {/* Clean Header Section */}
-          <div className="border-b border-border px-6 py-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-2xl font-semibold mb-1">Community Discussions</h1>
-                <p className="text-muted-foreground">
-                  Explore ideas about human enhancement, AI, and consciousness.
-                </p>
-              </div>
-              
-              {user && (
-                <Button asChild className="gap-2">
-                  <Link to="/create-post-rich">
-                    <Plus className="h-4 w-4" />
-                    Create Post
-                  </Link>
-                </Button>
-              )}
-            </div>
-
+          <div className="p-6">
             <PostSearch
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -236,7 +217,9 @@ const Forum = () => {
             />
           </div>
           
-          <div className="p-6 space-y-4">
+          <div className="px-6 pb-6 space-y-4">
+            <QuickTakes />
+            
             {posts.map((post) => (
               <PostCard
                 key={post.id}
@@ -246,34 +229,30 @@ const Forum = () => {
             ))}
 
             {posts.length === 0 && !loading && (
-              <div className="interactive-card text-center py-12">
-                <h3 className="text-lg font-semibold mb-2">No posts found</h3>
-                <p className="text-muted-foreground mb-6">
-                  Try adjusting your search terms or filters
-                </p>
-                {user && (
-                  <Button asChild>
-                    <Link to="/create-post-rich">Create Post</Link>
-                  </Button>
-                )}
-              </div>
+              <Card>
+                <CardContent className="p-12 text-center">
+                  <h3 className="text-lg font-medium mb-2">No posts found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Try adjusting your search terms or filters
+                  </p>
+                  {user && (
+                    <Button asChild>
+                      <Link to="/create-post-rich">Create Post</Link>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>
 
         {/* Right Sidebar - Activity Feed */}
-        <div className="w-80 border-l border-border p-6 hidden xl:block">
+        <div className="w-96 border-l bg-card/50 p-6 hidden xl:block">
           <div className="space-y-6">
-            <div className="interactive-card">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                Community Activity
-              </h3>
-              <ActivityFeed 
-                title=""
-                limit={12}
-              />
-            </div>
+            <ActivityFeed 
+              title="Community Activity"
+              limit={15}
+            />
           </div>
         </div>
       </div>

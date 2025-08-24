@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { MessageSquare, Eye, Clock, User, Plus } from 'lucide-react';
+import { MessageSquare, Eye, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import EnhancedVoteButtons from '@/components/EnhancedVoteButtons';
@@ -28,130 +29,94 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({ post, onVote, compact = false }) => {
   const { user } = useAuth();
 
-  const truncateContent = (content: string, maxLength: number = 180) => {
-    // Strip HTML tags for preview
-    const plainText = content.replace(/<[^>]*>/g, '');
-    if (plainText.length <= maxLength) return plainText;
-    return plainText.slice(0, maxLength) + '...';
-  };
-
-  const getReadingTime = (content: string) => {
-    const plainText = content.replace(/<[^>]*>/g, '');
-    const wordsPerMinute = 200;
-    const words = plainText.split(' ').length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
+  const truncateContent = (content: string, maxLength: number = 200) => {
+    if (content.length <= maxLength) return content;
+    return content.slice(0, maxLength) + '...';
   };
 
   return (
-    <article className="interactive-card group">
-      <div className="flex gap-4">
-        {/* Voting Section */}
-        {user && (
-          <div className="flex flex-col items-center justify-start py-1 min-w-[60px]">
-            <EnhancedVoteButtons
-              postId={post.id}
-              initialScore={post.votes_score}
-              onVoteChange={(newScore) => {
-                post.votes_score = newScore;
-              }}
-              size="sm"
-            />
-          </div>
-        )}
-
-        {/* Main Content */}
-        <div className="flex-1 space-y-3">
-          {/* Author & Metadata Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              {/* Simple Author Avatar */}
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                <User className="w-4 h-4 text-primary" />
-              </div>
-              
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="font-medium">
-                    {post.profiles?.full_name || post.profiles?.username || 'Anonymous'}
-                  </span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="text-muted-foreground">
-                    {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-                  </span>
-                  <span className="text-muted-foreground">•</span>
-                  <span className="text-muted-foreground text-xs">{getReadingTime(post.content)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Category Badge */}
-            {post.categories && (
-              <Badge 
-                variant="outline" 
-                className="text-xs"
-                style={{ 
-                  borderColor: post.categories.color + '60',
-                  color: post.categories.color,
-                  backgroundColor: post.categories.color + '15'
+    <Card className="hover:shadow-md transition-shadow border-l-2 border-l-transparent hover:border-l-primary/50">
+      <CardContent className="p-0">
+        <div className="flex">
+          {/* Enhanced Voting Section */}
+          {user && (
+            <div className="flex flex-col items-center justify-start p-4 bg-muted/30 min-w-[60px]">
+              <EnhancedVoteButtons
+                postId={post.id}
+                initialScore={post.votes_score}
+                onVoteChange={(newScore) => {
+                  // Update the score in parent component if needed
+                  post.votes_score = newScore;
                 }}
-              >
-                {post.categories.name}
-              </Badge>
-            )}
-          </div>
-
-          {/* Title */}
-          <Link to={`/post/${post.id}`} className="block group/title">
-            <h2 className={cn(
-              "font-semibold group-hover/title:text-primary transition-colors leading-tight",
-              compact ? "text-lg" : "text-xl"
-            )}>
-              {post.title}
-            </h2>
-          </Link>
-
-          {/* Content Preview */}
-          {!compact && (
-            <p className="text-muted-foreground leading-relaxed">
-              {truncateContent(post.content, 200)}
-            </p>
+                size="sm"
+              />
+            </div>
           )}
 
-          {/* Engagement Footer */}
-          <div className="flex items-center justify-between pt-2 border-t border-border/50">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {/* Comments */}
-              <Link 
-                to={`/post/${post.id}#comments`}
-                className="flex items-center gap-1.5 hover:text-primary transition-colors"
-              >
-                <MessageSquare className="h-4 w-4" />
-                <span>{post.comment_count}</span>
-              </Link>
-              
-              {/* Views */}
-              <div className="flex items-center gap-1.5">
-                <Eye className="h-4 w-4" />
-                <span>{post.view_count.toLocaleString()}</span>
-              </div>
-
-              {/* Score */}
-              {post.votes_score > 0 && (
-                <div className="flex items-center gap-1 text-green-600">
-                  <span className="text-sm">▲ {post.votes_score}</span>
-                </div>
+          {/* Main Content */}
+          <div className="flex-1 p-4">
+            {/* Category and Metadata */}
+            <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
+              {post.categories && (
+                <Badge 
+                  variant="outline" 
+                  className="text-xs"
+                  style={{ 
+                    borderColor: post.categories.color + '40',
+                    color: post.categories.color,
+                    backgroundColor: post.categories.color + '10'
+                  }}
+                >
+                  {post.categories.name}
+                </Badge>
               )}
+              <span>•</span>
+              <span>{post.profiles?.username || 'Anonymous'}</span>
+              <span>•</span>
+              <div className="flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+              </div>
             </div>
-            
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              {user && <BookmarkButton postId={post.id} />}
+
+            {/* Title */}
+            <Link to={`/post/${post.id}`} className="block group">
+              <h3 className={cn(
+                "font-semibold group-hover:text-primary transition-colors mb-2 leading-tight",
+                compact ? "text-base" : "text-lg"
+              )}>
+                {post.title}
+              </h3>
+            </Link>
+
+            {/* Content Preview */}
+            {!compact && (
+              <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
+                {truncateContent(post.content)}
+              </p>
+            )}
+
+            {/* Engagement Metrics */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <MessageSquare className="h-3 w-3" />
+                  <span>{post.comment_count} comments</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Eye className="h-3 w-3" />
+                  <span>{post.view_count} views</span>
+                </div>
+              </div>
+              
+              {user && (
+                <BookmarkButton postId={post.id} />
+              )}
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </CardContent>
+    </Card>
   );
 };
 
