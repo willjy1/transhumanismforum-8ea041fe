@@ -54,11 +54,8 @@ const MinimalSidebar = () => {
           )}
         </div>
 
-        {/* Library Section */}
+        {/* Resources Section */}
         <div className="space-y-3">
-          <h3 className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
-            Library
-          </h3>
           <div className="space-y-2 pl-0">
             <NavItem
               to="/library"

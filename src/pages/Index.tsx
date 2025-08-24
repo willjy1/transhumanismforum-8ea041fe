@@ -24,28 +24,25 @@ const Index = () => {
         <MinimalSidebar />
         
         <div className="flex-1">
-          {/* Academic hero section */}
-          <div className="max-w-4xl mx-auto px-8 py-20">
-            <article className="prose prose-lg mx-auto text-center">
+          <div className="min-h-[90vh] flex items-center justify-center">
+            <div className="max-w-2xl mx-auto px-8 text-center">
               
               {/* Main title */}
-              <header className="mb-16">
-              <h1 className="font-serif text-5xl font-normal mb-6">
+              <h1 className="text-6xl font-light mb-8 tracking-tight">
                 The Transhumanist Forum
               </h1>
-                
-                <p className="text-xl text-muted-foreground leading-relaxed font-light max-w-3xl mx-auto">
-                  A forum for rigorous discussion of human enhancement, the expansion of consciousness, 
-                  artificial intelligence, and the future of life itself.
-                </p>
-              </header>
+              
+              <p className="serif text-lg text-muted-foreground leading-relaxed mb-12 max-w-lg mx-auto">
+                A forum for rigorous discussion of human enhancement, the expansion of consciousness, 
+                artificial intelligence, and the future of life itself.
+              </p>
               
               {/* Call to action */}
-              <div className="mt-12 not-prose">
+              <div>
                 {user ? (
                   <Link 
                     to="/forum"
-                    className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground text-sm font-medium rounded border hover:bg-primary/90 crisp-transition shadow-subtle"
+                    className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground font-medium rounded border hover:bg-primary/90 crisp-transition shadow-subtle"
                   >
                     Enter Forum
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -53,14 +50,14 @@ const Index = () => {
                 ) : (
                   <Link 
                     to="/forum"
-                    className="inline-flex items-center px-6 py-3 border border-border bg-background text-foreground text-sm font-medium rounded hover:bg-muted crisp-transition shadow-subtle"
+                    className="inline-flex items-center px-6 py-3 border border-border bg-background text-foreground font-medium rounded hover:bg-muted crisp-transition shadow-subtle"
                   >
                     Browse Discussions
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 )}
               </div>
-            </article>
+            </div>
           </div>
         </div>
       </div>

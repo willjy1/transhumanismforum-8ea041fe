@@ -13,25 +13,24 @@ const About = () => {
             
             {/* Header */}
             <div className="mb-16">
-              <h1 className="font-serif text-5xl font-normal mb-6">About</h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
+              <h1 className="text-5xl font-normal mb-6">About</h1>
+              <p className="serif text-xl text-muted-foreground leading-relaxed">
                 A forum dedicated to rigorous discussion of human enhancement, artificial intelligence, 
                 and the technological transformation of our species.
               </p>
             </div>
             
-            {/* Mission */}
             <section className="mb-16">
-              <h2 className="font-serif text-2xl font-normal mb-6 border-b border-border pb-2">
+              <h2 className="text-2xl font-normal mb-6 border-b border-border pb-2">
                 Our Mission
               </h2>
               <div className="prose prose-lg max-w-none">
-                <p className="text-muted-foreground leading-relaxed mb-6">
+                <p className="serif text-muted-foreground leading-relaxed mb-6">
                   The Transhumanist Forum exists to advance rational discourse about humanity's technological future. 
                   We believe that through careful application of science, reason, and ethical consideration, 
                   we can overcome biological limitations and create a better world.
                 </p>
-                <p className="text-muted-foreground leading-relaxed mb-6">
+                <p className="serif text-muted-foreground leading-relaxed mb-6">
                   Our community brings together researchers, philosophers, scientists, and curious individuals 
                   to explore questions that will define our species: How do we develop safe artificial intelligence? 
                   What are the ethical implications of human enhancement? How can we extend healthy human lifespan? 

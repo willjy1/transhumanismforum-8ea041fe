@@ -178,6 +178,10 @@ All colors MUST be HSL.
     font-weight: 500;
   }
 
+  .serif {
+    font-family: "Merriweather", Georgia, Times, serif;
+  }
+
   /* Enhanced hover effects */
   .hover-lift {
     @apply smooth-transition hover:-translate-y-1 hover:shadow-medium;
