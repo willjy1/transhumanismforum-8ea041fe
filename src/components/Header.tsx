@@ -82,7 +82,7 @@ const Header = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center gap-2">
+                    <Link to={`/profile/${user.email?.split('@')[0] || 'user'}`} className="flex items-center gap-2">
                       <User className="h-4 w-4" />
                       Profile
                     </Link>

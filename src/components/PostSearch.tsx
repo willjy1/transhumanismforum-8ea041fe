@@ -110,37 +110,26 @@ const PostSearch: React.FC<PostSearchProps> = ({
             <SelectItem value="top">
               <div className="flex items-center gap-2">
                 <SortDesc className="h-3 w-3" />
-                Top Rated
-              </div>
-            </SelectItem>
-            <SelectItem value="discussed">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-3 w-3" />
-                Most Discussed
-              </div>
-            </SelectItem>
-            <SelectItem value="views">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-3 w-3" />
-                Most Viewed
+                Top
               </div>
             </SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Time filter */}
-        <Select value={timeFilter} onValueChange={onTimeFilterChange}>
-          <SelectTrigger className="w-[120px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Time</SelectItem>
-            <SelectItem value="day">Today</SelectItem>
-            <SelectItem value="week">This Week</SelectItem>
-            <SelectItem value="month">This Month</SelectItem>
-            <SelectItem value="year">This Year</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* Time filter - only show when "top" is selected */}
+        {sortBy === 'top' && (
+          <Select value={timeFilter} onValueChange={onTimeFilterChange}>
+            <SelectTrigger className="w-[120px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Time</SelectItem>
+              <SelectItem value="day">Today</SelectItem>
+              <SelectItem value="month">This Month</SelectItem>
+              <SelectItem value="year">This Year</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
 
         {/* Category filter */}
         <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
@@ -169,10 +158,6 @@ const PostSearch: React.FC<PostSearchProps> = ({
                       checked={selectedCategories.includes(category.id)}
                       onChange={() => handleCategoryToggle(category.id)}
                       className="rounded border-border"
-                    />
-                    <div 
-                      className="w-3 h-3 rounded-full" 
-                      style={{ backgroundColor: category.color }}
                     />
                     <span className="text-sm">{category.name}</span>
                   </label>
@@ -221,15 +206,7 @@ const PostSearch: React.FC<PostSearchProps> = ({
                 key={categoryId} 
                 variant="secondary" 
                 className="gap-1"
-                style={{ 
-                  borderColor: category.color + '40',
-                  backgroundColor: category.color + '10'
-                }}
               >
-                <div 
-                  className="w-2 h-2 rounded-full" 
-                  style={{ backgroundColor: category.color }}
-                />
                 {category.name}
                 <Button
                   variant="ghost"

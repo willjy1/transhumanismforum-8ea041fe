@@ -235,7 +235,7 @@ const Forum = () => {
                   <p className="text-muted-foreground mb-4">
                     {searchQuery || selectedCategories.length > 0
                       ? "Try adjusting your search terms or filters"
-                      : "Be the first to start a discussion about transhumanism!"
+                      : "No discussions yet"
                     }
                   </p>
                   {user && !searchQuery && selectedCategories.length === 0 && (
