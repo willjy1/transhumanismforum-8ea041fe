@@ -63,10 +63,10 @@ const Index = () => {
                   ) : (
                     <>
                       <Link 
-                        to="/auth"
+                        to="/forum"
                         className="group relative inline-flex items-center text-2xl font-light hover-lift"
                       >
-                        <span className="relative z-10">Join Discussion</span>
+                        <span className="relative z-10">Browse Discussions</span>
                         <ArrowUpRight className="h-6 w-6 ml-3 crisp-transition group-hover:translate-x-1 group-hover:-translate-y-1" />
                         <div className="absolute inset-0 -z-10 bg-accent/5 scale-0 group-hover:scale-100 crisp-transition rounded-lg -m-4"></div>
                       </Link>

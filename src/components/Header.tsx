@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Search, LogOut, PenTool } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import ThemeToggle from './ThemeToggle';
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -32,7 +33,8 @@ const Header = () => {
         </div>
 
         {/* Right Actions - Clean and bold */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-6">
+          <ThemeToggle />
           {user ? (
             <>
               <Link 
