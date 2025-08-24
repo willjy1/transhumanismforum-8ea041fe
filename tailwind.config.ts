@@ -65,9 +65,8 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
-				serif: ['"Crimson Text"', 'Georgia', 'Times', 'serif'],
-				display: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif']
+				sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+				display: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
 			},
 			fontSize: {
 				'display': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '0.9', letterSpacing: '-0.025em' }],

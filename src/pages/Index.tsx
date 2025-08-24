@@ -30,13 +30,13 @@ const Index = () => {
               
               {/* Main title */}
               <header className="mb-16">
-                <h1 className="font-serif text-6xl font-normal tracking-tight text-foreground mb-8 leading-tight">
+                <h1 className="text-6xl font-medium tracking-tight text-foreground mb-8 leading-tight">
                   The Transhumanist Forum
                 </h1>
                 
-                <p className="text-xl text-muted-foreground leading-relaxed font-light max-w-2xl mx-auto">
-                  A scholarly community dedicated to the rigorous examination of human enhancement, 
-                  artificial intelligence, consciousness, and the technological transformation of our species.
+                <p className="text-xl text-muted-foreground leading-relaxed font-light max-w-3xl mx-auto">
+                  A forum for rigorous discussion of human enhancement, the expansion of consciousness, 
+                  artificial intelligence, and the future of life itself.
                 </p>
               </header>
               
@@ -60,33 +60,6 @@ const Index = () => {
                   </Link>
                 )}
               </div>
-              
-              {/* Academic mission statement */}
-              <section className="mt-20 pt-16 border-t border-border text-left">
-                <div className="grid md:grid-cols-3 gap-12 text-sm">
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-3">Rigorous Discussion</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Evidence-based conversations about emerging technologies, 
-                      philosophical implications, and ethical considerations.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-3">Scholarly Community</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Researchers, academics, and thoughtful individuals exploring 
-                      the future of human enhancement and artificial intelligence.
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground mb-3">Open Inquiry</h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      Interdisciplinary dialogue bridging technology, philosophy, 
-                      biology, and ethics in the study of human potential.
-                    </p>
-                  </div>
-                </div>
-              </section>
             </article>
           </div>
         </div>
