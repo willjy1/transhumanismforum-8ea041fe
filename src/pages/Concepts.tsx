@@ -18,23 +18,30 @@ const Concepts = () => {
       <div className="flex">
         <MinimalSidebar />
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-12 py-32">
-            <div className="space-y-20">
-              <h1 className="text-display font-light tracking-tight">Concepts</h1>
-              
-              <div className="space-y-8">
-                {concepts.map((concept, index) => (
-                  <div 
-                    key={concept}
-                    className="animate-fade-up"
-                    style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
-                  >
-                    <h2 className="text-hero font-light tracking-tight hover:text-accent crisp-transition cursor-pointer">
-                      {concept}
-                    </h2>
-                  </div>
-                ))}
-              </div>
+          {/* Minimal Header */}
+          <div className="max-w-2xl mx-auto px-8 pt-16 pb-12">
+            <h1 className="text-4xl font-light tracking-tight mb-4">
+              Concepts
+            </h1>
+            <p className="text-lg text-muted-foreground font-light leading-relaxed">
+              Key ideas shaping transhumanist thought
+            </p>
+          </div>
+
+          {/* Minimal Concepts List */}
+          <div className="max-w-2xl mx-auto px-8 pb-20">
+            <div className="space-y-16">
+              {concepts.map((concept, index) => (
+                <article 
+                  key={concept}
+                  className="group animate-fade-in border-b border-border/50 pb-16 last:border-b-0"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <h2 className="text-2xl font-medium tracking-tight group-hover:text-primary smooth-transition cursor-pointer">
+                    {concept}
+                  </h2>
+                </article>
+              ))}
             </div>
           </div>
         </main>
