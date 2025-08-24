@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { ArrowUpRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -148,15 +148,22 @@ const CleanForum = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-subtle">
+      <div className="min-h-screen bg-background">
         <Header />
         <div className="flex">
           <MinimalSidebar />
           <main className="flex-1">
-            <div className="max-w-4xl mx-auto p-6">
-              <div className="space-y-6">
+            <div className="max-w-2xl mx-auto px-8 py-8">
+              <div className="space-y-8">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-32 bg-muted rounded-lg animate-pulse elegant-shadow"></div>
+                  <div key={i} className="space-y-4 pb-8 border-b border-border/30">
+                    <div className="h-6 bg-muted rounded w-3/4 animate-pulse"></div>
+                    <div className="h-4 bg-muted rounded w-1/2 animate-pulse"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 bg-muted rounded animate-pulse"></div>
+                      <div className="h-4 bg-muted rounded w-5/6 animate-pulse"></div>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -167,7 +174,7 @@ const CleanForum = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-background">
       <Header />
       <div className="flex">
         <MinimalSidebar />
@@ -178,31 +185,38 @@ const CleanForum = () => {
             onFilterChange={setActiveFilter}
           />
           
-          <div className="max-w-4xl mx-auto p-6 space-y-6">
-            {posts.length > 0 ? (
-              posts.map((post) => (
-                <div key={post.id} className="animate-fade-in">
-                  <CleanPostCard
-                    post={post}
-                    onVote={vote}
-                  />
-                </div>
-              ))
-            ) : (
-              <Card className="elegant-shadow">
-                <CardContent className="p-12 text-center">
-                  <h3 className="text-xl font-semibold mb-3">No posts yet</h3>
-                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                    Be the first to start a meaningful discussion about transhumanism and the future of humanity.
+          <div className="max-w-2xl mx-auto px-8 py-8">
+            <div className="space-y-8">
+              {posts.length > 0 ? (
+                posts.map((post) => (
+                  <div key={post.id} className="animate-fade-in">
+                    <CleanPostCard
+                      post={post}
+                      onVote={vote}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-20">
+                  <h3 className="text-xl font-light text-muted-foreground mb-4">
+                    No posts yet
+                  </h3>
+                  <p className="text-muted-foreground font-light mb-8">
+                    Be the first to start a meaningful discussion about transhumanism 
+                    and the future of humanity.
                   </p>
                   {user && (
-                    <Button asChild className="bg-primary hover:bg-primary/90 shadow-glow">
-                      <Link to="/create-post">Create the First Post</Link>
-                    </Button>
+                    <Link 
+                      to="/create-post"
+                      className="inline-flex items-center text-foreground hover:text-primary smooth-transition group"
+                    >
+                      <span className="font-light">Create the first post</span>
+                      <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 smooth-transition" />
+                    </Link>
                   )}
-                </CardContent>
-              </Card>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </main>
       </div>

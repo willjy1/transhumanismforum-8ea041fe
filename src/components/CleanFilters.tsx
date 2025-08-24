@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface CleanFiltersProps {
@@ -19,18 +18,18 @@ const CleanFilters: React.FC<CleanFiltersProps> = ({
   ];
 
   return (
-    <div className="border-b bg-card/50 backdrop-blur-sm sticky top-14 z-40">
-      <div className="px-6 py-4">
-        <div className="flex gap-1">
+    <div className="border-b border-border/30 bg-background/80 backdrop-blur-sm sticky top-16 z-30">
+      <div className="max-w-2xl mx-auto px-8 py-4">
+        <div className="flex gap-8">
           {filters.map((filter) => (
             <button
               key={filter.key}
               onClick={() => onFilterChange(filter.key)}
               className={cn(
-                "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
+                "text-sm font-light pb-2 border-b border-transparent transition-all duration-200",
                 activeFilter === filter.key 
-                  ? "bg-primary text-primary-foreground shadow-sm" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  ? "text-foreground border-foreground" 
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               {filter.label}

@@ -13,10 +13,10 @@ const NavItem: React.FC<NavItemProps> = ({ to, label, isActive }) => (
   <Link
     to={to}
     className={cn(
-      "block px-3 py-2 text-sm rounded transition-colors",
+      "block text-sm font-light transition-colors py-1",
       isActive 
-        ? "bg-gray-100 text-gray-900 font-medium" 
-        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+        ? "text-foreground" 
+        : "text-muted-foreground hover:text-foreground"
     )}
   >
     {label}
@@ -30,11 +30,11 @@ const MinimalSidebar = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="w-56 bg-white border-r min-h-screen pt-6">
-      <div className="px-4 space-y-6">
+    <nav className="w-48 bg-background border-r border-border/30 min-h-screen pt-6">
+      <div className="px-6 space-y-8">
         
         {/* Main Navigation */}
-        <div className="space-y-1">
+        <div className="space-y-2">
           <NavItem
             to="/"
             label="Home"
@@ -56,10 +56,10 @@ const MinimalSidebar = () => {
 
         {/* Library Section */}
         <div className="space-y-3">
-          <h3 className="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <h3 className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
             Library
           </h3>
-          <div className="space-y-1">
+          <div className="space-y-2 pl-0">
             <NavItem
               to="/sequences"
               label="Sequences"
@@ -75,10 +75,10 @@ const MinimalSidebar = () => {
 
         {/* Community Section */}
         <div className="space-y-3">
-          <h3 className="px-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
+          <h3 className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
             Community
           </h3>
-          <div className="space-y-1">
+          <div className="space-y-2 pl-0">
             <NavItem
               to="/about"
               label="About"

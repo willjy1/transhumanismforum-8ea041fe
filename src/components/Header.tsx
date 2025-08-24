@@ -15,10 +15,10 @@ const Header = () => {
   };
 
   return (
-    <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-50 elegant-shadow">
-      <div className="flex h-16 items-center justify-between px-6">
+    <header className="border-b border-border/30 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+      <div className="flex h-16 items-center justify-between px-8 max-w-7xl mx-auto">
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 smooth-transition">
+        <Link to="/" className="text-xl font-light tracking-tight hover:text-primary smooth-transition">
           The Transhumanist Forum
         </Link>
         
@@ -26,30 +26,35 @@ const Header = () => {
         <div className="hidden md:flex relative max-w-sm flex-1 mx-8">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input 
-            placeholder="Search discussions..." 
-            className="pl-10 bg-muted/50 border-0 focus:bg-card focus:ring-2 focus:ring-primary/20"
+            placeholder="Search..." 
+            className="pl-10 bg-transparent border-0 focus:bg-muted/20 focus:ring-1 focus:ring-border"
           />
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-6">
           {user ? (
             <>
-              <Button asChild variant="ghost" size="sm" className="font-medium hover:bg-primary/10 hover:text-primary smooth-transition">
-                <Link to="/create-post">
-                  <PenTool className="h-4 w-4 mr-2" />
-                  Write
-                </Link>
-              </Button>
-              <Button variant="ghost" size="sm" onClick={handleSignOut} className="hover:bg-destructive/10 hover:text-destructive smooth-transition">
-                <LogOut className="h-4 w-4 mr-2" />
+              <Link 
+                to="/create-post"
+                className="text-sm font-light text-muted-foreground hover:text-foreground smooth-transition"
+              >
+                Write
+              </Link>
+              <button 
+                onClick={handleSignOut}
+                className="text-sm font-light text-muted-foreground hover:text-foreground smooth-transition"
+              >
                 Sign Out
-              </Button>
+              </button>
             </>
           ) : (
-            <Button asChild size="sm" className="bg-primary hover:bg-primary/90 shadow-sm">
-              <Link to="/auth">Sign In</Link>
-            </Button>
+            <Link 
+              to="/auth"
+              className="text-sm font-light hover:text-primary smooth-transition"
+            >
+              Sign In
+            </Link>
           )}
         </div>
       </div>
