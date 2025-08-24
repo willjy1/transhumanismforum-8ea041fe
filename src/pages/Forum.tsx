@@ -7,7 +7,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import PostCard from '@/components/PostCard';
 import PostSearch from '@/components/PostSearch';
-import QuickTakes from '@/components/QuickTakes';
 import ActivityFeed from '@/components/ActivityFeed';
 import Sidebar from '@/components/Sidebar';
 
@@ -218,8 +217,6 @@ const Forum = () => {
           </div>
           
           <div className="px-6 pb-6 space-y-4">
-            <QuickTakes />
-            
             {posts.map((post) => (
               <PostCard
                 key={post.id}
