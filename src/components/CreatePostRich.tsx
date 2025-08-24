@@ -190,8 +190,7 @@ const CreatePostRich = () => {
 
                   {/* Category */}
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium flex items-center gap-2">
-                      <Hash className="h-4 w-4" />
+                    <Label className="text-sm font-medium">
                       Category
                     </Label>
                     <Select value={categoryId} onValueChange={setCategoryId}>
@@ -201,13 +200,7 @@ const CreatePostRich = () => {
                       <SelectContent>
                         {categories.map((category) => (
                           <SelectItem key={category.id} value={category.id}>
-                            <div className="flex items-center gap-2">
-                              <div 
-                                className="w-3 h-3 rounded-full" 
-                                style={{ backgroundColor: category.color }}
-                              />
-                              <span>{category.name}</span>
-                            </div>
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -220,7 +213,7 @@ const CreatePostRich = () => {
                     <RichTextEditor
                       value={content}
                       onChange={setContent}
-                      placeholder="Share your thoughts, research, analysis... Use the toolbar to format your text."
+                      placeholder="Write..."
                       className="min-h-[400px]"
                     />
                     <div className="text-xs text-muted-foreground text-right">

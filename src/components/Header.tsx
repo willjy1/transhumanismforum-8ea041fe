@@ -65,16 +65,16 @@ const Header = () => {
               <NotificationCenter />
               <Link 
                 to="/create-post-rich"
-                className="text-lg font-light text-muted-foreground hover:text-foreground crisp-transition hover-lift"
+                className="text-lg font-semibold text-muted-foreground hover:text-foreground crisp-transition hover-lift"
               >
                 Write
               </Link>
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                    <Avatar className="h-9 w-9">
-                      <AvatarFallback className="text-sm">
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full border-2 border-transparent hover:border-border">
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="text-sm font-medium">
                         {user.email?.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
