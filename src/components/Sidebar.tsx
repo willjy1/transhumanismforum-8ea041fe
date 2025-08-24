@@ -3,39 +3,24 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  Home, 
-  FileText, 
-  Users, 
-  MessageSquare, 
-  TrendingUp, 
-  Calendar,
-  BookOpen,
-  Zap,
-  Settings,
-  Clock,
-  Archive
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface NavItemProps {
   to: string;
-  icon: React.ReactNode;
   label: string;
   isActive?: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ to, icon, label, isActive }) => (
+const NavItem: React.FC<NavItemProps> = ({ to, label, isActive }) => (
   <Link
     to={to}
     className={cn(
-      "flex items-center space-x-3 px-3 py-2 rounded-md text-sm transition-colors",
+      "flex items-center px-3 py-2 rounded-md text-sm transition-colors",
       isActive 
         ? "bg-primary/10 text-primary" 
         : "text-muted-foreground hover:text-foreground hover:bg-accent"
     )}
   >
-    {icon}
     <span>{label}</span>
   </Link>
 );
@@ -53,14 +38,12 @@ const Sidebar = () => {
         <div className="space-y-1">
           <NavItem
             to="/"
-            icon={<Home className="h-4 w-4" />}
             label="Home"
             isActive={isActive('/')}
           />
           {user && (
             <NavItem
               to="/messages"
-              icon={<MessageSquare className="h-4 w-4" />}
               label="Messages"
               isActive={isActive('/messages')}
             />
@@ -76,25 +59,21 @@ const Sidebar = () => {
           </h3>
           <NavItem
             to="/library"
-            icon={<Zap className="h-4 w-4" />}
             label="Concepts"
             isActive={isActive('/library')}
           />
           <NavItem
             to="/thinkers"
-            icon={<Users className="h-4 w-4" />}
             label="Thinkers"
             isActive={isActive('/thinkers')}
           />
           <NavItem
             to="/resources"
-            icon={<BookOpen className="h-4 w-4" />}
             label="Resources"
             isActive={isActive('/resources')}
           />
           <NavItem
             to="/forum"
-            icon={<FileText className="h-4 w-4" />}
             label="Posts"
             isActive={isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')}
           />
@@ -109,7 +88,6 @@ const Sidebar = () => {
           </h3>
           <NavItem
             to="/events"
-            icon={<Calendar className="h-4 w-4" />}
             label="Events"
             isActive={isActive('/events')}
           />
