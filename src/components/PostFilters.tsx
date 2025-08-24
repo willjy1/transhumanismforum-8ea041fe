@@ -55,11 +55,11 @@ const PostFilters: React.FC<PostFiltersProps> = ({
           ))}
         </div>
 
-        {/* Time Filter for Top Posts */}
+        {/* Time Filter for Top Posts - Inline */}
         {activeFilter === 'top' && onTimeFilterChange && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pt-2">
             <span className="text-sm text-muted-foreground">From:</span>
-            <div className="flex gap-1">
+            <div className="flex gap-1 bg-muted p-1 rounded-lg">
               {[
                 { key: 'today' as const, label: 'Today' },
                 { key: 'week' as const, label: 'This Week' }, 
@@ -70,7 +70,12 @@ const PostFilters: React.FC<PostFiltersProps> = ({
                   variant={timeFilter === option.key ? "default" : "ghost"}
                   size="sm"
                   onClick={() => onTimeFilterChange(option.key)}
-                  className="text-xs"
+                  className={cn(
+                    "text-xs px-3 py-1",
+                    timeFilter === option.key 
+                      ? "bg-background text-foreground shadow-sm" 
+                      : "text-muted-foreground hover:text-foreground"
+                  )}
                 >
                   {option.label}
                 </Button>

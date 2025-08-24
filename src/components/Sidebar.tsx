@@ -98,24 +98,6 @@ const Sidebar = () => {
             label="Posts"
             isActive={isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')}
           />
-          
-          {/* Posts Subsection */}
-          {(isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')) && (
-            <div className="pl-3 pt-2 space-y-1">
-              <NavItem
-                to="/posts/top"
-                icon={<TrendingUp className="h-3 w-3" />}
-                label="Top"
-                isActive={isActive('/posts/top')}
-              />
-              <NavItem
-                to="/posts/latest"
-                icon={<Clock className="h-3 w-3" />}
-                label="Latest" 
-                isActive={isActive('/posts/latest')}
-              />
-            </div>
-          )}
         </div>
 
         <Separator />
