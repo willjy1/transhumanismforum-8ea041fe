@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ExternalLink, Brain, Users, BookOpen, MapPin } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { ExternalLink, Quote, BookOpen } from 'lucide-react';
 import Header from '@/components/Header';
 import MinimalSidebar from '@/components/MinimalSidebar';
 
@@ -11,12 +11,10 @@ interface Thinker {
   id: string;
   name: string;
   bio: string;
-  photo_url: string | null;
-  website_url: string | null;
-  key_works: string[];
-  quotes: string[];
   field_of_expertise: string;
-  display_order: number;
+  key_works: string[];
+  website_url: string | null;
+  photo_url: string | null;
 }
 
 const Thinkers = () => {
@@ -45,104 +43,149 @@ const Thinkers = () => {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="animate-pulse space-y-6">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-64 bg-muted rounded-lg"></div>
-          ))}
+      <div className="min-h-screen bg-gradient-subtle">
+        <Header />
+        <div className="flex">
+          <MinimalSidebar />
+          <main className="flex-1">
+            <div className="max-w-7xl mx-auto p-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-96 bg-muted rounded-xl animate-pulse elegant-shadow"></div>
+                ))}
+              </div>
+            </div>
+          </main>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-subtle">
       <Header />
       <div className="flex">
         <MinimalSidebar />
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto p-6">
-            <div className="py-8">
-              <h1 className="text-3xl font-medium text-gray-900 mb-2">Featured Thinkers</h1>
-              <p className="text-gray-600 mb-12">
-                Influential voices shaping transhumanist thought and the future of humanity.
+          {/* Hero Section */}
+          <section className="relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-primary opacity-10"></div>
+            <div className="relative max-w-7xl mx-auto px-6 py-16 text-center">
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6 animate-fade-in">
+                <Brain className="h-4 w-4 text-primary mr-2" />
+                <span className="text-sm font-medium text-primary">Visionary Minds</span>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent animate-slide-up">
+                Featured Thinkers
+              </h1>
+              
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in">
+                Pioneering researchers, philosophers, and visionaries shaping the future of humanity through 
+                science, technology, and transformative ideas.
               </p>
+            </div>
+          </section>
 
-              <div className="space-y-6">
-                {thinkers.map((thinker) => (
-                  <div key={thinker.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-sm transition-shadow">
-                    {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{thinker.name}</h3>
-                        <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-sm font-medium rounded-full">
-                          {thinker.field_of_expertise}
-                        </span>
+          {/* Thinkers Grid */}
+          <section className="max-w-7xl mx-auto px-6 pb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+              {thinkers.map((thinker, index) => (
+                <Card 
+                  key={thinker.id} 
+                  className="group elegant-shadow hover:shadow-glow smooth-transition overflow-hidden animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="relative">
+                    {/* Header with gradient */}
+                    <div className="h-24 bg-gradient-primary relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/80 to-primary-glow/60"></div>
+                      <div className="absolute bottom-4 left-6 right-6">
+                        <h2 className="text-xl font-bold text-white mb-1 group-hover:scale-105 smooth-transition">
+                          {thinker.name}
+                        </h2>
                       </div>
-                      
-                      {thinker.website_url && (
-                        <a 
-                          href={thinker.website_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                          <ExternalLink className="h-5 w-5" />
-                        </a>
-                      )}
                     </div>
-                    
+
+                    {/* Profile Image Placeholder */}
+                    <div className="absolute -bottom-6 left-6">
+                      <div className="w-12 h-12 rounded-full bg-card border-4 border-card flex items-center justify-center elegant-shadow">
+                        <Users className="h-6 w-6 text-primary" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <CardContent className="pt-10 pb-6 space-y-4">
+                    {/* Field of Expertise Badge */}
+                    <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 smooth-transition">
+                      {thinker.field_of_expertise}
+                    </Badge>
+
                     {/* Bio */}
-                    <p className="text-gray-700 leading-relaxed mb-6">
+                    <p className="text-muted-foreground leading-relaxed text-sm">
                       {thinker.bio}
                     </p>
-                    
+
                     {/* Key Works */}
                     {thinker.key_works && thinker.key_works.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                          <BookOpen className="h-4 w-4 mr-2 text-gray-600" />
-                          Key Works
-                        </h4>
-                        <ul className="space-y-1">
-                          {thinker.key_works.map((work, index) => (
-                            <li key={index} className="text-sm text-gray-600 flex items-start">
-                              <span className="text-gray-400 mr-2">•</span>
-                              <span className="italic">{work}</span>
-                            </li>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-sm font-medium">
+                          <BookOpen className="h-4 w-4 text-primary" />
+                          <span>Key Contributions</span>
+                        </div>
+                        <div className="space-y-2">
+                          {thinker.key_works.slice(0, 3).map((work, workIndex) => (
+                            <div 
+                              key={workIndex}
+                              className="text-xs text-muted-foreground bg-muted/50 rounded-lg px-3 py-2 border-l-2 border-primary/20"
+                            >
+                              {work}
+                            </div>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     )}
-                    
-                    {/* Quote */}
-                    {thinker.quotes && thinker.quotes.length > 0 && (
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                          <Quote className="h-4 w-4 mr-2 text-gray-600" />
-                          Notable Quote
-                        </h4>
-                        <blockquote className="border-l-4 border-blue-200 pl-4 py-2 bg-gray-50 rounded-r-md">
-                          <p className="text-gray-700 italic leading-relaxed">
-                            "{thinker.quotes[0]}"
-                          </p>
-                        </blockquote>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
 
-              {thinkers.length === 0 && (
-                <div className="text-center py-16">
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No featured thinkers yet</h3>
-                  <p className="text-gray-600">
-                    Featured thinkers will appear here to showcase influential voices in transhumanism.
-                  </p>
-                </div>
-              )}
+                    {/* Website Link */}
+                    {thinker.website_url && (
+                      <div className="pt-4 border-t border-border">
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="sm"
+                          className="w-full group/btn hover:bg-primary/5 hover:border-primary/40 smooth-transition"
+                        >
+                          <a 
+                            href={thinker.website_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2"
+                          >
+                            <span>Visit Website</span>
+                            <ExternalLink className="h-3 w-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 smooth-transition" />
+                          </a>
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          </div>
+
+            {/* Empty State */}
+            {thinkers.length === 0 && !loading && (
+              <Card className="elegant-shadow max-w-md mx-auto">
+                <CardContent className="p-12 text-center">
+                  <Brain className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-3">No Featured Thinkers</h3>
+                  <p className="text-muted-foreground">
+                    Featured thinkers will appear here as they are added to showcase the minds 
+                    shaping our transhuman future.
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </section>
         </main>
       </div>
     </div>
