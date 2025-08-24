@@ -2,3 +2,7 @@ project_id = "tiqkfmokjrmoyytqmhat"
 
 [functions.send-confirmation]
 verify_jwt = false
+
+[auth]
+[auth.email]
+template = { confirm_signup = "send-confirmation" }

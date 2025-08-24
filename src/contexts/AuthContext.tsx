@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -69,26 +69,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
       
-      // Send custom confirmation email
-      if (data.user && !data.user.email_confirmed_at) {
-        try {
-          const confirmationUrl = `${window.location.origin}/auth/confirm?email=${encodeURIComponent(email)}`;
-          
-          await supabase.functions.invoke('send-confirmation', {
-            body: {
-              email: email,
-              confirmation_url: confirmationUrl
-            }
-          });
-        } catch (emailError) {
-          console.error('Failed to send custom confirmation email:', emailError);
-          // Don't fail the signup if email sending fails
-        }
-      }
-      
       toast({
-        title: "Success",
-        description: "Please check your email to confirm your account.",
+        title: "Verification Required",
+        description: "Please check your email to verify your account.",
       });
       
       return { error: null };
