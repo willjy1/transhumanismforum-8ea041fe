@@ -92,29 +92,30 @@ const Sidebar = () => {
             label="Resources"
             isActive={isActive('/resources')}
           />
+          <NavItem
+            to="/forum"
+            icon={<FileText className="h-4 w-4" />}
+            label="Posts"
+            isActive={isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')}
+          />
           
           {/* Posts Subsection */}
-          <div className="pl-3 pt-2 space-y-1">
-            <div className="px-3 text-xs font-medium text-muted-foreground/80 mb-1">Posts</div>
-            <NavItem
-              to="/posts/top"
-              icon={<TrendingUp className="h-3 w-3" />}
-              label="Top"
-              isActive={isActive('/posts/top')}
-            />
-            <NavItem
-              to="/posts/latest"
-              icon={<Clock className="h-3 w-3" />}
-              label="Latest" 
-              isActive={isActive('/posts/latest')}
-            />
-            <NavItem
-              to="/forum"
-              icon={<Archive className="h-3 w-3" />}
-              label="Posts"
-              isActive={isActive('/forum')}
-            />
-          </div>
+          {(isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')) && (
+            <div className="pl-3 pt-2 space-y-1">
+              <NavItem
+                to="/posts/top"
+                icon={<TrendingUp className="h-3 w-3" />}
+                label="Top"
+                isActive={isActive('/posts/top')}
+              />
+              <NavItem
+                to="/posts/latest"
+                icon={<Clock className="h-3 w-3" />}
+                label="Latest" 
+                isActive={isActive('/posts/latest')}
+              />
+            </div>
+          )}
         </div>
 
         <Separator />
@@ -129,12 +130,6 @@ const Sidebar = () => {
             icon={<Calendar className="h-4 w-4" />}
             label="Events"
             isActive={isActive('/events')}
-          />
-          <NavItem
-            to="/best-of"
-            icon={<TrendingUp className="h-4 w-4" />}
-            label="Best Of"
-            isActive={isActive('/best-of')}
           />
         </div>
 
