@@ -196,13 +196,23 @@ const Forum = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <Sidebar />
       
       {/* Main Content Area */}
       <div className="flex-1 flex">
         {/* Posts Column */}
         <div className="flex-1 max-w-4xl">
+          {/* Enhanced Header Section */}
+          <div className="bg-gradient-card border-b border-border/50 px-6 py-8">
+            <div className="max-w-3xl">
+              <h1 className="text-2xl font-bold mb-2">Community Discussions</h1>
+              <p className="text-muted-foreground">
+                Explore cutting-edge ideas about human enhancement, AI, and the future of consciousness.
+              </p>
+            </div>
+          </div>
+
           <div className="p-6">
             <PostSearch
               searchQuery={searchQuery}
@@ -217,42 +227,49 @@ const Forum = () => {
             />
           </div>
           
-          <div className="px-6 pb-6 space-y-4">
+          <div className="px-6 pb-6 space-y-6">
             <QuickTakes />
             
-            {posts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                onVote={handleVote}
-              />
-            ))}
+            <div className="space-y-4 stagger-children">
+              {posts.map((post) => (
+                <div key={post.id} className="animate-fade-up" style={{ animationDelay: `${Math.random() * 0.3}s` }}>
+                  <PostCard
+                    post={post}
+                    onVote={handleVote}
+                  />
+                </div>
+              ))}
+            </div>
 
             {posts.length === 0 && !loading && (
-              <Card>
-                <CardContent className="p-12 text-center">
-                  <h3 className="text-lg font-medium mb-2">No posts found</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Try adjusting your search terms or filters
-                  </p>
-                  {user && (
-                    <Button asChild>
-                      <Link to="/create-post-rich">Create Post</Link>
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="engagement-card p-12 text-center">
+                <h3 className="text-lg font-semibold mb-2">No posts found</h3>
+                <p className="text-muted-foreground mb-6">
+                  Try adjusting your search terms or filters
+                </p>
+                {user && (
+                  <Button asChild className="btn-primary">
+                    <Link to="/create-post-rich">Create Post</Link>
+                  </Button>
+                )}
+              </div>
             )}
           </div>
         </div>
 
-        {/* Right Sidebar - Activity Feed */}
-        <div className="w-96 border-l bg-card/50 p-6 hidden xl:block">
+        {/* Enhanced Right Sidebar - Activity Feed */}
+        <div className="w-80 border-l border-border/50 bg-gradient-card/30 p-6 hidden xl:block">
           <div className="space-y-6">
-            <ActivityFeed 
-              title="Community Activity"
-              limit={15}
-            />
+            <div className="engagement-card p-4">
+              <h3 className="font-semibold mb-3 flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                Live Activity
+              </h3>
+              <ActivityFeed 
+                title=""
+                limit={15}
+              />
+            </div>
           </div>
         </div>
       </div>
