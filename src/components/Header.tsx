@@ -67,7 +67,7 @@ const Header = () => {
                 to="/create-post-rich"
                 className="text-lg font-semibold text-muted-foreground hover:text-foreground crisp-transition hover-lift"
               >
-                Write
+                <PenTool className="h-5 w-5" />
               </Link>
               
               <DropdownMenu>
