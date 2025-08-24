@@ -233,14 +233,11 @@ const Forum = () => {
                 <CardContent className="p-12 text-center">
                   <h3 className="text-lg font-medium mb-2">No posts found</h3>
                   <p className="text-muted-foreground mb-4">
-                    {searchQuery || selectedCategories.length > 0
-                      ? "Try adjusting your search terms or filters"
-                      : "No discussions yet"
-                    }
+                    Try adjusting your search terms or filters
                   </p>
-                  {user && !searchQuery && selectedCategories.length === 0 && (
+                  {user && (
                     <Button asChild>
-                      <Link to="/create-post-rich">Create First Post</Link>
+                      <Link to="/create-post-rich">Create Post</Link>
                     </Button>
                   )}
                 </CardContent>

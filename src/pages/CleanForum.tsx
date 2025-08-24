@@ -243,7 +243,7 @@ const CleanForum = () => {
                 <div className="text-center py-20">
                   <div className="space-y-4">
                     <h3 className="text-xl font-light text-muted-foreground">
-                      {searchTerm ? 'No posts found' : 'No discussions yet'}
+                      No posts found
                     </h3>
                     {searchTerm && (
                       <p className="text-muted-foreground">
