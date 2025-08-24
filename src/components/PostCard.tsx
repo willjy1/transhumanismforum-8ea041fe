@@ -4,9 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChevronUp, ChevronDown, MessageSquare, Eye, Clock } from 'lucide-react';
+import { MessageSquare, Eye, Clock } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
+import EnhancedVoteButtons from '@/components/EnhancedVoteButtons';
+import BookmarkButton from '@/components/BookmarkButton';
 
 interface PostCardProps {
   post: {
@@ -36,28 +38,18 @@ const PostCard: React.FC<PostCardProps> = ({ post, onVote, compact = false }) =>
     <Card className="hover:shadow-md transition-shadow border-l-2 border-l-transparent hover:border-l-primary/50">
       <CardContent className="p-0">
         <div className="flex">
-          {/* Karma/Voting Section */}
+          {/* Enhanced Voting Section */}
           {user && (
             <div className="flex flex-col items-center justify-start p-4 bg-muted/30 min-w-[60px]">
-              <Button
-                variant="ghost"
+              <EnhancedVoteButtons
+                postId={post.id}
+                initialScore={post.votes_score}
+                onVoteChange={(newScore) => {
+                  // Update the score in parent component if needed
+                  post.votes_score = newScore;
+                }}
                 size="sm"
-                onClick={() => onVote(post.id, 1)}
-                className="p-1 h-8 w-8 hover:bg-primary/10 hover:text-primary"
-              >
-                <ChevronUp className="h-4 w-4" />
-              </Button>
-              <div className="text-sm font-bold text-center py-1 min-w-[2ch]">
-                {post.votes_score}
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onVote(post.id, -1)}
-                className="p-1 h-8 w-8 hover:bg-destructive/10 hover:text-destructive"
-              >
-                <ChevronDown className="h-4 w-4" />
-              </Button>
+              />
             </div>
           )}
 
@@ -105,15 +97,21 @@ const PostCard: React.FC<PostCardProps> = ({ post, onVote, compact = false }) =>
             )}
 
             {/* Engagement Metrics */}
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <MessageSquare className="h-3 w-3" />
-                <span>{post.comment_count} comments</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <MessageSquare className="h-3 w-3" />
+                  <span>{post.comment_count} comments</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Eye className="h-3 w-3" />
+                  <span>{post.view_count} views</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                <span>{post.view_count} views</span>
-              </div>
+              
+              {user && (
+                <BookmarkButton postId={post.id} />
+              )}
             </div>
           </div>
         </div>

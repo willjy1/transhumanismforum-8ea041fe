@@ -2,18 +2,42 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { Search, LogOut, PenTool } from 'lucide-react';
+import { Search, LogOut, PenTool, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import ThemeToggle from './ThemeToggle';
-import { NotificationBell } from './NotificationBell';
+import NotificationCenter from '@/components/NotificationCenter';
 
 const Header = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/auth');
+    try {
+      await supabase.auth.signOut();
+      navigate('/auth');
+      toast({
+        title: "Signed out successfully",
+        description: "You have been logged out"
+      });
+    } catch (error) {
+      console.error('Error signing out:', error);
+      toast({
+        title: "Error signing out",
+        description: "Please try again",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -33,24 +57,43 @@ const Header = () => {
           />
         </div>
 
-        {/* Right Actions - Clean and bold */}
+        {/* Right Actions - Clean and modern */}
         <div className="flex items-center gap-4">
           <ThemeToggle />
           {user ? (
             <>
-              <NotificationBell />
+              <NotificationCenter />
               <Link 
-                to="/create-post"
+                to="/create-post-rich"
                 className="text-lg font-light text-muted-foreground hover:text-foreground crisp-transition hover-lift"
               >
                 Write
               </Link>
-              <button 
-                onClick={handleSignOut}
-                className="text-lg font-light text-muted-foreground hover:text-foreground crisp-transition hover-lift"
-              >
-                Sign Out
-              </button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback className="text-sm">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           ) : (
             <Link 

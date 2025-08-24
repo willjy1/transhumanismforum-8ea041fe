@@ -27,18 +27,16 @@ export const useActivityFeed = (userId?: string, limit: number = 10) => {
 
   const fetchActivities = async () => {
     try {
-      let query = supabase
+      // First get the activities
+      let activityQuery = supabase
         .from('user_activity')
-        .select(`
-          *,
-          profiles(username, full_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(limit);
 
       if (userId) {
         // Get activities for specific user
-        query = query.eq('user_id', userId);
+        activityQuery = activityQuery.eq('user_id', userId);
       } else if (user) {
         // Get activities from followed users (activity feed)
         const { data: follows } = await supabase
@@ -49,20 +47,40 @@ export const useActivityFeed = (userId?: string, limit: number = 10) => {
         const followingIds = follows?.map(f => f.following_id) || [];
         
         if (followingIds.length > 0) {
-          query = query.in('user_id', [...followingIds, user.id]);
+          activityQuery = activityQuery.in('user_id', [...followingIds, user.id]);
         } else {
           // If not following anyone, show own activities
-          query = query.eq('user_id', user.id);
+          activityQuery = activityQuery.eq('user_id', user.id);
         }
       } else {
-        // Public activities
-        query = query.limit(5);
+        // Public activities - show recent ones
+        activityQuery = activityQuery.limit(5);
       }
 
-      const { data, error } = await query;
+      const { data: activityData, error: activityError } = await activityQuery;
+      if (activityError) throw activityError;
 
-      if (error) throw error;
-      setActivities(data || []);
+      // Then get the profile information for each user
+      if (!activityData || activityData.length === 0) {
+        setActivities([]);
+        return;
+      }
+
+      const userIds = [...new Set(activityData.map(a => a.user_id))];
+      const { data: profilesData, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, username, full_name')
+        .in('id', userIds);
+
+      if (profilesError) throw profilesError;
+
+      // Combine activities with profile data
+      const activitiesWithProfiles = activityData.map(activity => ({
+        ...activity,
+        profiles: profilesData?.find(p => p.id === activity.user_id) || null
+      }));
+
+      setActivities(activitiesWithProfiles);
     } catch (error) {
       console.error('Error fetching activities:', error);
       setActivities([]);

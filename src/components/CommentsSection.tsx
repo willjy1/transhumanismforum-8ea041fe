@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, Reply, ChevronUp, ChevronDown } from 'lucide-react';
+import { MessageSquare, Reply } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -7,7 +7,9 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useActivityFeed } from '@/hooks/useActivityFeed';
 import { formatDistanceToNow } from 'date-fns';
+import EnhancedVoteButtons from '@/components/EnhancedVoteButtons';
 
 interface Comment {
   id: string;
@@ -30,57 +32,18 @@ interface CommentsSectionProps {
 const CommentItem = ({ comment, depth = 0 }: { comment: Comment; depth?: number }) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { logActivity } = useActivityFeed();
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState('');
-  const [userVote, setUserVote] = useState<number | null>(null);
-  const [score, setScore] = useState(comment.votes_score || 0);
 
-  const handleVote = async (voteType: number) => {
-    if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "You must be signed in to vote",
-        variant: "destructive"
+  const handleVote = async (newScore: number) => {
+    // The EnhancedVoteButtons component handles the voting logic
+    // We just need to log the activity here
+    if (user) {
+      await logActivity('vote_cast', 'comment', comment.id, {
+        vote_type: newScore > (comment.votes_score || 0) ? 1 : -1,
+        target_type: 'comment'
       });
-      return;
-    }
-
-    try {
-      if (userVote === voteType) {
-        // Remove vote
-        await supabase
-          .from('votes')
-          .delete()
-          .eq('comment_id', comment.id)
-          .eq('user_id', user.id);
-        
-        setScore(score - voteType);
-        setUserVote(null);
-      } else {
-        // Remove existing vote if any
-        if (userVote !== null) {
-          await supabase
-            .from('votes')
-            .delete()
-            .eq('comment_id', comment.id)
-            .eq('user_id', user.id);
-          setScore(score - userVote);
-        }
-
-        // Add new vote
-        await supabase
-          .from('votes')
-          .insert({
-            comment_id: comment.id,
-            user_id: user.id,
-            vote_type: voteType
-          });
-
-        setScore(score + voteType);
-        setUserVote(voteType);
-      }
-    } catch (error) {
-      console.error('Error voting:', error);
     }
   };
 
@@ -98,6 +61,12 @@ const CommentItem = ({ comment, depth = 0 }: { comment: Comment; depth?: number 
         });
 
       if (error) throw error;
+
+      // Log reply activity
+      await logActivity('comment_created', 'comment', comment.id, {
+        parent_comment_id: comment.id,
+        post_id: comment.post_id
+      });
 
       setReplyContent('');
       setIsReplying(false);
@@ -122,31 +91,13 @@ const CommentItem = ({ comment, depth = 0 }: { comment: Comment; depth?: number 
     <div className={`${depth > 0 ? 'ml-8 border-l border-border/50 pl-4' : ''}`}>
       <Card className="p-4 space-y-3">
         <div className="flex items-start gap-3">
-          <div className="flex flex-col items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleVote(1)}
-              className={`h-6 w-6 p-0 ${userVote === 1 ? 'text-green-600' : 'text-muted-foreground'}`}
-            >
-              <ChevronUp className="h-3 w-3" />
-            </Button>
-            
-            <span className={`text-xs font-medium ${
-              score > 0 ? 'text-green-600' : score < 0 ? 'text-red-600' : 'text-muted-foreground'
-            }`}>
-              {score}
-            </span>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleVote(-1)}
-              className={`h-6 w-6 p-0 ${userVote === -1 ? 'text-red-600' : 'text-muted-foreground'}`}
-            >
-              <ChevronDown className="h-3 w-3" />
-            </Button>
-          </div>
+          <EnhancedVoteButtons
+            commentId={comment.id}
+            initialScore={comment.votes_score || 0}
+            onVoteChange={handleVote}
+            size="sm"
+            layout="vertical"
+          />
 
           <div className="flex-1 space-y-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -210,6 +161,7 @@ const CommentItem = ({ comment, depth = 0 }: { comment: Comment; depth?: number 
 export const CommentsSection = ({ postId }: CommentsSectionProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { logActivity } = useActivityFeed();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(true);
@@ -264,6 +216,11 @@ export const CommentsSection = ({ postId }: CommentsSectionProps) => {
         });
 
       if (error) throw error;
+
+      // Log comment activity
+      await logActivity('comment_created', 'post', postId, {
+        comment_content: newComment.trim()
+      });
 
       setNewComment('');
       await fetchComments();

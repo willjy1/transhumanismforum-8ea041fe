@@ -10,12 +10,14 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Thinkers from "./pages/Thinkers";
 import CreatePost from "./pages/CreatePost";
+import CreatePostRich from "./components/CreatePostRich";
+import Bookmarks from "./pages/Bookmarks";
 import Messages from "./pages/Messages";
 import Sequences from "./pages/Sequences";
 import Concepts from "./pages/Concepts";
 import About from "./pages/About";
 import UserProfile from "./pages/UserProfile";
-import CleanForum from "./pages/CleanForum";
+import Forum from "./pages/Forum";
 import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
 
@@ -38,10 +40,12 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
-              <Route path="/forum" element={<CleanForum />} />
+              <Route path="/forum" element={<Forum />} />
               <Route path="/profile/:username" element={<UserProfile />} />
               <Route path="/thinkers" element={<Thinkers />} />
               <Route path="/create-post" element={<CreatePost />} />
+              <Route path="/create-post-rich" element={<CreatePostRich />} />
+              <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/messages" element={<Messages />} />
               <Route path="/sequences" element={<Sequences />} />
               <Route path="/concepts" element={<Concepts />} />
