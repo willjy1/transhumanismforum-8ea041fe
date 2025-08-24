@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Clock, User, Hash, Pin } from 'lucide-react';
+import { MessageCircle, Clock, User, Hash, Pin, Eye } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
-import VoteButtons from './VoteButtons';
+import { PostVoting } from './PostVoting';
 
 interface Post {
   id: string;
@@ -78,7 +78,7 @@ const CleanPostCard = ({ post, commentCount = 0 }: PostCardProps) => {
       <CardContent className="p-0">
         <div className="flex gap-4 p-6">
           {/* Vote buttons */}
-          <VoteButtons 
+          <PostVoting 
             postId={post.id} 
             initialScore={post.votes_score || 0}
             className="pt-1"
@@ -154,11 +154,12 @@ const CleanPostCard = ({ post, commentCount = 0 }: PostCardProps) => {
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <MessageCircle className="h-3 w-3" />
-                  <span>{localCommentCount} {localCommentCount === 1 ? 'comment' : 'comments'}</span>
+                  <span>{localCommentCount}</span>
                 </div>
                 
-                <div className="text-xs">
-                  {post.view_count || 0} views
+                <div className="flex items-center gap-1">
+                  <Eye className="h-3 w-3" />
+                  <span>{post.view_count || 0}</span>
                 </div>
               </div>
             </div>
