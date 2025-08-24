@@ -25,6 +25,7 @@ import UserProfile from "./pages/UserProfile";
 import Forum from "./pages/Forum";
 import PostDetail from "./pages/PostDetail";
 import NotFound from "./pages/NotFound";
+import ArtPreview from "./pages/ArtPreview";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/resources" element={<Resources />} />
               <Route path="/posts/top" element={<PostsTop />} />
               <Route path="/posts/latest" element={<PostsLatest />} />
+              <Route path="/art-preview" element={<ArtPreview />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
