@@ -15,6 +15,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import ProfileEdit from '@/components/ProfileEdit';
+import NoteCard from '@/components/NoteCard';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Profile {
@@ -47,10 +48,19 @@ interface Post {
 
 interface Note {
   id: string;
+  author_id: string;
   content: string;
   created_at: string;
+  updated_at: string;
   likes_count: number;
   replies_count: number;
+  parent_id: string | null;
+  profiles: {
+    username: string;
+    full_name: string | null;
+    avatar_url: string | null;
+  };
+  user_liked?: boolean;
 }
 
 interface Comment {
@@ -87,6 +97,36 @@ const UserProfile = () => {
   useEffect(() => {
     if (profile && user) {
       checkFollowStatus();
+    }
+
+    // Set up real-time subscription for notes
+    if (profile) {
+      const channel = supabase
+        .channel('profile-notes-changes')
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'notes',
+          filter: `author_id=eq.${profile.id}`
+        }, () => {
+          if (profile) {
+            fetchUserNotes(profile.id);
+          }
+        })
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public', 
+          table: 'note_likes'
+        }, () => {
+          if (profile) {
+            fetchUserNotes(profile.id);
+          }
+        })
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [profile, user]);
 
@@ -172,7 +212,7 @@ const UserProfile = () => {
       const { data, error } = await supabase
         .from('notes')
         .select(`
-          id, content, created_at, likes_count, replies_count
+          id, content, created_at, updated_at, likes_count, replies_count, author_id, parent_id
         `)
         .eq('author_id', userId)
         .is('parent_id', null) // Only top-level notes, not replies
@@ -180,7 +220,42 @@ const UserProfile = () => {
         .limit(10);
 
       if (error) throw error;
-      setNotes(data || []);
+
+      // Add profile data and user_liked status
+      let notesWithDetails = [];
+      if (data && data.length > 0) {
+        // Get profile data
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('username, full_name, avatar_url')
+          .eq('id', userId)
+          .single();
+
+        // Check which notes the current user has liked
+        let userLikes = new Set();
+        if (user && data.length > 0) {
+          const noteIds = data.map(note => note.id);
+          const { data: likesData } = await supabase
+            .from('note_likes')
+            .select('note_id')
+            .eq('user_id', user.id)
+            .in('note_id', noteIds);
+
+          userLikes = new Set(likesData?.map(like => like.note_id) || []);
+        }
+
+        notesWithDetails = data.map(note => ({
+          ...note,
+          profiles: profileData || {
+            username: 'unknown',
+            full_name: null,
+            avatar_url: null
+          },
+          user_liked: userLikes.has(note.id)
+        }));
+      }
+
+      setNotes(notesWithDetails || []);
     } catch (error) {
       console.error('Error fetching user notes:', error);
     }
@@ -266,6 +341,46 @@ const UserProfile = () => {
       title: "Messages feature coming soon",
       description: "Direct messaging will be available soon"
     });
+  };
+
+  const handleLikeToggle = async (noteId: string, isLiked: boolean) => {
+    if (!user) return;
+
+    try {
+      if (isLiked) {
+        await supabase
+          .from('note_likes')
+          .delete()
+          .eq('note_id', noteId)
+          .eq('user_id', user.id);
+      } else {
+        await supabase
+          .from('note_likes')
+          .insert({
+            note_id: noteId,
+            user_id: user.id
+          });
+      }
+      
+      // Update local state immediately for better UX
+      setNotes(prevNotes => 
+        prevNotes.map(note => 
+          note.id === noteId
+            ? {
+                ...note,
+                user_liked: !isLiked,
+                likes_count: isLiked ? note.likes_count - 1 : note.likes_count + 1
+              }
+            : note
+        )
+      );
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  };
+
+  const handleNoteDelete = (noteId: string) => {
+    setNotes(prevNotes => prevNotes.filter(note => note.id !== noteId));
   };
 
   if (loading) {
@@ -546,30 +661,15 @@ const UserProfile = () => {
                 )}
               </TabsContent>
 
-              <TabsContent value="notes" className="space-y-8">
+              <TabsContent value="notes" className="space-y-4">
                 {notes.length > 0 ? (
                   notes.map((note) => (
-                    <Card key={note.id} className="p-8 hover:border-accent/50 crisp-transition">
-                      <div className="space-y-6">
-                        <div className="text-lg leading-relaxed font-light whitespace-pre-wrap">
-                          {note.content}
-                        </div>
-                        
-                        <div className="flex items-center gap-8 text-lg text-muted-foreground">
-                          <div className="flex items-center gap-2">
-                            <Heart className="h-4 w-4" />
-                            <span>{note.likes_count} likes</span>
-                          </div>
-                          {note.replies_count > 0 && (
-                            <div className="flex items-center gap-2">
-                              <MessageSquare className="h-4 w-4" />
-                              <span>{note.replies_count} replies</span>
-                            </div>
-                          )}
-                          <time>{formatDistanceToNow(new Date(note.created_at), { addSuffix: true })}</time>
-                        </div>
-                      </div>
-                    </Card>
+                    <NoteCard
+                      key={note.id}
+                      note={note}
+                      onLikeToggle={handleLikeToggle}
+                      onDelete={handleNoteDelete}
+                    />
                   ))
                 ) : (
                   <div className="text-center py-16">
