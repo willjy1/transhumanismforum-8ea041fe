@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, MapPin, ExternalLink, Users, FileText, MessageSquare, Heart, BookOpen, Plus } from 'lucide-react';
+import { Calendar, MapPin, ExternalLink, Users, FileText, MessageSquare, Heart, Edit } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import ProfileEdit from '@/components/ProfileEdit';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Profile {
@@ -74,6 +76,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   useEffect(() => {
     if (username) {
@@ -245,6 +248,10 @@ const UserProfile = () => {
     }
   };
 
+  const handleProfileUpdate = (updatedProfile: any) => {
+    setProfile(prev => prev ? { ...prev, ...updatedProfile } : null);
+  };
+
   const sendMessage = () => {
     toast({
       title: "Messages feature coming soon",
@@ -315,6 +322,7 @@ const UserProfile = () => {
             <div className="space-y-12 mb-16">
               <div className="flex flex-col lg:flex-row items-start lg:items-center gap-10">
                 <Avatar className="h-32 w-32">
+                  <AvatarImage src={profile.avatar_url || undefined} />
                   <AvatarFallback className="text-4xl">
                     {(profile.full_name || profile.username).charAt(0).toUpperCase()}
                   </AvatarFallback>
@@ -364,28 +372,40 @@ const UserProfile = () => {
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  {!isOwnProfile && user && (
-                    <>
-                      <Button
-                        onClick={toggleFollow}
-                        variant={isFollowing ? "outline" : "default"}
-                        size="lg"
-                        className="gap-3 px-8"
-                      >
-                        <Users className="h-5 w-5" />
-                        {isFollowing ? 'Unfollow' : 'Follow'}
-                      </Button>
-                      
-                      <Button
-                        variant="outline"
-                        size="lg"
-                        onClick={sendMessage}
-                        className="gap-3 px-8"
-                      >
-                        <MessageSquare className="h-5 w-5" />
-                        Message
-                      </Button>
-                    </>
+                  {isOwnProfile ? (
+                    <Button
+                      onClick={() => setShowEditDialog(true)}
+                      variant="outline"
+                      size="lg"
+                      className="gap-3 px-8"
+                    >
+                      <Edit className="h-5 w-5" />
+                      Edit Profile
+                    </Button>
+                  ) : (
+                    user && (
+                      <>
+                        <Button
+                          onClick={toggleFollow}
+                          variant={isFollowing ? "outline" : "default"}
+                          size="lg"
+                          className="gap-3 px-8"
+                        >
+                          <Users className="h-5 w-5" />
+                          {isFollowing ? 'Unfollow' : 'Follow'}
+                        </Button>
+                        
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          onClick={sendMessage}
+                          className="gap-3 px-8"
+                        >
+                          <MessageSquare className="h-5 w-5" />
+                          Message
+                        </Button>
+                      </>
+                    )
                   )}
                 </div>
               </div>
@@ -550,6 +570,16 @@ const UserProfile = () => {
           </div>
         </main>
       </div>
+
+      {/* Profile Edit Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent className="max-w-4xl">
+          <ProfileEdit
+            onClose={() => setShowEditDialog(false)}
+            onUpdate={handleProfileUpdate}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

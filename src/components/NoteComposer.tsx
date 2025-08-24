@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,7 +23,31 @@ const NoteComposer: React.FC<NoteComposerProps> = ({
 }) => {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [profile, setProfile] = useState<any>(null);
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      fetchProfile();
+    }
+  }, [user]);
+
+  const fetchProfile = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('avatar_url, full_name, username')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,9 +96,9 @@ const NoteComposer: React.FC<NoteComposerProps> = ({
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex gap-3">
             <Avatar className="h-10 w-10 flex-shrink-0">
-              <AvatarImage src={user.user_metadata?.avatar_url} />
+              <AvatarImage src={profile?.avatar_url || undefined} />
               <AvatarFallback>
-                {user.user_metadata?.full_name?.[0] || user.email?.[0] || '?'}
+                {profile?.full_name?.[0] || profile?.username?.[0] || user?.email?.[0] || '?'}
               </AvatarFallback>
             </Avatar>
             
