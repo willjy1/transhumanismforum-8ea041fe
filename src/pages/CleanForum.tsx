@@ -169,9 +169,6 @@ const CleanForum = () => {
               <h1 className="text-large font-light">
                 Discussion Forum
               </h1>
-              <p className="text-body text-muted-foreground max-w-2xl">
-                Rigorous discourse on human enhancement, consciousness expansion, and the future of intelligent life.
-              </p>
             </div>
 
             {/* Minimal Controls */}
@@ -251,12 +248,11 @@ const CleanForum = () => {
                     <h3 className="text-xl font-light text-muted-foreground">
                       {searchTerm ? 'No posts found' : 'No discussions yet'}
                     </h3>
-                    <p className="text-muted-foreground">
-                      {searchTerm 
-                        ? `No posts match "${searchTerm}".`
-                        : 'Be the first to start a meaningful discussion.'
-                      }
-                    </p>
+                    {searchTerm && (
+                      <p className="text-muted-foreground">
+                        No posts match "${searchTerm}".
+                      </p>
+                    )}
                     {user && !searchTerm && (
                       <Link to="/create-post" className="inline-block mt-6">
                         <Button>Start Discussion</Button>
