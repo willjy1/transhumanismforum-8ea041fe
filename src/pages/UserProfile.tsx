@@ -96,9 +96,18 @@ const UserProfile = () => {
         .from('profiles')
         .select('*')
         .eq('username', username)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
+      
+      if (!profileData) {
+        toast({
+          title: "Profile not found",
+          description: "The user profile could not be found.",
+          variant: "destructive"
+        });
+        return;
+      }
       setProfile(profileData);
 
       // Fetch user's posts, comments, and notes in parallel
