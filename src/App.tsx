@@ -12,6 +12,8 @@ import Messages from "./pages/Messages";
 import Sequences from "./pages/Sequences";
 import Concepts from "./pages/Concepts";
 import About from "./pages/About";
+import Profile from "./pages/Profile";
+import CleanForum from "./pages/CleanForum";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +28,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/forum" element={<CleanForum />} />
+            <Route path="/profile/:username" element={<Profile />} />
             <Route path="/thinkers" element={<Thinkers />} />
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/messages" element={<Messages />} />

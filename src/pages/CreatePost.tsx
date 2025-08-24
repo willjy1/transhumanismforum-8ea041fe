@@ -86,78 +86,86 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       <Header />
       <div className="flex">
         <MinimalSidebar />
         <main className="flex-1">
-          <div className="max-w-2xl mx-auto p-6">
-            <Card className="border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-2xl font-medium text-gray-900">Create New Post</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      required
-                      placeholder="Enter your post title..."
-                      className="border-gray-300 focus:border-blue-500"
-                    />
-                  </div>
+          <div className="max-w-4xl mx-auto px-12 py-16">
+            {/* Minimal header */}
+            <div className="mb-16">
+              <h1 className="text-display font-light tracking-tight mb-4">Write</h1>
+              <p className="text-muted-foreground font-light">Share your thoughts on transhumanism and the future of intelligence</p>
+            </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select value={categoryId} onValueChange={setCategoryId}>
-                      <SelectTrigger className="border-gray-300 focus:border-blue-500">
-                        <SelectValue placeholder="Select a category (optional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+            <form onSubmit={handleSubmit} className="space-y-12">
+              {/* Title - Large, prominent like Substack */}
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                  placeholder="Post title..."
+                  className="w-full text-4xl font-light placeholder:text-muted-foreground/50 
+                           bg-transparent border-0 outline-0 focus:outline-0 resize-none
+                           leading-tight tracking-tight"
+                />
+              </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="content">Content</Label>
-                    <Textarea
-                      id="content"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      required
-                      placeholder="Share your thoughts, ideas, or questions about transhumanism..."
-                      className="min-h-[300px] border-gray-300 focus:border-blue-500"
-                    />
-                  </div>
+              {/* Category selection - Minimal */}
+              {categories.length > 0 && (
+                <div className="space-y-3">
+                  <Label htmlFor="category" className="text-sm font-light text-muted-foreground">
+                    Category
+                  </Label>
+                  <Select value={categoryId} onValueChange={setCategoryId}>
+                    <SelectTrigger className="w-fit border-border/30 hover:border-border crisp-transition">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
 
-                  <div className="flex gap-4">
-                    <Button 
-                      type="submit" 
-                      disabled={loading}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      {loading ? 'Creating...' : 'Create Post'}
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => navigate('/')}
-                      className="border-gray-300"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+              {/* Content - Clean, distraction-free */}
+              <div className="space-y-2">
+                <textarea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  required
+                  placeholder="Start writing..."
+                  className="w-full min-h-[400px] text-lg leading-relaxed 
+                           placeholder:text-muted-foreground/50 bg-transparent 
+                           border-0 outline-0 focus:outline-0 resize-none font-light"
+                />
+              </div>
+
+              {/* Actions - Minimal, right-aligned */}
+              <div className="flex items-center justify-between pt-8 border-t border-border/30">
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={() => navigate('/')}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={loading}
+                  className="bg-foreground text-background hover:bg-foreground/90 crisp-transition"
+                >
+                  {loading ? 'Publishing...' : 'Publish'}
+                </Button>
+              </div>
+            </form>
           </div>
         </main>
       </div>

@@ -13,11 +13,12 @@ interface Post {
   id: string;
   title: string;
   content: string;
+  author_id: string;
   votes_score: number;
   view_count: number;
   created_at: string;
   categories: { name: string; color: string } | null;
-  profiles: { username: string; full_name: string | null } | null;
+  profiles: { username: string; full_name: string | null; avatar_url?: string | null; bio?: string | null } | null;
   comment_count: number;
 }
 
@@ -39,11 +40,12 @@ const CleanForum = () => {
           id,
           title,
           content,
+          author_id,
           votes_score,
           view_count,
           created_at,
           categories (name, color),
-          profiles (username, full_name)
+          profiles (username, full_name, avatar_url, bio)
         `);
 
       // Apply sorting based on active filter
