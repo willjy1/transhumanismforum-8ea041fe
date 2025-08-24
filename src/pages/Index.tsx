@@ -35,7 +35,7 @@ const Index = () => {
                     The Future
                     <br />
                     <span className="relative">
-                      of Humanity
+                      of Life
                       <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-accent animate-scale-in" 
                            style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
                       </div>
@@ -43,9 +43,9 @@ const Index = () => {
                   </h1>
                   
                   <p className="text-xl max-w-2xl leading-relaxed font-light text-muted-foreground">
-                    A forum for rigorous discussion about human enhancement, 
-                    longevity research, artificial intelligence, and the technologies 
-                    reshaping our species.
+                    A forum for rigorous discussion about biological enhancement, 
+                    consciousness research, artificial intelligence, and the forces 
+                    shaping the trajectory of life in the universe.
                   </p>
                 </div>
                 
@@ -91,23 +91,23 @@ const Index = () => {
                 {[
                   {
                     number: "01",
-                    title: "Human Enhancement",
-                    description: "Genetic engineering, cybernetics, cognitive augmentation"
+                    title: "Biological Enhancement",
+                    description: "Genetic engineering, synthetic biology, evolutionary augmentation"
                   },
                   {
                     number: "02", 
-                    title: "Longevity Research",
-                    description: "Life extension, aging reversal, biological immortality"
+                    title: "Consciousness & Intelligence",
+                    description: "Artificial minds, digital consciousness, substrate-independent intelligence"
                   },
                   {
                     number: "03",
-                    title: "AI & Consciousness",
-                    description: "Artificial intelligence, neural interfaces, digital minds"
+                    title: "Life Extension",
+                    description: "Longevity research, aging reversal, indefinite lifespan"
                   },
                   {
                     number: "04",
-                    title: "Future Society",
-                    description: "Ethics, governance, social implications"
+                    title: "Cosmic Perspectives",
+                    description: "Space colonization, astrobiology, the future of intelligence in the universe"
                   }
                 ].map((topic, index) => (
                   <div 
