@@ -7,7 +7,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import PostCard from '@/components/PostCard';
 import PostSearch from '@/components/PostSearch';
-import ActivityFeed from '@/components/ActivityFeed';
 import Sidebar from '@/components/Sidebar';
 
 interface Category {
@@ -181,8 +180,8 @@ const Forum = () => {
     return (
       <div className="flex min-h-screen bg-background">
         <Sidebar />
-        <div className="flex-1 flex">
-          <div className="flex-1 max-w-4xl">
+        <div className="flex-1">
+          <div className="max-w-4xl mx-auto">
             <div className="animate-pulse space-y-4 p-6">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="h-32 bg-muted rounded-lg"></div>
@@ -199,9 +198,9 @@ const Forum = () => {
       <Sidebar />
       
       {/* Main Content Area */}
-      <div className="flex-1 flex">
+      <div className="flex-1">
         {/* Posts Column */}
-        <div className="flex-1 max-w-4xl">
+        <div className="max-w-4xl mx-auto">
           <div className="p-6">
             <PostSearch
               searchQuery={searchQuery}
@@ -240,16 +239,6 @@ const Forum = () => {
                 </CardContent>
               </Card>
             )}
-          </div>
-        </div>
-
-        {/* Right Sidebar - Activity Feed */}
-        <div className="w-96 border-l bg-card/50 p-6 hidden xl:block">
-          <div className="space-y-6">
-            <ActivityFeed 
-              title="Community Activity"
-              limit={15}
-            />
           </div>
         </div>
       </div>
