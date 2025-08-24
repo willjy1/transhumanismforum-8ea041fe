@@ -9,7 +9,9 @@ const Concepts = () => {
     'Consciousness Research', 
     'Cosmism',
     'Human Enhancement',
-    'Life Extension'
+    'Life Extension',
+    'Singularity',
+    'Abolitionism'
   ];
 
   return (

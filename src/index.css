@@ -8,44 +8,45 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Bold minimal theme with striking contrast */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3%;
+/* Sophisticated design system with rich typography */
+    --background: 0 0% 99%;
+    --foreground: 220 18% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3%;
+    --card-foreground: 220 18% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3%;
+    --popover-foreground: 220 18% 9%;
 
-    --primary: 0 0% 3%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 0 0% 15%;
+    --primary: 220 18% 9%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 220 15% 25%;
 
-    --secondary: 0 0% 97%;
-    --secondary-foreground: 0 0% 3%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 18% 9%;
 
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 40%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
 
-    --accent: 245 100% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 262 100% 65%;
+    --accent-foreground: 0 0% 98%;
 
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 95%;
-    --ring: 0 0% 3%;
+    --border: 220 13% 91%;
+    --input: 220 13% 94%;
+    --ring: 262 100% 65%;
 
     --radius: 0rem;
 
-    /* Bold visual elements */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(245 100% 70%));
-    --shadow-bold: 0 0 0 1px hsl(0 0% 3%);
-    --shadow-subtle: 0 1px 0 hsl(0 0% 90%);
-    --shadow-float: 0 4px 20px hsl(0 0% 0% / 0.15);
+    /* Rich visual elements */
+    --gradient-primary: linear-gradient(135deg, hsl(262 100% 65%), hsl(262 100% 75%));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(262 100% 75%));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --shadow-subtle: 0 1px 3px 0 hsl(220 18% 9% / 0.1);
+    --shadow-medium: 0 4px 6px -1px hsl(220 18% 9% / 0.1), 0 2px 4px -1px hsl(220 18% 9% / 0.06);
+    --shadow-large: 0 10px 15px -3px hsl(220 18% 9% / 0.1), 0 4px 6px -2px hsl(220 18% 9% / 0.05);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
@@ -63,42 +64,43 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Minimal dark theme */
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Rich dark theme with enhanced readability */
+    --background: 222 84% 4%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --primary-glow: 0 0% 80%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222 47% 11%;
+    --primary-glow: 217 32% 80%;
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 217 32% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 262 100% 70%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 90% 70%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 262 100% 70%;
 
-    /* Minimal visual elements for dark mode */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    /* Rich visual elements for dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(262 100% 70%), hsl(262 100% 80%));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(262 100% 80%));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-elegant: 0 1px 3px -1px hsl(0 0% 0% / 0.3);
-    --shadow-card: 0 1px 3px -1px hsl(0 0% 0% / 0.3);
-    --shadow-glow: 0 0 20px hsl(0 0% 100% / 0.05);
+    --shadow-subtle: 0 1px 3px 0 hsl(222 84% 4% / 0.5);
+    --shadow-medium: 0 4px 6px -1px hsl(222 84% 4% / 0.3), 0 2px 4px -1px hsl(222 84% 4% / 0.2);
+    --shadow-large: 0 10px 15px -3px hsl(222 84% 4% / 0.3), 0 4px 6px -2px hsl(222 84% 4% / 0.2);
 
     /* Dark sidebar */
     --sidebar-background: 0 0% 3.9%;
@@ -120,15 +122,23 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-variant-numeric: oldstyle-nums proportional-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Bold minimal components */
-  .bold-shadow {
-    box-shadow: var(--shadow-bold);
+  /* Enhanced design system components */
+  .shadow-subtle {
+    box-shadow: var(--shadow-subtle);
   }
 
-  .float-shadow {
-    box-shadow: var(--shadow-float);
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+
+  .shadow-large {
+    box-shadow: var(--shadow-large);
   }
 
   .crisp-transition {
@@ -139,33 +149,74 @@ All colors MUST be HSL.
     transition: var(--transition-smooth);
   }
 
-  /* Typography scale */
+  /* Typography scale with optimal reading */
   .text-display {
-    font-size: clamp(3rem, 8vw, 8rem);
-    line-height: 0.9;
-    letter-spacing: -0.025em;
-    font-weight: 300;
+    font-size: clamp(2.5rem, 8vw, 7rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    font-variation-settings: "wght" 700;
   }
 
   .text-hero {
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    font-weight: 400;
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-weight: 600;
+    font-variation-settings: "wght" 600;
   }
 
   .text-large {
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.01em;
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+    font-variation-settings: "wght" 500;
   }
 
-  /* Hover effects */
+  .text-body {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .text-caption {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* Enhanced hover effects */
   .hover-lift {
-    @apply crisp-transition hover:-translate-y-0.5;
+    @apply smooth-transition hover:-translate-y-1 hover:shadow-medium;
   }
 
   .hover-glow {
-    @apply crisp-transition hover:shadow-accent/20 hover:shadow-lg;
+    @apply smooth-transition hover:shadow-large;
+  }
+
+  .hover-accent {
+    @apply crisp-transition hover:text-accent hover:bg-accent/5;
+  }
+
+  .interactive-card {
+    @apply bg-card border border-border rounded-lg p-6 hover-lift hover:border-accent/20 smooth-transition cursor-pointer;
+  }
+
+  /* Reading optimizations */
+  .prose {
+    max-width: 70ch;
+    line-height: 1.7;
+  }
+
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.25;
+  }
+
+  .prose p {
+    margin-bottom: 1.25rem;
   }
 }

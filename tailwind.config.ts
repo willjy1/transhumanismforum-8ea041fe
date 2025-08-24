@@ -65,8 +65,9 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
-				display: ['Inter', 'system-ui', 'sans-serif']
+				sans: ['"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
+				display: ['"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
+				mono: ['"JetBrains Mono"', 'Consolas', 'monospace']
 			},
 			fontSize: {
 				'display': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '0.9', letterSpacing: '-0.025em' }],
@@ -78,9 +79,15 @@ export default {
 				'gradient-accent': 'var(--gradient-accent)'
 			},
 			boxShadow: {
-				'bold': 'var(--shadow-bold)',
 				'subtle': 'var(--shadow-subtle)',
-				'float': 'var(--shadow-float)'
+				'medium': 'var(--shadow-medium)', 
+				'large': 'var(--shadow-large)'
+			},
+			spacing: {
+				'18': '4.5rem',
+				'72': '18rem',
+				'84': '21rem',
+				'96': '24rem'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
