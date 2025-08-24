@@ -32,10 +32,10 @@ const Index = () => {
                 {/* Main headline with improved typography */}
                 <div className="space-y-12">
                   <h1 className="text-display">
-                    Beyond
+                    The
                     <br />
                     <span className="relative">
-                      Humanity
+                      Transhumanist Forum
                       <div className="absolute -bottom-1 left-0 w-full h-px bg-foreground animate-scale-in" 
                            style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
                       </div>
