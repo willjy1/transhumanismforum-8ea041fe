@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface NavItemProps {
   to: string;
@@ -28,12 +30,18 @@ const NavItem: React.FC<NavItemProps> = ({ to, label, isActive }) => (
 const Sidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const [communityOpen, setCommunityOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
+  
+  // Check if any library routes are active to keep it open
+  const isLibraryActive = isActive('/library') || isActive('/thinkers') || isActive('/resources');
+  const isCommunityActive = isActive('/events');
 
   return (
     <div className="w-64 h-full bg-card border-r flex flex-col">
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-4">
         {/* Main Navigation */}
         <div className="space-y-1">
           <NavItem
@@ -41,6 +49,71 @@ const Sidebar = () => {
             label="Home"
             isActive={isActive('/')}
           />
+          
+          <NavItem
+            to="/forum"
+            label="Posts"
+            isActive={isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')}
+          />
+
+          {/* Library Section - Collapsible */}
+          <Collapsible open={libraryOpen || isLibraryActive} onOpenChange={setLibraryOpen}>
+            <CollapsibleTrigger className={cn(
+              "flex items-center justify-between w-full px-3 py-2 rounded-md text-sm transition-colors",
+              isLibraryActive 
+                ? "bg-primary/10 text-primary" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
+            )}>
+              <span>Library</span>
+              {libraryOpen || isLibraryActive ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="ml-4 space-y-1">
+              <NavItem
+                to="/library"
+                label="Concepts"
+                isActive={isActive('/library')}
+              />
+              <NavItem
+                to="/thinkers"
+                label="Thinkers"
+                isActive={isActive('/thinkers')}
+              />
+              <NavItem
+                to="/resources"
+                label="Resources"
+                isActive={isActive('/resources')}
+              />
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Community Section - Collapsible */}
+          <Collapsible open={communityOpen || isCommunityActive} onOpenChange={setCommunityOpen}>
+            <CollapsibleTrigger className={cn(
+              "flex items-center justify-between w-full px-3 py-2 rounded-md text-sm transition-colors",
+              isCommunityActive 
+                ? "bg-primary/10 text-primary" 
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
+            )}>
+              <span>Community</span>
+              {communityOpen || isCommunityActive ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </CollapsibleTrigger>
+            <CollapsibleContent className="ml-4 space-y-1">
+              <NavItem
+                to="/events"
+                label="Events"
+                isActive={isActive('/events')}
+              />
+            </CollapsibleContent>
+          </Collapsible>
+
           {user && (
             <NavItem
               to="/messages"
@@ -49,57 +122,6 @@ const Sidebar = () => {
             />
           )}
         </div>
-
-        <Separator />
-
-        {/* Library Section */}
-        <div className="space-y-1">
-          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Library
-          </h3>
-          <NavItem
-            to="/library"
-            label="Concepts"
-            isActive={isActive('/library')}
-          />
-          <NavItem
-            to="/thinkers"
-            label="Thinkers"
-            isActive={isActive('/thinkers')}
-          />
-          <NavItem
-            to="/resources"
-            label="Resources"
-            isActive={isActive('/resources')}
-          />
-          <NavItem
-            to="/forum"
-            label="Posts"
-            isActive={isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')}
-          />
-        </div>
-
-        <Separator />
-
-        {/* Community Section */}
-        <div className="space-y-1">
-          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Community
-          </h3>
-          <NavItem
-            to="/events"
-            label="Events"
-            isActive={isActive('/events')}
-          />
-        </div>
-
-        {user && (
-          <>
-            <Separator />
-            
-            {/* User Actions - Removed redundant Write Post button */}
-          </>
-        )}
       </div>
     </div>
   );
