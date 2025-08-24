@@ -27,10 +27,9 @@ const Library = () => {
       <div className="flex">
         <MinimalSidebar />
         <main className="flex-1">
-          {/* Clean Header */}
           <div className="max-w-2xl mx-auto px-8 py-16">
             <h1 className="text-3xl font-light tracking-tight mb-3">
-              Library
+              Concepts
             </h1>
           </div>
 

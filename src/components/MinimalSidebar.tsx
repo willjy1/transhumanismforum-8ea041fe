@@ -40,43 +40,34 @@ const MinimalSidebar = () => {
             label="Home"
             isActive={isActive('/')}
           />
-          <NavItem
-            to="/thinkers"
-            label="Thinkers"
-            isActive={isActive('/thinkers')}
-          />
-          {user && (
-            <NavItem
-              to="/messages"
-              label="Messages"
-              isActive={isActive('/messages')}
-            />
-          )}
         </div>
 
-        {/* Resources Section */}
-        <div className="space-y-3">
-          <div className="space-y-2 pl-0">
-            <NavItem
-              to="/library"
-              label="Library"
-              isActive={isActive('/library')}
-            />
-          </div>
-        </div>
-
-        {/* Community Section */}
+        {/* Library Section */}
         <div className="space-y-3">
           <h3 className="text-xs font-medium text-muted-foreground tracking-wide uppercase">
-            Community
+            Library
           </h3>
           <div className="space-y-2 pl-0">
             <NavItem
-              to="/about"
-              label="About"
-              isActive={isActive('/about')}
+              to="/library"
+              label="Concepts"
+              isActive={isActive('/library')}
+            />
+            <NavItem
+              to="/thinkers"
+              label="Thinkers"
+              isActive={isActive('/thinkers')}
             />
           </div>
+        </div>
+
+        {/* About */}
+        <div className="space-y-2">
+          <NavItem
+            to="/about"
+            label="About"
+            isActive={isActive('/about')}
+          />
         </div>
       </div>
     </nav>
