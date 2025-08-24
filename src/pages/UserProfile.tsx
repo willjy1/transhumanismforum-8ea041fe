@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, MapPin, ExternalLink, Users, FileText, MessageSquare, Heart, Edit } from 'lucide-react';
+import { Calendar, MapPin, ExternalLink, Users, FileText, MessageSquare, Heart, Edit, Shield } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,6 +16,7 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
 import ProfileEdit from '@/components/ProfileEdit';
 import NoteCard from '@/components/NoteCard';
+import { useUserRole } from '@/hooks/useUserRole';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Profile {
@@ -87,6 +88,8 @@ const UserProfile = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const { roles: userRoles, isEditor } = useUserRole();
+  const [profileRoles, setProfileRoles] = useState<string[]>([]);
 
   useEffect(() => {
     if (username) {
@@ -150,6 +153,9 @@ const UserProfile = () => {
       }
       setProfile(profileData);
 
+      // Fetch user's roles
+      await fetchUserRoles(profileData.id);
+
       // Fetch user's posts, comments, and notes in parallel
       await Promise.all([
         fetchUserPosts(profileData.id),
@@ -166,6 +172,20 @@ const UserProfile = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchUserRoles = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+
+      if (error) throw error;
+      setProfileRoles(data?.map(r => r.role) || []);
+    } catch (error) {
+      console.error('Error fetching user roles:', error);
     }
   };
 
@@ -493,21 +513,57 @@ const UserProfile = () => {
                       </a>
                     )}
                   </div>
-                </div>
 
-                <div className="flex flex-col gap-4">
+                  {/* Role Badges */}
+                  {profileRoles.length > 0 && (
+                    <div className="flex gap-2">
+                      {profileRoles.map(role => (
+                        <Badge 
+                          key={role} 
+                          variant="secondary"
+                          className={`capitalize ${
+                            role === 'editor' ? 'bg-purple-500 text-white' :
+                            role === 'moderator' ? 'bg-blue-500 text-white' :
+                            role === 'admin' ? 'bg-red-500 text-white' :
+                            'bg-gray-500 text-white'
+                          }`}
+                        >
+                          {role}
+                        </Badge>
+                      ))}
+                     </div>
+                   )}
+                 </div>
+
+                 <div className="flex flex-col gap-4">
                   {isOwnProfile ? (
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="lg"
-                      className="gap-3 px-8"
-                    >
-                      <Link to="/edit-profile">
-                        <Edit className="h-5 w-5" />
-                        Edit Profile
-                      </Link>
-                    </Button>
+                    <>
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="lg"
+                        className="gap-3 px-8"
+                      >
+                        <Link to="/edit-profile">
+                          <Edit className="h-5 w-5" />
+                          Edit Profile
+                        </Link>
+                      </Button>
+                      
+                      {isEditor && (
+                        <Button
+                          asChild
+                          variant="outline"
+                          size="lg"
+                          className="gap-3 px-8"
+                        >
+                          <Link to="/user-management">
+                            <Shield className="h-5 w-5" />
+                            User Management
+                          </Link>
+                        </Button>
+                      )}
+                    </>
                   ) : (
                     user && (
                       <>

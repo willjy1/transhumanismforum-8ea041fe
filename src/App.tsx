@@ -27,6 +27,7 @@ import PostDetail from "./pages/PostDetail";
 import Notes from "./pages/Notes";
 import NotFound from "./pages/NotFound";
 import EditProfile from "./pages/EditProfile";
+import UserManagementPage from "./pages/UserManagement";
 import ArtPreview from "./pages/ArtPreview";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/community" element={<Community />} />
               <Route path="/notes" element={<Notes />} />
               <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/user-management" element={<UserManagementPage />} />
               <Route path="/events" element={<Events />} />
               <Route path="/best-of" element={<BestOf />} />
               <Route path="/resources" element={<Resources />} />
