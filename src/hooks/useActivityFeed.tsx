@@ -40,7 +40,7 @@ export const useActivityFeed = (userId?: string, limit: number = 10) => {
       } else if (user) {
         // Get activities from followed users (activity feed)
         const { data: follows } = await supabase
-          .from('follows')
+          .from('user_follows')
           .select('following_id')
           .eq('follower_id', user.id);
 

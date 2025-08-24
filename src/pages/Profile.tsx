@@ -102,11 +102,11 @@ const Profile = () => {
     
     try {
       const { data } = await supabase
-        .from('follows')
+        .from('user_follows')
         .select('id')
         .eq('follower_id', user.id)
         .eq('following_id', profile.id)
-        .single();
+        .maybeSingle();
       
       setIsFollowing(!!data);
     } catch (error) {
@@ -120,11 +120,11 @@ const Profile = () => {
     try {
       const [followersResult, followingResult] = await Promise.all([
         supabase
-          .from('follows')
+          .from('user_follows')
           .select('*', { count: 'exact', head: true })
           .eq('following_id', profile.id),
         supabase
-          .from('follows')
+          .from('user_follows')
           .select('*', { count: 'exact', head: true })
           .eq('follower_id', profile.id)
       ]);
@@ -143,7 +143,7 @@ const Profile = () => {
     try {
       if (isFollowing) {
         await supabase
-          .from('follows')
+          .from('user_follows')
           .delete()
           .eq('follower_id', user.id)
           .eq('following_id', profile.id);
@@ -151,7 +151,7 @@ const Profile = () => {
         setFollowerCount(prev => prev - 1);
       } else {
         await supabase
-          .from('follows')
+          .from('user_follows')
           .insert({
             follower_id: user.id,
             following_id: profile.id

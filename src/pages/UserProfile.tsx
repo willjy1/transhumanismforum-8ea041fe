@@ -24,9 +24,10 @@ interface Profile {
   website_url?: string;
   location?: string;
   created_at: string;
-  karma: number;
   post_count: number;
   comment_count: number;
+  followers_count: number;
+  following_count: number;
 }
 
 interface Post {
@@ -61,11 +62,8 @@ const UserProfile = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [sequences, setSequences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [followerCount, setFollowerCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
   const [activeTab, setActiveTab] = useState('posts');
 
   useEffect(() => {
@@ -77,7 +75,6 @@ const UserProfile = () => {
   useEffect(() => {
     if (profile && user) {
       checkFollowStatus();
-      fetchCounts();
     }
   }, [profile, user]);
 
@@ -92,11 +89,10 @@ const UserProfile = () => {
       if (error) throw error;
       setProfile(profileData);
 
-      // Fetch user's posts, comments, and sequences in parallel
+      // Fetch user's posts and comments in parallel
       await Promise.all([
         fetchUserPosts(profileData.id),
-        fetchUserComments(profileData.id),
-        fetchUserSequences(profileData.id)
+        fetchUserComments(profileData.id)
       ]);
 
     } catch (error) {
@@ -149,28 +145,12 @@ const UserProfile = () => {
     }
   };
 
-  const fetchUserSequences = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('sequences')
-        .select('*')
-        .eq('author_id', userId)
-        .eq('is_published', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setSequences(data || []);
-    } catch (error) {
-      console.error('Error fetching user sequences:', error);
-    }
-  };
-
   const checkFollowStatus = async () => {
     if (!user || !profile || user.id === profile.id) return;
 
     try {
       const { data } = await supabase
-        .from('follows')
+        .from('user_follows')
         .select('id')
         .eq('follower_id', user.id)
         .eq('following_id', profile.id)
@@ -179,28 +159,6 @@ const UserProfile = () => {
       setIsFollowing(!!data);
     } catch (error) {
       console.error('Error checking follow status:', error);
-    }
-  };
-
-  const fetchCounts = async () => {
-    if (!profile) return;
-
-    try {
-      const [followersRes, followingRes] = await Promise.all([
-        supabase
-          .from('follows')
-          .select('*', { count: 'exact', head: true })
-          .eq('following_id', profile.id),
-        supabase
-          .from('follows')
-          .select('*', { count: 'exact', head: true })
-          .eq('follower_id', profile.id)
-      ]);
-
-      setFollowerCount(followersRes.count || 0);
-      setFollowingCount(followingRes.count || 0);
-    } catch (error) {
-      console.error('Error fetching follow counts:', error);
     }
   };
 
@@ -219,24 +177,22 @@ const UserProfile = () => {
     try {
       if (isFollowing) {
         await supabase
-          .from('follows')
+          .from('user_follows')
           .delete()
           .eq('follower_id', user.id)
           .eq('following_id', profile.id);
         
         setIsFollowing(false);
-        setFollowerCount(prev => prev - 1);
         toast({ title: "Unfollowed user" });
       } else {
         await supabase
-          .from('follows')
+          .from('user_follows')
           .insert({
             follower_id: user.id,
             following_id: profile.id
           });
         
         setIsFollowing(true);
-        setFollowerCount(prev => prev + 1);
         toast({ title: "Following user" });
 
         // Create notification
@@ -246,7 +202,7 @@ const UserProfile = () => {
             user_id: profile.id,
             type: 'follow',
             title: 'New follower',
-            content: `${user.email?.split('@')[0] || 'Someone'} started following you`,
+            content: `${user.user_metadata?.full_name || user.email?.split('@')[0] || 'Someone'} started following you`,
             related_user_id: user.id
           });
       }
@@ -406,11 +362,7 @@ const UserProfile = () => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-8 py-8 border-y border-border/30">
-                <div className="text-center">
-                  <div className="text-3xl font-light">{profile.karma || 0}</div>
-                  <div className="text-lg text-muted-foreground">Karma</div>
-                </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-y border-border/30">
                 <div className="text-center">
                   <div className="text-3xl font-light">{profile.post_count || 0}</div>
                   <div className="text-lg text-muted-foreground">Posts</div>
@@ -420,11 +372,11 @@ const UserProfile = () => {
                   <div className="text-lg text-muted-foreground">Comments</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-light">{followerCount}</div>
+                  <div className="text-3xl font-light">{profile.followers_count || 0}</div>
                   <div className="text-lg text-muted-foreground">Followers</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-light">{followingCount}</div>
+                  <div className="text-3xl font-light">{profile.following_count || 0}</div>
                   <div className="text-lg text-muted-foreground">Following</div>
                 </div>
               </div>
@@ -432,7 +384,7 @@ const UserProfile = () => {
 
             {/* Content Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-12">
-              <TabsList className="grid w-full grid-cols-3 h-14">
+              <TabsList className="grid w-full grid-cols-2 h-14">
                 <TabsTrigger value="posts" className="gap-3 text-lg">
                   <FileText className="h-5 w-5" />
                   Posts
@@ -440,10 +392,6 @@ const UserProfile = () => {
                 <TabsTrigger value="comments" className="gap-3 text-lg">
                   <MessageSquare className="h-5 w-5" />
                   Comments
-                </TabsTrigger>
-                <TabsTrigger value="sequences" className="gap-3 text-lg">
-                  <BookOpen className="h-5 w-5" />
-                  Sequences
                 </TabsTrigger>
               </TabsList>
 
@@ -530,45 +478,6 @@ const UserProfile = () => {
                 ) : (
                   <div className="text-center py-16">
                     <p className="text-xl text-muted-foreground">No comments yet.</p>
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value="sequences" className="space-y-8">
-                {sequences.length > 0 ? (
-                  sequences.map((sequence: any) => (
-                    <Card key={sequence.id} className="p-8 hover:border-accent/50 crisp-transition">
-                      <div className="space-y-6">
-                        <Link 
-                          to={`/sequences/${sequence.id}`}
-                          className="block hover:text-accent crisp-transition"
-                        >
-                          <h3 className="text-2xl font-light mb-4">
-                            {sequence.title}
-                          </h3>
-                          <p className="text-muted-foreground text-lg leading-relaxed">
-                            {sequence.description}
-                          </p>
-                        </Link>
-                        
-                        <div className="flex items-center gap-8 text-lg text-muted-foreground">
-                          <span>{sequence.view_count || 0} views</span>
-                          <time>{formatDistanceToNow(new Date(sequence.created_at), { addSuffix: true })}</time>
-                        </div>
-                      </div>
-                    </Card>
-                  ))
-                ) : (
-                  <div className="text-center py-16">
-                    <p className="text-xl text-muted-foreground mb-6">No sequences yet.</p>
-                    {isOwnProfile && (
-                      <Button size="lg" asChild>
-                        <Link to="/sequences/create">
-                          <Plus className="h-5 w-5 mr-3" />
-                          Create Your First Sequence
-                        </Link>
-                      </Button>
-                    )}
                   </div>
                 )}
               </TabsContent>

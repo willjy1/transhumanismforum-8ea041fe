@@ -35,11 +35,11 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
     try {
       const { data, error } = await supabase
-        .from('follows')
+        .from('user_follows')
         .select('id')
         .eq('follower_id', user.id)
         .eq('following_id', targetUserId)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         throw error;
@@ -76,7 +76,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       if (isFollowing) {
         // Unfollow
         const { error } = await supabase
-          .from('follows')
+          .from('user_follows')
           .delete()
           .eq('follower_id', user.id)
           .eq('following_id', targetUserId);
@@ -91,7 +91,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       } else {
         // Follow
         const { error } = await supabase
-          .from('follows')
+          .from('user_follows')
           .insert({
             follower_id: user.id,
             following_id: targetUserId

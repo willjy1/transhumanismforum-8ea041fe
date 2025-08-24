@@ -202,42 +202,6 @@ export type Database = {
         }
         Relationships: []
       }
-      follows: {
-        Row: {
-          created_at: string | null
-          follower_id: string | null
-          following_id: string | null
-          id: string
-        }
-        Insert: {
-          created_at?: string | null
-          follower_id?: string | null
-          following_id?: string | null
-          id?: string
-        }
-        Update: {
-          created_at?: string | null
-          follower_id?: string | null
-          following_id?: string | null
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "follows_follower_id_fkey"
-            columns: ["follower_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "follows_following_id_fkey"
-            columns: ["following_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       messages: {
         Row: {
           content: string
@@ -553,6 +517,8 @@ export type Database = {
           bio: string | null
           comment_count: number | null
           created_at: string | null
+          followers_count: number | null
+          following_count: number | null
           full_name: string | null
           id: string
           location: string | null
@@ -566,6 +532,8 @@ export type Database = {
           bio?: string | null
           comment_count?: number | null
           created_at?: string | null
+          followers_count?: number | null
+          following_count?: number | null
           full_name?: string | null
           id: string
           location?: string | null
@@ -579,6 +547,8 @@ export type Database = {
           bio?: string | null
           comment_count?: number | null
           created_at?: string | null
+          followers_count?: number | null
+          following_count?: number | null
           full_name?: string | null
           id?: string
           location?: string | null
@@ -621,6 +591,42 @@ export type Database = {
           {
             foreignKeyName: "fk_user_activity_profiles"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_follows: {
+        Row: {
+          created_at: string | null
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_follows_follower_id_fkey"
+            columns: ["follower_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_follows_following_id_fkey"
+            columns: ["following_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]

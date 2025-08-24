@@ -29,7 +29,6 @@ interface Post {
     username: string;
     full_name?: string;
     bio?: string;
-    karma?: number;
   };
   categories?: {
     name: string;
@@ -83,7 +82,7 @@ const PostDetail = () => {
         .from('posts')
         .select(`
           *,
-          profiles(username, full_name, bio, karma),
+          profiles(username, full_name, bio),
           categories(name, color)
         `)
         .eq('id', id)
@@ -368,7 +367,7 @@ const PostDetail = () => {
                           {authorName}
                         </div>
                         <div className="text-sm text-muted-foreground">
-                          {post.profiles?.karma || 0} karma
+                          @{post.profiles?.username}
                         </div>
                       </div>
                     </Link>
