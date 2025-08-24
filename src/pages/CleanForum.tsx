@@ -167,141 +167,152 @@ const CleanForum = () => {
       <div className="flex">
         <MinimalSidebar />
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto px-8 py-16">
-            {/* Header */}
-            <div className="mb-12">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h1 className="text-4xl font-light tracking-tight mb-2">
-                    Discussion Forum
-                  </h1>
-                  <p className="text-lg text-muted-foreground">
-                    Rigorous discourse on the future of human enhancement
-                  </p>
+          <div className="max-w-6xl mx-auto px-6 py-12">
+            <div className="space-y-12">
+              <div className="space-y-3">
+                <h1 className="text-4xl font-light tracking-tight">
+                  Discussion Forum
+                </h1>
+                <p className="text-xl text-muted-foreground font-light max-w-2xl">
+                  Rigorous discourse on human enhancement, consciousness expansion, and the future of intelligent life
+                </p>
+              </div>
+              {/* Header Actions */}
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="text-sm text-muted-foreground">
+                    {posts.length} {posts.length === 1 ? 'discussion' : 'discussions'}
+                  </div>
                 </div>
                 
                 {user && (
                   <Link to="/create-post">
-                    <Button className="gap-2">
+                    <Button size="lg" className="gap-2 px-6">
                       <Plus className="h-4 w-4" />
-                      New Post
+                      New Discussion
                     </Button>
                   </Link>
                 )}
               </div>
 
               {/* Filters and Search */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    placeholder="Search discussions..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                
-                <div className="flex gap-2">
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-48">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          <div className="flex items-center gap-2">
-                            <div 
-                              className="w-3 h-3 rounded-full" 
-                              style={{ backgroundColor: category.color }}
-                            />
-                            {category.name}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              <div className="space-y-6">
+                <div className="flex flex-col lg:flex-row gap-4">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      placeholder="Search discussions..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-12 h-12 text-base"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-3">
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger className="w-48 h-12">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            <div className="flex items-center gap-2">
+                              <div 
+                                className="w-3 h-3 rounded-full" 
+                                style={{ backgroundColor: category.color }}
+                              />
+                              {category.name}
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
 
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-36">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="recent">
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          Recent
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="popular">
-                        <div className="flex items-center gap-2">
-                          <TrendingUp className="h-4 w-4" />
-                          Popular
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="discussed">
-                        <div className="flex items-center gap-2">
-                          <MessageSquare className="h-4 w-4" />
-                          Discussed
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <div className="flex bg-muted rounded-lg p-1">
+                      {(['recent', 'popular', 'discussed'] as const).map((sort) => {
+                        const icons = {
+                          recent: Clock,
+                          popular: TrendingUp,
+                          discussed: MessageSquare
+                        };
+                        const Icon = icons[sort];
+                        
+                        return (
+                          <Button
+                            key={sort}
+                            variant={sortBy === sort ? "default" : "ghost"}
+                            size="sm"
+                            onClick={() => setSortBy(sort)}
+                            className="gap-2 capitalize"
+                          >
+                            <Icon className="h-4 w-4" />
+                            {sort}
+                          </Button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Category pills */}
-              <div className="flex flex-wrap gap-2">
-                <Badge 
-                  variant={selectedCategory === 'all' ? 'default' : 'outline'}
-                  className="cursor-pointer"
-                  onClick={() => setSelectedCategory('all')}
-                >
-                  All
-                </Badge>
-                {categories.map((category) => (
-                  <Badge
-                    key={category.id}
-                    variant={selectedCategory === category.id ? 'default' : 'outline'}
-                    className="cursor-pointer"
-                    style={selectedCategory === category.id ? {
-                      backgroundColor: category.color,
-                      borderColor: category.color
-                    } : {
-                      borderColor: category.color,
-                      color: category.color
-                    }}
-                    onClick={() => setSelectedCategory(category.id)}
+                {/* Category Filter Pills */}
+                <div className="flex flex-wrap gap-2">
+                  <Badge 
+                    variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                    className="cursor-pointer px-4 py-2 text-sm"
+                    onClick={() => setSelectedCategory('all')}
                   >
-                    {category.name}
+                    All
                   </Badge>
-                ))}
+                  {categories.map((category) => (
+                    <Badge
+                      key={category.id}
+                      variant={selectedCategory === category.id ? 'default' : 'outline'}
+                      className="cursor-pointer px-4 py-2 text-sm"
+                      style={selectedCategory === category.id ? {
+                        backgroundColor: category.color,
+                        borderColor: category.color,
+                        color: 'white'
+                      } : {
+                        borderColor: category.color,
+                        color: category.color,
+                        backgroundColor: 'transparent'
+                      }}
+                      onClick={() => setSelectedCategory(category.id)}
+                    >
+                      {category.name}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             </div>
 
             {/* Posts */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {filteredPosts.length > 0 ? (
                 filteredPosts.map((post) => (
                   <CleanPostCard key={post.id} post={post} />
                 ))
               ) : (
-                <div className="text-center py-16">
-                  <h3 className="text-xl font-light text-muted-foreground mb-2">
-                    {searchTerm ? 'No posts found' : 'No discussions yet'}
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    {searchTerm 
-                      ? `No posts match "${searchTerm}"`
-                      : 'Be the first to start a discussion'
-                    }
-                  </p>
-                  {user && !searchTerm && (
-                    <Link to="/create-post">
-                      <Button>Create First Post</Button>
-                    </Link>
-                  )}
+                <div className="text-center py-20">
+                  <div className="max-w-md mx-auto space-y-4">
+                    <h3 className="text-2xl font-light text-muted-foreground">
+                      {searchTerm ? 'No posts found' : 'No discussions yet'}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {searchTerm 
+                        ? `No posts match "${searchTerm}". Try adjusting your search terms or filters.`
+                        : 'Be the first to start a meaningful discussion about human enhancement and our future.'
+                      }
+                    </p>
+                    {user && !searchTerm && (
+                      <Link to="/create-post">
+                        <Button size="lg" className="mt-6">
+                          Start the First Discussion
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

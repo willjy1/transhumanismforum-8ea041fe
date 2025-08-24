@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Search, LogOut, PenTool } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import ThemeToggle from './ThemeToggle';
+import { NotificationBell } from './NotificationBell';
 
 const Header = () => {
   const { user, signOut } = useAuth();
@@ -33,10 +34,11 @@ const Header = () => {
         </div>
 
         {/* Right Actions - Clean and bold */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <ThemeToggle />
           {user ? (
             <>
+              <NotificationBell />
               <Link 
                 to="/create-post"
                 className="text-lg font-light text-muted-foreground hover:text-foreground crisp-transition hover-lift"

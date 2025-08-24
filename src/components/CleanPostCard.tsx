@@ -114,7 +114,7 @@ const CleanPostCard = ({ post, commentCount = 0 }: PostCardProps) => {
             {/* Title */}
             <div>
               <Link 
-                to={`/forum/post/${post.id}`}
+                to={`/post/${post.id}`}
                 className="block group-hover:text-accent crisp-transition"
               >
                 <h2 className="text-xl font-medium leading-tight line-clamp-2">
