@@ -63,16 +63,15 @@ const Header = () => {
           {user ? (
             <>
               <NotificationCenter />
-              <Link 
-                to="/create-post-rich"
-                className="text-lg font-semibold text-muted-foreground hover:text-foreground crisp-transition hover-lift"
-              >
-                <PenTool className="h-5 w-5" />
-              </Link>
+              <Button variant="ghost" size="sm" asChild className="w-9 h-9 p-0">
+                <Link to="/create-post-rich">
+                  <PenTool className="h-5 w-5" />
+                </Link>
+              </Button>
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full border-2 border-transparent hover:border-border">
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-8 w-8">
                       <AvatarFallback className="text-sm font-medium">
                         {user.email?.charAt(0).toUpperCase()}
