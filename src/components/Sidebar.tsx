@@ -53,6 +53,12 @@ const Sidebar = () => {
             isActive={isActive('/forum') || isActive('/posts/top') || isActive('/posts/latest')}
           />
 
+          <NavItem
+            to="/notes"
+            label="Notes"
+            isActive={isActive('/notes')}
+          />
+
           {/* Library Section - Collapsible */}
           <Collapsible open={libraryOpen || isLibraryActive} onOpenChange={setLibraryOpen}>
             <CollapsibleTrigger className={cn(
