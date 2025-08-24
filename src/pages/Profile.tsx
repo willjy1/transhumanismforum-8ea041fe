@@ -173,44 +173,38 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-12 py-16">
-              <div className="animate-pulse space-y-8">
-                <div className="h-24 w-24 bg-muted rounded-full"></div>
-                <div className="space-y-4">
-                  <div className="h-8 bg-muted rounded w-64"></div>
-                  <div className="h-4 bg-muted rounded w-96"></div>
-                </div>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1">
+          <div className="max-w-4xl mx-auto px-12 py-16">
+            <div className="animate-pulse space-y-8">
+              <div className="h-24 w-24 bg-muted rounded-full"></div>
+              <div className="space-y-4">
+                <div className="h-8 bg-muted rounded w-64"></div>
+                <div className="h-4 bg-muted rounded w-96"></div>
               </div>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-12 py-16 text-center">
-              <h1 className="text-2xl font-light text-muted-foreground mb-4">User not found</h1>
-              <Link 
-                to="/" 
-                className="text-accent hover:text-accent/80 crisp-transition"
-              >
-                Return home
-              </Link>
-            </div>
-          </main>
-        </div>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1">
+          <div className="max-w-4xl mx-auto px-12 py-16 text-center">
+            <h1 className="text-2xl font-light text-muted-foreground mb-4">User not found</h1>
+            <Link 
+              to="/" 
+              className="text-accent hover:text-accent/80 crisp-transition"
+            >
+              Return home
+            </Link>
+          </div>
+        </main>
       </div>
     );
   }
@@ -218,10 +212,8 @@ const Profile = () => {
   const isOwnProfile = user?.id === profile.id;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="flex">
-        <Sidebar />
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
         
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-12 py-16">
@@ -392,7 +384,6 @@ const Profile = () => {
             </div>
           </div>
         </main>
-      </div>
     </div>
   );
 };

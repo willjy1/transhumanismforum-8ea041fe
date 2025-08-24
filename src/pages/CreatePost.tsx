@@ -108,29 +108,24 @@ const CreatePost = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1">
-            <div className="max-w-2xl mx-auto px-8 py-16">
-              <div className="text-center">
-                <h1 className="text-2xl font-light mb-4">Authentication Required</h1>
-                <p className="text-muted-foreground mb-8">Please sign in to create a post.</p>
-                <Button onClick={() => navigate('/auth')}>Sign In</Button>
-              </div>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1">
+          <div className="max-w-2xl mx-auto px-8 py-16">
+            <div className="text-center">
+              <h1 className="text-2xl font-light mb-4">Authentication Required</h1>
+              <p className="text-muted-foreground mb-8">Please sign in to create a post.</p>
+              <Button onClick={() => navigate('/auth')}>Sign In</Button>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="flex">
-        <Sidebar />
+    <div className="flex min-h-screen bg-background">
+      <Sidebar />
         <main className="flex-1">
           <div className="max-w-2xl mx-auto px-8 py-16">
             {/* Header */}
@@ -190,13 +185,7 @@ const CreatePost = () => {
                       <SelectContent>
                         {categories.map((category) => (
                           <SelectItem key={category.id} value={category.id}>
-                            <div className="flex items-center gap-2">
-                              <div 
-                                className="w-3 h-3 rounded-full" 
-                                style={{ backgroundColor: category.color }}
-                              />
-                              <span>{category.name}</span>
-                            </div>
+                            <span>{category.name}</span>
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -240,7 +229,6 @@ const CreatePost = () => {
             </Card>
           </div>
         </main>
-      </div>
     </div>
   );
 };

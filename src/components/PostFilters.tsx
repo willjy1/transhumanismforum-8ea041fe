@@ -6,12 +6,14 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PostFiltersProps {
-  activeFilter: 'recent' | 'top' | 'hot' | 'new';
-  onFilterChange: (filter: 'recent' | 'top' | 'hot' | 'new') => void;
+  activeFilter: 'newest' | 'oldest' | 'top';
+  onFilterChange: (filter: 'newest' | 'oldest' | 'top') => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
   sortBy: 'created_at' | 'votes_score' | 'view_count';
   onSortChange: (sort: 'created_at' | 'votes_score' | 'view_count') => void;
+  timeFilter?: 'today' | 'week' | 'all';
+  onTimeFilterChange?: (filter: 'today' | 'week' | 'all') => void;
 }
 
 const PostFilters: React.FC<PostFiltersProps> = ({
@@ -20,13 +22,14 @@ const PostFilters: React.FC<PostFiltersProps> = ({
   searchQuery,
   onSearchChange,
   sortBy,
-  onSortChange
+  onSortChange,
+  timeFilter = 'all',
+  onTimeFilterChange
 }) => {
   const filters = [
-    { key: 'recent' as const, label: 'Recent' },
-    { key: 'hot' as const, label: 'Hot' },
+    { key: 'newest' as const, label: 'Newest' },
+    { key: 'oldest' as const, label: 'Oldest' },
     { key: 'top' as const, label: 'Top' },
-    { key: 'new' as const, label: 'New' },
   ];
 
   return (
@@ -51,6 +54,30 @@ const PostFilters: React.FC<PostFiltersProps> = ({
             </Button>
           ))}
         </div>
+
+        {/* Time Filter for Top Posts */}
+        {activeFilter === 'top' && onTimeFilterChange && (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">From:</span>
+            <div className="flex gap-1">
+              {[
+                { key: 'today' as const, label: 'Today' },
+                { key: 'week' as const, label: 'This Week' }, 
+                { key: 'all' as const, label: 'All Time' },
+              ].map((option) => (
+                <Button
+                  key={option.key}
+                  variant={timeFilter === option.key ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => onTimeFilterChange(option.key)}
+                  className="text-xs"
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Search and Advanced Controls */}
         <div className="flex items-center gap-2">

@@ -111,7 +111,7 @@ const Sidebar = () => {
             <NavItem
               to="/forum"
               icon={<Archive className="h-3 w-3" />}
-              label="All"
+              label="Posts"
               isActive={isActive('/forum')}
             />
           </div>

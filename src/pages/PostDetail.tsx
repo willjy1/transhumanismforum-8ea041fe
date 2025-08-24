@@ -241,41 +241,35 @@ const PostDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-8 py-12">
-              <div className="animate-pulse space-y-8">
-                <div className="h-8 bg-muted rounded w-3/4"></div>
-                <div className="space-y-4">
-                  <div className="h-4 bg-muted rounded"></div>
-                  <div className="h-4 bg-muted rounded w-5/6"></div>
-                  <div className="h-4 bg-muted rounded w-4/6"></div>
-                </div>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1">
+          <div className="max-w-4xl mx-auto px-8 py-12">
+            <div className="animate-pulse space-y-8">
+              <div className="h-8 bg-muted rounded w-3/4"></div>
+              <div className="space-y-4">
+                <div className="h-4 bg-muted rounded"></div>
+                <div className="h-4 bg-muted rounded w-5/6"></div>
+                <div className="h-4 bg-muted rounded w-4/6"></div>
               </div>
             </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex">
-          <Sidebar />
-          <main className="flex-1">
-            <div className="max-w-4xl mx-auto px-8 py-12 text-center">
-              <h1 className="text-2xl font-light mb-4">Post not found</h1>
-              <p className="text-muted-foreground mb-8">The post you're looking for doesn't exist.</p>
-              <Button onClick={() => navigate('/forum')}>Back to Forum</Button>
-            </div>
-          </main>
-        </div>
+      <div className="flex min-h-screen bg-background">
+        <Sidebar />
+        <main className="flex-1">
+          <div className="max-w-4xl mx-auto px-8 py-12 text-center">
+            <h1 className="text-2xl font-light mb-4">Post not found</h1>
+            <p className="text-muted-foreground mb-8">The post you're looking for doesn't exist.</p>
+            <Button onClick={() => navigate('/forum')}>Back to Forum</Button>
+          </div>
+        </main>
       </div>
     );
   }
@@ -285,7 +279,7 @@ const PostDetail = () => {
   const excerpt = post.content.substring(0, 160) + '...';
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background">
       <Helmet>
         <title>{post.title} | Beyond Humanity</title>
         <meta name="description" content={excerpt} />
@@ -312,10 +306,7 @@ const PostDetail = () => {
         </script>
       </Helmet>
 
-      <Header />
-      
-      <div className="flex">
-        <Sidebar />
+      <Sidebar />
         
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-8 py-16">
@@ -469,7 +460,6 @@ const PostDetail = () => {
             </div>
           </div>
         </main>
-      </div>
     </div>
   );
 };
