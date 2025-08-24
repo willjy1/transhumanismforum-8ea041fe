@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -83,12 +82,10 @@ const CleanForum = () => {
           )
         `);
 
-      // Filter by category
       if (selectedCategory !== 'all') {
         query = query.eq('category_id', selectedCategory);
       }
 
-      // Apply sorting
       switch (sortBy) {
         case 'recent':
           query = query.order('created_at', { ascending: false });
@@ -97,7 +94,6 @@ const CleanForum = () => {
           query = query.order('votes_score', { ascending: false });
           break;
         case 'discussed':
-          // Note: This would need a comment count calculation in production
           query = query.order('created_at', { ascending: false });
           break;
         default:
@@ -108,7 +104,6 @@ const CleanForum = () => {
 
       if (error) throw error;
 
-      // Sort pinned posts to top
       const sortedData = (data || []).sort((a, b) => {
         if (a.is_pinned && !b.is_pinned) return -1;
         if (!a.is_pinned && b.is_pinned) return 1;
@@ -139,10 +134,10 @@ const CleanForum = () => {
             <div className="max-w-4xl mx-auto px-12 py-20">
               <div className="space-y-8">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="border border-border rounded-lg p-8">
-                    <div className="animate-pulse space-y-6">
+                  <div key={i} className="border-b border-border pb-8">
+                    <div className="animate-pulse space-y-4">
                       <div className="h-6 bg-muted rounded w-3/4"></div>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <div className="h-4 bg-muted rounded"></div>
                         <div className="h-4 bg-muted rounded w-5/6"></div>
                       </div>
@@ -169,149 +164,102 @@ const CleanForum = () => {
         <main className="flex-1">
           <div className="max-w-4xl mx-auto px-12 py-20">
             
-            {/* Clean Header */}
-            <div className="space-y-12 mb-20">
-              <div className="space-y-4">
-                <h1 className="text-large font-light">
-                  Discussion Forum
-                </h1>
-                <p className="text-body text-muted-foreground max-w-2xl">
-                  Rigorous discourse on human enhancement, consciousness expansion, and the future of intelligent life.
-                </p>
-              </div>
-              
-              {/* Action bar */}
-              {user && (
-                <Link to="/create-post">
-                  <Button variant="outline" size="lg" className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    New Discussion
-                  </Button>
-                </Link>
-              )}
+            {/* Minimal Header */}
+            <div className="space-y-3 mb-20">
+              <h1 className="text-large font-light">
+                Discussion Forum
+              </h1>
+              <p className="text-body text-muted-foreground max-w-2xl">
+                Rigorous discourse on human enhancement, consciousness expansion, and the future of intelligent life.
+              </p>
             </div>
 
-            {/* Simple Filters */}
-            <div className="space-y-8 mb-16">
-              
-              {/* Search */}
-              <div className="relative max-w-md">
-                <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Search discussions..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-12"
-                />
-              </div>
-              
-              {/* Category and Sort filters */}
-              <div className="flex flex-col sm:flex-row gap-4">
+            {/* Minimal Controls */}
+            <div className="flex items-center justify-between mb-16">
+              <div className="flex items-center gap-8">
                 
-                {/* Category dropdown */}
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 w-64 border-0 border-b border-border rounded-none bg-transparent focus-visible:ring-0 focus-visible:border-foreground"
+                  />
+                </div>
+                
+                {/* Category */}
                 <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-full sm:w-48">
-                    <SelectValue />
+                  <SelectTrigger className="w-40 border-0 border-b border-border rounded-none bg-transparent focus:ring-0">
+                    <SelectValue placeholder="Category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">All</SelectItem>
                     {categories.map((category) => (
                       <SelectItem key={category.id} value={category.id}>
-                        <div className="flex items-center gap-2">
-                          <div 
-                            className="w-3 h-3 rounded-full" 
-                            style={{ backgroundColor: category.color }}
-                          />
-                          {category.name}
-                        </div>
+                        {category.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
 
-                {/* Sort buttons */}
-                <div className="flex gap-2">
-                  {(['recent', 'popular', 'discussed'] as const).map((sort) => {
-                    const icons = {
-                      recent: Clock,
-                      popular: TrendingUp,
-                      discussed: MessageSquare
-                    };
-                    const Icon = icons[sort];
-                    
-                    return (
-                      <Button
-                        key={sort}
-                        variant={sortBy === sort ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSortBy(sort)}
-                        className="gap-2 capitalize"
-                      >
-                        <Icon className="h-4 w-4" />
-                        {sort}
-                      </Button>
-                    );
-                  })}
+                {/* Sort */}
+                <div className="flex items-center gap-1 text-sm">
+                  {(['recent', 'popular', 'discussed'] as const).map((sort) => (
+                    <button
+                      key={sort}
+                      onClick={() => setSortBy(sort)}
+                      className={`px-3 py-1 capitalize crisp-transition ${
+                        sortBy === sort 
+                          ? 'text-foreground border-b border-foreground' 
+                          : 'text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      {sort}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Category pills */}
-              {categories.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  <Badge 
-                    variant={selectedCategory === 'all' ? 'default' : 'outline'}
-                    className="cursor-pointer px-3 py-1"
-                    onClick={() => setSelectedCategory('all')}
-                  >
-                    All
-                  </Badge>
-                  {categories.map((category) => (
-                    <Badge
-                      key={category.id}
-                      variant={selectedCategory === category.id ? 'default' : 'outline'}
-                      className="cursor-pointer px-3 py-1"
-                      style={selectedCategory === category.id ? {
-                        backgroundColor: category.color,
-                        borderColor: category.color,
-                        color: 'white'
-                      } : {
-                        borderColor: category.color,
-                        color: category.color,
-                        backgroundColor: 'transparent'
-                      }}
-                      onClick={() => setSelectedCategory(category.id)}
-                    >
-                      {category.name}
-                    </Badge>
-                  ))}
-                </div>
+              {/* New Post */}
+              {user && (
+                <Link to="/create-post">
+                  <Button variant="outline" className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    New
+                  </Button>
+                </Link>
               )}
-              
             </div>
 
-            {/* Posts List */}
-            <div className="space-y-6">
+            {/* Posts */}
+            <div className="space-y-12">
               {filteredPosts.length > 0 ? (
-                filteredPosts.map((post) => (
-                  <CleanPostCard key={post.id} post={post} />
+                filteredPosts.map((post, index) => (
+                  <div 
+                    key={post.id}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <CleanPostCard post={post} />
+                  </div>
                 ))
               ) : (
                 <div className="text-center py-20">
-                  <div className="max-w-lg mx-auto space-y-6">
+                  <div className="space-y-4">
                     <h3 className="text-xl font-light text-muted-foreground">
                       {searchTerm ? 'No posts found' : 'No discussions yet'}
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground">
                       {searchTerm 
-                        ? `No posts match "${searchTerm}". Try adjusting your search.`
+                        ? `No posts match "${searchTerm}".`
                         : 'Be the first to start a meaningful discussion.'
                       }
                     </p>
                     {user && !searchTerm && (
-                      <Link to="/create-post">
-                        <Button className="mt-6">
-                          Start the First Discussion
-                        </Button>
+                      <Link to="/create-post" className="inline-block mt-6">
+                        <Button>Start Discussion</Button>
                       </Link>
                     )}
                   </div>
