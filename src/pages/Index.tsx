@@ -1,8 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, MessageCircle } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Header from '@/components/Header';
 import MinimalSidebar from '@/components/MinimalSidebar';
 
@@ -25,100 +24,112 @@ const Index = () => {
         <MinimalSidebar />
         
         <main className="flex-1">
-          {/* Hero Section - Minimal */}
-          <div className="max-w-2xl mx-auto px-8 pt-24 pb-16">
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <h1 className="text-5xl font-light tracking-tight leading-tight">
-                  The Transhumanist Forum
-                </h1>
+          {/* Bold Hero Section */}
+          <div className="min-h-[80vh] flex items-center">
+            <div className="max-w-4xl mx-auto px-12 py-32">
+              <div className="space-y-12 animate-fade-up">
                 
-                <p className="text-xl text-muted-foreground font-light leading-relaxed">
-                  A place for thoughtful discussion about human enhancement, longevity research, 
-                  artificial intelligence, and the technologies that will shape our species' future.
-                </p>
-              </div>
-              
-              <div className="flex gap-6 pt-4">
-                {user ? (
-                  <Link 
-                    to="/forum"
-                    className="inline-flex items-center text-foreground hover:text-primary smooth-transition group"
-                  >
-                    <span className="text-lg font-light">Enter Forum</span>
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 smooth-transition" />
-                  </Link>
-                ) : (
-                  <>
-                    <Link 
-                      to="/auth"
-                      className="inline-flex items-center text-foreground hover:text-primary smooth-transition group"
-                    >
-                      <span className="text-lg font-light">Get Started</span>
-                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 smooth-transition" />
-                    </Link>
+                {/* Main headline with dramatic typography */}
+                <div className="space-y-8">
+                  <h1 className="text-display font-light tracking-tight">
+                    The Future
+                    <br />
+                    <span className="relative">
+                      of Humanity
+                      <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-accent animate-scale-in" 
+                           style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
+                      </div>
+                    </span>
+                  </h1>
+                  
+                  <p className="text-xl max-w-2xl leading-relaxed font-light text-muted-foreground">
+                    A forum for rigorous discussion about human enhancement, 
+                    longevity research, artificial intelligence, and the technologies 
+                    reshaping our species.
+                  </p>
+                </div>
+                
+                {/* CTA with bold interaction */}
+                <div className="flex items-center gap-12 pt-8">
+                  {user ? (
                     <Link 
                       to="/forum"
-                      className="text-lg font-light text-muted-foreground hover:text-foreground smooth-transition"
+                      className="group relative inline-flex items-center text-2xl font-light hover-lift"
                     >
-                      Browse Discussions
+                      <span className="relative z-10">Enter Forum</span>
+                      <ArrowUpRight className="h-6 w-6 ml-3 crisp-transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                      <div className="absolute inset-0 -z-10 bg-accent/5 scale-0 group-hover:scale-100 crisp-transition rounded-lg -m-4"></div>
                     </Link>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <Link 
+                        to="/auth"
+                        className="group relative inline-flex items-center text-2xl font-light hover-lift"
+                      >
+                        <span className="relative z-10">Join Discussion</span>
+                        <ArrowUpRight className="h-6 w-6 ml-3 crisp-transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                        <div className="absolute inset-0 -z-10 bg-accent/5 scale-0 group-hover:scale-100 crisp-transition rounded-lg -m-4"></div>
+                      </Link>
+                      
+                      <Link 
+                        to="/forum"
+                        className="text-xl font-light text-muted-foreground hover:text-foreground crisp-transition"
+                      >
+                        Browse
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Simple Feature List */}
-          <div className="max-w-2xl mx-auto px-8 pb-20">
-            <div className="border-t border-border/50 pt-16">
-              <div className="space-y-12">
-                <div>
-                  <h2 className="text-2xl font-light tracking-tight mb-4">
-                    What we discuss
-                  </h2>
-                  <div className="space-y-6">
-                    {[
-                      {
-                        title: "Human Enhancement",
-                        description: "Genetic engineering, cybernetics, and cognitive augmentation"
-                      },
-                      {
-                        title: "Longevity Research", 
-                        description: "Life extension science, aging reversal, and biological immortality"
-                      },
-                      {
-                        title: "AI & Consciousness",
-                        description: "Artificial intelligence, neural interfaces, and digital minds"
-                      },
-                      {
-                        title: "Future Society",
-                        description: "Ethics, governance, and social implications of enhancement"
-                      }
-                    ].map((topic, index) => (
-                      <div key={index} className="space-y-2">
-                        <h3 className="text-lg font-medium">
+          {/* Topics Grid - Bold & Minimal */}
+          <div className="border-t border-border">
+            <div className="max-w-4xl mx-auto px-12 py-20">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+                {[
+                  {
+                    number: "01",
+                    title: "Human Enhancement",
+                    description: "Genetic engineering, cybernetics, cognitive augmentation"
+                  },
+                  {
+                    number: "02", 
+                    title: "Longevity Research",
+                    description: "Life extension, aging reversal, biological immortality"
+                  },
+                  {
+                    number: "03",
+                    title: "AI & Consciousness",
+                    description: "Artificial intelligence, neural interfaces, digital minds"
+                  },
+                  {
+                    number: "04",
+                    title: "Future Society",
+                    description: "Ethics, governance, social implications"
+                  }
+                ].map((topic, index) => (
+                  <div 
+                    key={index} 
+                    className="group space-y-4 animate-fade-up hover-lift"
+                    style={{ animationDelay: `${index * 0.1 + 0.3}s`, animationFillMode: 'both' }}
+                  >
+                    <div className="flex items-start gap-6">
+                      <span className="text-sm font-mono text-muted-foreground mt-2 crisp-transition group-hover:text-accent">
+                        {topic.number}
+                      </span>
+                      <div className="space-y-3">
+                        <h3 className="text-large font-medium group-hover:text-accent crisp-transition">
                           {topic.title}
                         </h3>
-                        <p className="text-muted-foreground font-light leading-relaxed">
+                        <p className="text-muted-foreground leading-relaxed font-light">
                           {topic.description}
                         </p>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-                
-                {!user && (
-                  <div className="border-t border-border/50 pt-12">
-                    <Link 
-                      to="/auth"
-                      className="inline-flex items-center text-foreground hover:text-primary smooth-transition group"
-                    >
-                      <span className="text-lg font-light">Join the discussion</span>
-                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 smooth-transition" />
-                    </Link>
-                  </div>
-                )}
+                ))}
               </div>
             </div>
           </div>

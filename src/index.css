@@ -8,57 +8,58 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Ultra-minimal light theme with refined typography */
+    /* Bold minimal theme with striking contrast */
     --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    --foreground: 0 0% 3%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 0 0% 3%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover-foreground: 0 0% 3%;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 0 0% 20%;
+    --primary: 0 0% 3%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 0 0% 15%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 3%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 245 100% 60%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 9%;
+    --input: 0 0% 95%;
+    --ring: 0 0% 3%;
 
-    --radius: 0.5rem;
+    --radius: 0rem;
 
-    /* Minimal visual elements */
+    /* Bold visual elements */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-elegant: 0 1px 3px -1px hsl(0 0% 0% / 0.1);
-    --shadow-card: 0 1px 3px -1px hsl(0 0% 0% / 0.1);
-    --shadow-glow: 0 0 20px hsl(0 0% 0% / 0.05);
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(245 100% 70%));
+    --shadow-bold: 0 0 0 1px hsl(0 0% 3%);
+    --shadow-subtle: 0 1px 0 hsl(0 0% 90%);
+    --shadow-float: 0 4px 20px hsl(0 0% 0% / 0.15);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 0 0% 9%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 9%;
+    --sidebar-foreground: 0 0% 3%;
+    --sidebar-primary: 0 0% 3%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 97%;
+    --sidebar-accent-foreground: 0 0% 3%;
     --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 0 0% 9%;
+    --sidebar-ring: 0 0% 3%;
 
     /* Animation */
-    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-crisp: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
@@ -117,28 +118,54 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-medium;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Enhanced visual components */
-  .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-border/50;
-    box-shadow: var(--shadow-card);
+  /* Bold minimal components */
+  .bold-shadow {
+    box-shadow: var(--shadow-bold);
   }
 
-  .gradient-bg {
-    background: var(--gradient-subtle);
+  .float-shadow {
+    box-shadow: var(--shadow-float);
   }
 
-  .elegant-shadow {
-    box-shadow: var(--shadow-elegant);
-  }
-
-  .glow-effect {
-    box-shadow: var(--shadow-glow);
+  .crisp-transition {
+    transition: var(--transition-crisp);
   }
 
   .smooth-transition {
     transition: var(--transition-smooth);
+  }
+
+  /* Typography scale */
+  .text-display {
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    font-weight: 300;
+  }
+
+  .text-hero {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .text-large {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    @apply crisp-transition hover:-translate-y-0.5;
+  }
+
+  .hover-glow {
+    @apply crisp-transition hover:shadow-accent/20 hover:shadow-lg;
   }
 }

@@ -185,11 +185,15 @@ const CleanForum = () => {
             onFilterChange={setActiveFilter}
           />
           
-          <div className="max-w-2xl mx-auto px-8 py-8">
-            <div className="space-y-8">
+          <div className="max-w-4xl mx-auto px-12 py-16">
+            <div className="space-y-16">
               {posts.length > 0 ? (
-                posts.map((post) => (
-                  <div key={post.id} className="animate-fade-in">
+                posts.map((post, index) => (
+                  <div 
+                    key={post.id} 
+                    className="animate-fade-up"
+                    style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
+                  >
                     <CleanPostCard
                       post={post}
                       onVote={vote}
@@ -197,21 +201,22 @@ const CleanForum = () => {
                   </div>
                 ))
               ) : (
-                <div className="text-center py-20">
-                  <h3 className="text-xl font-light text-muted-foreground mb-4">
-                    No posts yet
+                <div className="text-center py-32">
+                  <h3 className="text-large font-light text-muted-foreground mb-6">
+                    No discussions yet
                   </h3>
-                  <p className="text-muted-foreground font-light mb-8">
-                    Be the first to start a meaningful discussion about transhumanism 
+                  <p className="text-muted-foreground mb-12 max-w-md mx-auto leading-relaxed">
+                    Start the first meaningful conversation about transhumanism 
                     and the future of humanity.
                   </p>
                   {user && (
                     <Link 
                       to="/create-post"
-                      className="inline-flex items-center text-foreground hover:text-primary smooth-transition group"
+                      className="group relative inline-flex items-center text-xl font-light hover-lift"
                     >
-                      <span className="font-light">Create the first post</span>
-                      <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 smooth-transition" />
+                      <span className="relative z-10">Create First Post</span>
+                      <ArrowUpRight className="h-5 w-5 ml-3 crisp-transition group-hover:translate-x-1 group-hover:-translate-y-1" />
+                      <div className="absolute inset-0 -z-10 bg-accent/5 scale-0 group-hover:scale-100 crisp-transition rounded-lg -m-4"></div>
                     </Link>
                   )}
                 </div>
