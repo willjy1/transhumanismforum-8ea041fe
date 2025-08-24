@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header';
 
 const Index = () => {
   const { loading, user } = useAuth();
@@ -17,6 +18,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Header />
       <div className="flex">
         <Sidebar />
         
