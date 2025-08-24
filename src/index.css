@@ -8,44 +8,43 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Modern design system with refined colors */
+    /* Academic design system - high contrast, readable */
     --background: 0 0% 100%;
-    --foreground: 224 5% 8%;
+    --foreground: 0 0% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 224 5% 8%;
+    --card-foreground: 0 0% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 224 5% 8%;
+    --popover-foreground: 0 0% 13%;
 
-    --primary: 224 5% 8%;
+    --primary: 0 0% 13%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 225 5% 35%;
+    --primary-glow: 0 0% 40%;
 
-    --secondary: 220 4% 96%;
-    --secondary-foreground: 224 5% 8%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 13%;
 
-    --muted: 220 4% 98%;
-    --muted-foreground: 220 4% 45%;
+    --muted: 0 0% 98%;
+    --muted-foreground: 0 0% 46%;
 
-    --accent: 224 5% 15%;
+    --accent: 220 13% 18%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 4% 90%;
-    --input: 220 4% 96%;
-    --ring: 224 5% 8%;
+    --border: 0 0% 89%;
+    --input: 0 0% 96%;
+    --ring: 0 0% 13%;
 
-    --radius: 8px;
+    --radius: 2px;
 
-    /* Enhanced visual elements */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    /* Minimal visual elements */
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.05);
-    --shadow-medium: 0 4px 16px 0 hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 25px 50px -12px hsl(0 0% 0% / 0.25);
+    --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-medium: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
+    --shadow-large: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
@@ -63,42 +62,40 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Minimal dark theme */
-    --background: 0 0% 4%;
-    --foreground: 0 0% 98%;
+    /* Academic dark theme - high contrast for readability */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --primary-glow: 0 0% 80%;
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 7%;
+    --primary-glow: 0 0% 70%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 0 0% 11%;
+    --secondary-foreground: 0 0% 95%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 64%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 0 0% 98%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 220 13% 82%;
+    --accent-foreground: 0 0% 7%;
 
-    --destructive: 0 62% 31%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 95%;
 
     --border: 0 0% 15%;
-    --input: 0 0% 15%;
+    --input: 0 0% 11%;
     --ring: 0 0% 83%;
 
-    /* Subtle dark visual elements */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.5);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.3);
-    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.4);
+    /* Dark theme shadows */
+    --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 1px 3px 0 hsl(0 0% 0% / 0.4);
+    --shadow-large: 0 4px 6px -1px hsl(0 0% 0% / 0.5);
 
     /* Dark sidebar */
     --sidebar-background: 0 0% 3.9%;

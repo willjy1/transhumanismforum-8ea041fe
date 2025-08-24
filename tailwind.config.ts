@@ -65,9 +65,9 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['"Geist"', 'system-ui', '-apple-system', 'sans-serif'],
-				display: ['"Geist"', 'system-ui', '-apple-system', 'sans-serif'],
-				mono: ['"Geist Mono"', 'monospace']
+				sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+				serif: ['"Crimson Text"', 'Georgia', 'Times', 'serif'],
+				display: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif']
 			},
 			fontSize: {
 				'display': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '0.9', letterSpacing: '-0.025em' }],

@@ -23,56 +23,73 @@ const Index = () => {
       <div className="flex">
         <MinimalSidebar />
         
-        <main className="flex-1">
-          {/* Clean Hero Section with enhanced spacing */}
-          <section className="min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-background to-muted/30">
-            <div className="max-w-4xl mx-auto px-8 py-32 text-center">
-              <div className="space-y-12 animate-fade-up">
+        <div className="flex-1">
+          {/* Academic hero section */}
+          <div className="max-w-4xl mx-auto px-8 py-20">
+            <article className="prose prose-lg mx-auto text-center">
+              
+              {/* Main title */}
+              <header className="mb-16">
+                <h1 className="font-serif text-6xl font-normal tracking-tight text-foreground mb-8 leading-tight">
+                  The Transhumanist Forum
+                </h1>
                 
-                {/* Main headline with improved typography */}
-                <div className="space-y-8">
-                  <h1 className="text-display font-light tracking-tight">
-                    The Transhumanist
-                    <br />
-                    <span className="relative font-normal">
-                      Forum
-                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-primary animate-scale-in" 
-                           style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
-                      </div>
-                    </span>
-                  </h1>
-                  
-                  <p className="text-large max-w-2xl mx-auto text-muted-foreground leading-relaxed font-light">
-                    A space for rigorous discussion about human enhancement, artificial intelligence, 
-                    and the future of consciousness
-                  </p>
-                </div>
-                
-                {/* CTA with subtle interaction */}
-                <div className="pt-8">
-                  {user ? (
-                    <Link 
-                      to="/forum"
-                      className="group inline-flex items-center px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 crisp-transition shadow-medium hover:shadow-large"
-                    >
-                      <span className="font-medium">Enter Forum</span>
-                      <ArrowRight className="h-5 w-5 ml-3 crisp-transition group-hover:translate-x-1" />
-                    </Link>
-                  ) : (
-                    <Link 
-                      to="/forum"
-                      className="group inline-flex items-center px-8 py-4 border border-border bg-card hover:bg-muted/50 rounded-lg crisp-transition shadow-subtle hover:shadow-medium"
-                    >
-                      <span className="font-medium text-foreground">Explore Discussions</span>
-                      <ArrowRight className="h-5 w-5 ml-3 crisp-transition group-hover:translate-x-1" />
-                    </Link>
-                  )}
-                </div>
+                <p className="text-xl text-muted-foreground leading-relaxed font-light max-w-2xl mx-auto">
+                  A scholarly community dedicated to the rigorous examination of human enhancement, 
+                  artificial intelligence, consciousness, and the technological transformation of our species.
+                </p>
+              </header>
+              
+              {/* Call to action */}
+              <div className="mt-12 not-prose">
+                {user ? (
+                  <Link 
+                    to="/forum"
+                    className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground text-sm font-medium rounded border hover:bg-primary/90 crisp-transition shadow-subtle"
+                  >
+                    Enter Forum
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                ) : (
+                  <Link 
+                    to="/forum"
+                    className="inline-flex items-center px-6 py-3 border border-border bg-background text-foreground text-sm font-medium rounded hover:bg-muted crisp-transition shadow-subtle"
+                  >
+                    Browse Discussions
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                )}
               </div>
-            </div>
-          </section>
-
-        </main>
+              
+              {/* Academic mission statement */}
+              <section className="mt-20 pt-16 border-t border-border text-left">
+                <div className="grid md:grid-cols-3 gap-12 text-sm">
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-3">Rigorous Discussion</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Evidence-based conversations about emerging technologies, 
+                      philosophical implications, and ethical considerations.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-3">Scholarly Community</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Researchers, academics, and thoughtful individuals exploring 
+                      the future of human enhancement and artificial intelligence.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-3">Open Inquiry</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Interdisciplinary dialogue bridging technology, philosophy, 
+                      biology, and ethics in the study of human potential.
+                    </p>
+                  </div>
+                </div>
+              </section>
+            </article>
+          </div>
+        </div>
       </div>
     </div>
   );

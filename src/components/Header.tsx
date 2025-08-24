@@ -44,8 +44,8 @@ const Header = () => {
     <header className="border-b border-border bg-background sticky top-0 z-50 backdrop-blur-sm">
       <div className="flex h-20 items-center justify-between px-12 max-w-7xl mx-auto">
         {/* Logo with bold typography */}
-        <Link to="/" className="text-2xl font-light tracking-tight hover:text-accent crisp-transition">
-          Transhumanist Forum
+        <Link to="/" className="font-serif text-xl font-semibold tracking-tight hover:text-accent crisp-transition">
+          The Transhumanist Forum
         </Link>
         
         {/* Search - Minimal and focused */}
