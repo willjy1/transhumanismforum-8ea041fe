@@ -31,13 +31,10 @@ const Sidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
   const [libraryOpen, setLibraryOpen] = useState(false);
-  const [communityOpen, setCommunityOpen] = useState(false);
-
   const isActive = (path: string) => location.pathname === path;
   
   // Check if any library routes are active to keep it open
-  const isLibraryActive = isActive('/library') || isActive('/thinkers') || isActive('/resources');
-  const isCommunityActive = isActive('/events');
+  const isLibraryActive = isActive('/library') || isActive('/resources');
 
   return (
     <div className="w-64 h-full bg-card border-r flex flex-col">
@@ -78,11 +75,6 @@ const Sidebar = () => {
                 isActive={isActive('/library')}
               />
               <NavItem
-                to="/thinkers"
-                label="Thinkers"
-                isActive={isActive('/thinkers')}
-              />
-              <NavItem
                 to="/resources"
                 label="Resources"
                 isActive={isActive('/resources')}
@@ -90,29 +82,11 @@ const Sidebar = () => {
             </CollapsibleContent>
           </Collapsible>
 
-          {/* Community Section - Collapsible */}
-          <Collapsible open={communityOpen || isCommunityActive} onOpenChange={setCommunityOpen}>
-            <CollapsibleTrigger className={cn(
-              "flex items-center justify-between w-full px-3 py-2 rounded-md text-sm transition-colors",
-              isCommunityActive 
-                ? "bg-primary/10 text-primary" 
-                : "text-muted-foreground hover:text-foreground hover:bg-accent"
-            )}>
-              <span>Community</span>
-              {communityOpen || isCommunityActive ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="ml-4 space-y-1">
-              <NavItem
-                to="/events"
-                label="Events"
-                isActive={isActive('/events')}
-              />
-            </CollapsibleContent>
-          </Collapsible>
+          <NavItem
+            to="/community"
+            label="Community"
+            isActive={isActive('/community')}
+          />
 
           {user && (
             <NavItem

@@ -15,6 +15,7 @@ import Bookmarks from "./pages/Bookmarks";
 import Messages from "./pages/Messages";
 import Library from "./pages/Library";
 import About from "./pages/About";
+import Community from "./pages/Community";
 import Events from "./pages/Events";
 import BestOf from "./pages/BestOf";
 import Resources from "./pages/Resources";
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/library" element={<Library />} />
               <Route path="/post/:id" element={<PostDetail />} />
               <Route path="/about" element={<About />} />
+              <Route path="/community" element={<Community />} />
               <Route path="/events" element={<Events />} />
               <Route path="/best-of" element={<BestOf />} />
               <Route path="/resources" element={<Resources />} />
