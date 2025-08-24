@@ -12,8 +12,7 @@ import {
   Calendar,
   BookOpen,
   Zap,
-  Settings,
-  PenTool
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,10 +56,10 @@ const Sidebar = () => {
             isActive={isActive('/')}
           />
           <NavItem
-            to="/all-posts"
+            to="/forum"
             icon={<FileText className="h-4 w-4" />}
             label="All Posts"
-            isActive={isActive('/all-posts')}
+            isActive={isActive('/forum')}
           />
           <NavItem
             to="/thinkers"
@@ -124,15 +123,7 @@ const Sidebar = () => {
           <>
             <Separator />
             
-            {/* User Actions */}
-            <div className="space-y-2">
-              <Button asChild className="w-full">
-                <Link to="/create-post">
-                  <PenTool className="h-4 w-4 mr-2" />
-                  Write Post
-                </Link>
-              </Button>
-            </div>
+            {/* User Actions - Removed redundant Write Post button */}
           </>
         )}
       </div>
