@@ -30,9 +30,9 @@ const Index = () => {
               
               {/* Main title */}
               <header className="mb-16">
-                <h1 className="text-6xl font-medium tracking-tight text-foreground mb-8 leading-tight">
-                  The Transhumanist Forum
-                </h1>
+              <h1 className="font-serif text-5xl font-normal mb-6">
+                The Transhumanist Forum
+              </h1>
                 
                 <p className="text-xl text-muted-foreground leading-relaxed font-light max-w-3xl mx-auto">
                   A forum for rigorous discussion of human enhancement, the expansion of consciousness, 

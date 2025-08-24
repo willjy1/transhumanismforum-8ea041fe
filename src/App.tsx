@@ -13,8 +13,7 @@ import CreatePost from "./pages/CreatePost";
 import CreatePostRich from "./components/CreatePostRich";
 import Bookmarks from "./pages/Bookmarks";
 import Messages from "./pages/Messages";
-import Sequences from "./pages/Sequences";
-import Concepts from "./pages/Concepts";
+import Library from "./pages/Library";
 import About from "./pages/About";
 import UserProfile from "./pages/UserProfile";
 import Forum from "./pages/Forum";
@@ -47,8 +46,7 @@ const App = () => (
               <Route path="/create-post-rich" element={<CreatePostRich />} />
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/messages" element={<Messages />} />
-              <Route path="/sequences" element={<Sequences />} />
-              <Route path="/concepts" element={<Concepts />} />
+              <Route path="/library" element={<Library />} />
               <Route path="/post/:id" element={<PostDetail />} />
               <Route path="/about" element={<About />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

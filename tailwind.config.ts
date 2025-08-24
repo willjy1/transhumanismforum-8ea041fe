@@ -65,8 +65,9 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-				display: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
+				sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+				serif: ['"Charter"', 'Georgia', 'Times', 'serif'],
+				display: ['"Charter"', 'Georgia', 'Times', 'serif']
 			},
 			fontSize: {
 				'display': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '0.9', letterSpacing: '-0.025em' }],

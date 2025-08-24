@@ -61,14 +61,9 @@ const MinimalSidebar = () => {
           </h3>
           <div className="space-y-2 pl-0">
             <NavItem
-              to="/sequences"
-              label="Sequences"
-              isActive={isActive('/sequences')}
-            />
-            <NavItem
-              to="/concepts"
-              label="Concepts"
-              isActive={isActive('/concepts')}
+              to="/library"
+              label="Library"
+              isActive={isActive('/library')}
             />
           </div>
         </div>
