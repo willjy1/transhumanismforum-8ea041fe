@@ -1,5 +1,8 @@
 import React from 'react';
-import { Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Calendar, MessageSquare, Users } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import Sidebar from '@/components/Sidebar';
 
 const Community = () => {
@@ -14,6 +17,53 @@ const Community = () => {
               <h1 className="text-large font-light">
                 Community
               </h1>
+              <p className="text-muted-foreground">
+                Connect, share, and engage with fellow thinkers and philosophers
+              </p>
+            </div>
+
+            {/* Community Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              {/* Notes Feature */}
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <MessageSquare className="h-6 w-6 text-primary" />
+                    Notes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Share quick thoughts, observations, and insights with the community. 
+                    Like Substack Notes - a social feed for philosophers and thinkers.
+                  </p>
+                  <Button asChild>
+                    <Link to="/community/notes">
+                      Explore Notes
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Forum Link */}
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-3">
+                    <Users className="h-6 w-6 text-primary" />
+                    Discussion Forum
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Engage in deep discussions with detailed posts, comments, and threaded conversations.
+                  </p>
+                  <Button asChild variant="outline">
+                    <Link to="/forum">
+                      Visit Forum
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Events Section */}

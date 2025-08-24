@@ -69,12 +69,7 @@ const Notes = () => {
           updated_at,
           likes_count,
           replies_count,
-          parent_id,
-          profiles!notes_author_id_fkey (
-            username,
-            full_name,
-            avatar_url
-          )
+          parent_id
         `)
         .is('parent_id', null); // Only top-level notes, not replies
 
@@ -89,24 +84,46 @@ const Notes = () => {
 
       if (error) throw error;
 
-      // Check which notes the current user has liked
-      let notesWithLikes = notesData || [];
-      if (user) {
-        const noteIds = notesData?.map(note => note.id) || [];
-        if (noteIds.length > 0) {
-          const { data: userLikes } = await supabase
-            .from('note_likes')
-            .select('note_id')
-            .eq('user_id', user.id)
-            .in('note_id', noteIds);
+      // Fetch profile data for each note
+      let notesWithProfiles = [];
+      if (notesData && notesData.length > 0) {
+        const authorIds = notesData.map(note => note.author_id);
+        const { data: profilesData } = await supabase
+          .from('profiles')
+          .select('id, username, full_name, avatar_url')
+          .in('id', authorIds);
 
-          const likedNoteIds = new Set(userLikes?.map(like => like.note_id) || []);
-          
-          notesWithLikes = notesData?.map(note => ({
-            ...note,
-            user_liked: likedNoteIds.has(note.id)
-          })) || [];
-        }
+        const profilesMap = new Map();
+        profilesData?.forEach(profile => {
+          profilesMap.set(profile.id, profile);
+        });
+
+        notesWithProfiles = notesData.map(note => ({
+          ...note,
+          profiles: profilesMap.get(note.author_id) || {
+            username: 'unknown',
+            full_name: null,
+            avatar_url: null
+          }
+        }));
+      }
+
+      // Check which notes the current user has liked
+      let notesWithLikes = notesWithProfiles;
+      if (user && notesWithProfiles.length > 0) {
+        const noteIds = notesWithProfiles.map(note => note.id);
+        const { data: userLikes } = await supabase
+          .from('note_likes')
+          .select('note_id')
+          .eq('user_id', user.id)
+          .in('note_id', noteIds);
+
+        const likedNoteIds = new Set(userLikes?.map(like => like.note_id) || []);
+        
+        notesWithLikes = notesWithProfiles.map(note => ({
+          ...note,
+          user_liked: likedNoteIds.has(note.id)
+        }));
       }
 
       setNotes(notesWithLikes);

@@ -24,6 +24,7 @@ import PostsLatest from "./pages/PostsLatest";
 import UserProfile from "./pages/UserProfile";
 import Forum from "./pages/Forum";
 import PostDetail from "./pages/PostDetail";
+import Notes from "./pages/Notes";
 import NotFound from "./pages/NotFound";
 import ArtPreview from "./pages/ArtPreview";
 
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/post/:id" element={<PostDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/community" element={<Community />} />
+              <Route path="/community/notes" element={<Notes />} />
               <Route path="/events" element={<Events />} />
               <Route path="/best-of" element={<BestOf />} />
               <Route path="/resources" element={<Resources />} />
