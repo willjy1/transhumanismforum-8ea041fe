@@ -32,7 +32,7 @@ const Thinkers = () => {
       const { data, error } = await supabase
         .from('featured_thinkers')
         .select('*')
-        .order('display_order', { ascending: true });
+        .order('name', { ascending: true });
 
       if (error) throw error;
       setThinkers(data || []);
