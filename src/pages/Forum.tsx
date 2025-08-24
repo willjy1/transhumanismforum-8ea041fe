@@ -5,9 +5,9 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
+import { Plus } from 'lucide-react';
 import PostCard from '@/components/PostCard';
 import PostSearch from '@/components/PostSearch';
-import QuickTakes from '@/components/QuickTakes';
 import ActivityFeed from '@/components/ActivityFeed';
 import Sidebar from '@/components/Sidebar';
 
@@ -196,24 +196,33 @@ const Forum = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+    <div className="flex min-h-screen bg-background">
       <Sidebar />
       
       {/* Main Content Area */}
       <div className="flex-1 flex">
         {/* Posts Column */}
         <div className="flex-1 max-w-4xl">
-          {/* Enhanced Header Section */}
-          <div className="bg-gradient-card border-b border-border/50 px-6 py-8">
-            <div className="max-w-3xl">
-              <h1 className="text-2xl font-bold mb-2">Community Discussions</h1>
-              <p className="text-muted-foreground">
-                Explore cutting-edge ideas about human enhancement, AI, and the future of consciousness.
-              </p>
+          {/* Clean Header Section */}
+          <div className="border-b border-border px-6 py-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-2xl font-semibold mb-1">Community Discussions</h1>
+                <p className="text-muted-foreground">
+                  Explore ideas about human enhancement, AI, and consciousness.
+                </p>
+              </div>
+              
+              {user && (
+                <Button asChild className="gap-2">
+                  <Link to="/create-post-rich">
+                    <Plus className="h-4 w-4" />
+                    Create Post
+                  </Link>
+                </Button>
+              )}
             </div>
-          </div>
 
-          <div className="p-6">
             <PostSearch
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -227,28 +236,23 @@ const Forum = () => {
             />
           </div>
           
-          <div className="px-6 pb-6 space-y-6">
-            <QuickTakes />
-            
-            <div className="space-y-4 stagger-children">
-              {posts.map((post) => (
-                <div key={post.id} className="animate-fade-up" style={{ animationDelay: `${Math.random() * 0.3}s` }}>
-                  <PostCard
-                    post={post}
-                    onVote={handleVote}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="p-6 space-y-4">
+            {posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onVote={handleVote}
+              />
+            ))}
 
             {posts.length === 0 && !loading && (
-              <div className="engagement-card p-12 text-center">
+              <div className="interactive-card text-center py-12">
                 <h3 className="text-lg font-semibold mb-2">No posts found</h3>
                 <p className="text-muted-foreground mb-6">
                   Try adjusting your search terms or filters
                 </p>
                 {user && (
-                  <Button asChild className="btn-primary">
+                  <Button asChild>
                     <Link to="/create-post-rich">Create Post</Link>
                   </Button>
                 )}
@@ -257,17 +261,17 @@ const Forum = () => {
           </div>
         </div>
 
-        {/* Enhanced Right Sidebar - Activity Feed */}
-        <div className="w-80 border-l border-border/50 bg-gradient-card/30 p-6 hidden xl:block">
+        {/* Right Sidebar - Activity Feed */}
+        <div className="w-80 border-l border-border p-6 hidden xl:block">
           <div className="space-y-6">
-            <div className="engagement-card p-4">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                Live Activity
+            <div className="interactive-card">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                Community Activity
               </h3>
               <ActivityFeed 
                 title=""
-                limit={15}
+                limit={12}
               />
             </div>
           </div>
