@@ -65,8 +65,9 @@ export default {
 				}
 			},
 			fontFamily: {
-				sans: ['"Space Grotesk"', 'system-ui', '-apple-system', 'sans-serif'],
-				display: ['"Space Grotesk"', 'system-ui', '-apple-system', 'sans-serif']
+				sans: ['"Geist"', 'system-ui', '-apple-system', 'sans-serif'],
+				display: ['"Geist"', 'system-ui', '-apple-system', 'sans-serif'],
+				mono: ['"Geist Mono"', 'monospace']
 			},
 			fontSize: {
 				'display': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '0.9', letterSpacing: '-0.025em' }],

@@ -8,44 +8,44 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-/* Minimal design system with enhanced typography */
+    /* Modern design system with refined colors */
     --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    --foreground: 224 5% 8%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 224 5% 8%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover-foreground: 224 5% 8%;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 0 0% 20%;
+    --primary: 224 5% 8%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 225 5% 35%;
 
-    --secondary: 0 0% 97%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 220 4% 96%;
+    --secondary-foreground: 224 5% 8%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 4% 98%;
+    --muted-foreground: 220 4% 45%;
 
-    --accent: 0 0% 9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 224 5% 15%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 96%;
-    --ring: 0 0% 9%;
+    --border: 220 4% 90%;
+    --input: 220 4% 96%;
+    --ring: 224 5% 8%;
 
-    --radius: 0rem;
+    --radius: 8px;
 
-    /* Subtle visual elements */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    /* Enhanced visual elements */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.1);
+    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.05);
+    --shadow-medium: 0 4px 16px 0 hsl(0 0% 0% / 0.1);
+    --shadow-large: 0 25px 50px -12px hsl(0 0% 0% / 0.25);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;

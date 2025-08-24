@@ -25,54 +25,52 @@ const Index = () => {
         
         <main className="flex-1">
           {/* Clean Hero Section with enhanced spacing */}
-          <div className="min-h-[85vh] flex items-center">
-            <div className="max-w-5xl mx-auto px-12 py-20">
-              <div className="space-y-16 animate-fade-up">
+          <section className="min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-background to-muted/30">
+            <div className="max-w-4xl mx-auto px-8 py-32 text-center">
+              <div className="space-y-12 animate-fade-up">
                 
                 {/* Main headline with improved typography */}
-                <div className="space-y-12">
-                  <h1 className="text-display">
-                    The
+                <div className="space-y-8">
+                  <h1 className="text-display font-light tracking-tight">
+                    The Transhumanist
                     <br />
-                    <span className="relative">
-                      Transhumanist Forum
-                      <div className="absolute -bottom-1 left-0 w-full h-px bg-foreground animate-scale-in" 
+                    <span className="relative font-normal">
+                      Forum
+                      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 h-0.5 bg-primary animate-scale-in" 
                            style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
                       </div>
                     </span>
                   </h1>
                   
-                  <p className="text-body max-w-3xl text-muted-foreground leading-relaxed">
-                    A forum for rigorous discussion of human enhancement, the expansion of consciousness, 
-                    artificial intelligence, and the future of life itself.
+                  <p className="text-large max-w-2xl mx-auto text-muted-foreground leading-relaxed font-light">
+                    A space for rigorous discussion about human enhancement, artificial intelligence, 
+                    and the future of consciousness
                   </p>
                 </div>
                 
                 {/* CTA with subtle interaction */}
-                <div className="flex items-center gap-16 pt-8">
+                <div className="pt-8">
                   {user ? (
                     <Link 
                       to="/forum"
-                      className="group relative inline-flex items-center text-2xl hover-lift"
+                      className="group inline-flex items-center px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 crisp-transition shadow-medium hover:shadow-large"
                     >
-                      <span className="relative z-10 font-light">Enter Forum</span>
-                      <ArrowRight className="h-6 w-6 ml-4 crisp-transition group-hover:translate-x-2" />
-                      <div className="absolute inset-0 -z-10 bg-muted/30 scale-0 group-hover:scale-100 crisp-transition rounded-lg -mx-6 -my-3"></div>
+                      <span className="font-medium">Enter Forum</span>
+                      <ArrowRight className="h-5 w-5 ml-3 crisp-transition group-hover:translate-x-1" />
                     </Link>
                   ) : (
                     <Link 
                       to="/forum"
-                      className="group relative inline-flex items-center text-2xl hover-lift"
+                      className="group inline-flex items-center px-8 py-4 border border-border bg-card hover:bg-muted/50 rounded-lg crisp-transition shadow-subtle hover:shadow-medium"
                     >
-                      <span className="relative z-10 font-light">Browse Discussions</span>
-                      <ArrowRight className="h-6 w-6 ml-4 crisp-transition group-hover:translate-x-2" />
-                      <div className="absolute inset-0 -z-10 bg-muted/30 scale-0 group-hover:scale-100 crisp-transition rounded-lg -mx-6 -my-3"></div>
+                      <span className="font-medium text-foreground">Explore Discussions</span>
+                      <ArrowRight className="h-5 w-5 ml-3 crisp-transition group-hover:translate-x-1" />
                     </Link>
                   )}
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
         </main>
       </div>
