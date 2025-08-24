@@ -43,6 +43,14 @@ interface Post {
   };
 }
 
+interface Note {
+  id: string;
+  content: string;
+  created_at: string;
+  likes_count: number;
+  replies_count: number;
+}
+
 interface Comment {
   id: string;
   content: string;
@@ -62,6 +70,7 @@ const UserProfile = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState('posts');
@@ -89,10 +98,11 @@ const UserProfile = () => {
       if (error) throw error;
       setProfile(profileData);
 
-      // Fetch user's posts and comments in parallel
+      // Fetch user's posts, comments, and notes in parallel
       await Promise.all([
         fetchUserPosts(profileData.id),
-        fetchUserComments(profileData.id)
+        fetchUserComments(profileData.id),
+        fetchUserNotes(profileData.id)
       ]);
 
     } catch (error) {
@@ -142,6 +152,25 @@ const UserProfile = () => {
       setComments(data || []);
     } catch (error) {
       console.error('Error fetching user comments:', error);
+    }
+  };
+
+  const fetchUserNotes = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .select(`
+          id, content, created_at, likes_count, replies_count
+        `)
+        .eq('author_id', userId)
+        .is('parent_id', null) // Only top-level notes, not replies
+        .order('created_at', { ascending: false })
+        .limit(10);
+
+      if (error) throw error;
+      setNotes(data || []);
+    } catch (error) {
+      console.error('Error fetching user notes:', error);
     }
   };
 
@@ -384,7 +413,7 @@ const UserProfile = () => {
 
             {/* Content Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-12">
-              <TabsList className="grid w-full grid-cols-2 h-14">
+              <TabsList className="grid w-full grid-cols-3 h-14">
                 <TabsTrigger value="posts" className="gap-3 text-lg">
                   <FileText className="h-5 w-5" />
                   Posts
@@ -392,6 +421,10 @@ const UserProfile = () => {
                 <TabsTrigger value="comments" className="gap-3 text-lg">
                   <MessageSquare className="h-5 w-5" />
                   Comments
+                </TabsTrigger>
+                <TabsTrigger value="notes" className="gap-3 text-lg">
+                  <MessageSquare className="h-5 w-5" />
+                  Notes
                 </TabsTrigger>
               </TabsList>
 
@@ -478,6 +511,38 @@ const UserProfile = () => {
                 ) : (
                   <div className="text-center py-16">
                     <p className="text-xl text-muted-foreground">No comments yet.</p>
+                  </div>
+                )}
+              </TabsContent>
+
+              <TabsContent value="notes" className="space-y-8">
+                {notes.length > 0 ? (
+                  notes.map((note) => (
+                    <Card key={note.id} className="p-8 hover:border-accent/50 crisp-transition">
+                      <div className="space-y-6">
+                        <div className="text-lg leading-relaxed font-light whitespace-pre-wrap">
+                          {note.content}
+                        </div>
+                        
+                        <div className="flex items-center gap-8 text-lg text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Heart className="h-4 w-4" />
+                            <span>{note.likes_count} likes</span>
+                          </div>
+                          {note.replies_count > 0 && (
+                            <div className="flex items-center gap-2">
+                              <MessageSquare className="h-4 w-4" />
+                              <span>{note.replies_count} replies</span>
+                            </div>
+                          )}
+                          <time>{formatDistanceToNow(new Date(note.created_at), { addSuffix: true })}</time>
+                        </div>
+                      </div>
+                    </Card>
+                  ))
+                ) : (
+                  <div className="text-center py-16">
+                    <p className="text-xl text-muted-foreground">No notes yet.</p>
                   </div>
                 )}
               </TabsContent>
