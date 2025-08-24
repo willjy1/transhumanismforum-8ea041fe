@@ -113,6 +113,13 @@ const Resources = () => {
       description: "Blog exploring cognitive biases, social dynamics, and unconventional thinking about human nature and society.",
       url: "http://www.overcomingbias.com",
       category: "Psychology"
+    },
+    {
+      title: "William Joy",
+      author: "William Joy",
+      description: "Insights on technology, entrepreneurship, and the future of human-computer interaction from a pioneering computer scientist.",
+      url: "https://williamjoy.ca",
+      category: "Technology"
     }
   ];
 
@@ -150,7 +157,7 @@ const Resources = () => {
           <div className="space-y-16">
             {/* Books Section */}
             <section>
-              <h2 className="text-xl font-medium mb-8">Essential Reading</h2>
+              <h2 className="text-xl font-medium mb-8">Recommended Reading</h2>
               
               <div className="space-y-6">
                 {books.map((book, index) => (
