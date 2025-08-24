@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import Header from '@/components/Header';
@@ -146,15 +148,15 @@ const CleanForum = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-subtle">
         <Header />
         <div className="flex">
           <MinimalSidebar />
           <main className="flex-1">
-            <div className="max-w-2xl mx-auto p-6">
+            <div className="max-w-4xl mx-auto p-6">
               <div className="space-y-6">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-24 bg-gray-100 rounded animate-pulse"></div>
+                  <div key={i} className="h-32 bg-muted rounded-lg animate-pulse elegant-shadow"></div>
                 ))}
               </div>
             </div>
@@ -165,7 +167,7 @@ const CleanForum = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-subtle">
       <Header />
       <div className="flex">
         <MinimalSidebar />
@@ -176,32 +178,30 @@ const CleanForum = () => {
             onFilterChange={setActiveFilter}
           />
           
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-4xl mx-auto p-6 space-y-6">
             {posts.length > 0 ? (
-              <div className="px-6">
-                {posts.map((post) => (
+              posts.map((post) => (
+                <div key={post.id} className="animate-fade-in">
                   <CleanPostCard
-                    key={post.id}
                     post={post}
                     onVote={vote}
                   />
-                ))}
-              </div>
+                </div>
+              ))
             ) : (
-              <div className="px-6 py-16 text-center">
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No posts yet</h3>
-                <p className="text-gray-600 mb-4">
-                  Be the first to start a discussion about transhumanism.
-                </p>
-                {user && (
-                  <Link 
-                    to="/create-post"
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
-                  >
-                    Create First Post
-                  </Link>
-                )}
-              </div>
+              <Card className="elegant-shadow">
+                <CardContent className="p-12 text-center">
+                  <h3 className="text-xl font-semibold mb-3">No posts yet</h3>
+                  <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                    Be the first to start a meaningful discussion about transhumanism and the future of humanity.
+                  </p>
+                  {user && (
+                    <Button asChild className="bg-primary hover:bg-primary/90 shadow-glow">
+                      <Link to="/create-post">Create the First Post</Link>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
             )}
           </div>
         </main>

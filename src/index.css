@@ -8,81 +8,98 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 225 25% 4%;
-    --foreground: 213 31% 91%;
+    /* Modern light theme with enhanced visual hierarchy */
+    --background: 0 0% 98%;
+    --foreground: 240 10% 3.9%;
 
-    --card: 225 20% 6%;
-    --card-foreground: 213 31% 91%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
 
-    --popover: 225 20% 6%;
-    --popover-foreground: 213 31% 91%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 266 83% 58%;
-    --primary-foreground: 225 25% 4%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 262 83% 70%;
 
-    --secondary: 225 15% 12%;
-    --secondary-foreground: 213 31% 91%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 225 15% 12%;
-    --muted-foreground: 225 8% 60%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
     --accent: 191 91% 36%;
-    --accent-foreground: 225 25% 4%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 225 25% 4%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 225 15% 12%;
-    --input: 225 15% 12%;
-    --ring: 266 83% 58%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 262 83% 58%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
+    /* Enhanced visual elements */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --shadow-elegant: 0 4px 20px -4px hsl(var(--primary) / 0.1);
+    --shadow-card: 0 2px 10px -2px hsl(240 10% 3.9% / 0.1);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.15);
+
+    /* Sidebar */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Animation */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .dark {
-    --background: 210 50% 2%;
+    /* Enhanced dark theme */
+    --background: 224 71% 4%;
     --foreground: 213 31% 91%;
 
-    --card: 210 40% 4%;
+    --card: 224 71% 4%;
     --card-foreground: 213 31% 91%;
 
-    --popover: 210 40% 4%;
+    --popover: 224 71% 4%;
     --popover-foreground: 213 31% 91%;
 
-    --primary: 266 83% 58%;
-    --primary-foreground: 210 50% 2%;
+    --primary: 263 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
+    --primary-glow: 263 70% 60%;
 
-    --secondary: 210 30% 8%;
-    --secondary-foreground: 213 31% 91%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
 
-    --muted: 210 30% 8%;
-    --muted-foreground: 225 8% 60%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
 
     --accent: 191 91% 36%;
-    --accent-foreground: 210 50% 2%;
+    --accent-foreground: 210 20% 98%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 50% 2%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
 
-    --border: 210 30% 8%;
-    --input: 210 30% 8%;
-    --ring: 266 83% 58%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263 70% 50.4%;
+
+    /* Enhanced visual elements for dark mode */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+    --shadow-elegant: 0 4px 20px -4px hsl(var(--primary) / 0.25);
+    --shadow-card: 0 2px 10px -2px hsl(0 0% 0% / 0.4);
+    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
+
+    /* Dark sidebar */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +117,28 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-medium;
+  }
+
+  /* Enhanced visual components */
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-border/50;
+    box-shadow: var(--shadow-card);
+  }
+
+  .gradient-bg {
+    background: var(--gradient-subtle);
+  }
+
+  .elegant-shadow {
+    box-shadow: var(--shadow-elegant);
+  }
+
+  .glow-effect {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .smooth-transition {
+    transition: var(--transition-smooth);
   }
 }

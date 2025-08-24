@@ -19,18 +19,18 @@ const CleanFilters: React.FC<CleanFiltersProps> = ({
   ];
 
   return (
-    <div className="border-b bg-white">
-      <div className="px-6 py-3">
-        <div className="flex gap-6">
+    <div className="border-b bg-card/50 backdrop-blur-sm sticky top-14 z-40">
+      <div className="px-6 py-4">
+        <div className="flex gap-1">
           {filters.map((filter) => (
             <button
               key={filter.key}
               onClick={() => onFilterChange(filter.key)}
               className={cn(
-                "text-sm font-medium pb-2 border-b-2 transition-colors",
+                "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
                 activeFilter === filter.key 
-                  ? "border-blue-600 text-blue-600" 
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  ? "bg-primary text-primary-foreground shadow-sm" 
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
             >
               {filter.label}
