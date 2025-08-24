@@ -147,24 +147,20 @@ const Resources = () => {
             </h1>
           </div>
 
-          <div className="space-y-20">
+          <div className="space-y-16">
             {/* Books Section */}
             <section>
-              <div className="flex items-center gap-3 mb-12">
-                <BookOpen className="h-6 w-6 text-muted-foreground" />
-                <h2 className="text-2xl font-light tracking-tight">Essential Reading</h2>
-              </div>
+              <h2 className="text-xl font-medium mb-8">Essential Reading</h2>
               
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {books.map((book, index) => (
                   <article 
                     key={`${book.title}-${book.author}`}
-                    className="group animate-fade-in pb-8 border-b border-border/30 last:border-b-0"
-                    style={{ animationDelay: `${index * 0.05}s` }}
+                    className="pb-6 border-b border-border/20 last:border-b-0"
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <h3 className="text-lg font-medium tracking-tight mb-1 group-hover:text-primary smooth-transition">
+                        <h3 className="font-medium mb-1">
                           {book.title}
                         </h3>
                         <p className="text-sm text-muted-foreground">
@@ -177,14 +173,14 @@ const Resources = () => {
                           href={book.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground smooth-transition group/link"
+                          className="text-sm text-muted-foreground hover:text-foreground"
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
                       )}
                     </div>
 
-                    <p className="text-muted-foreground leading-relaxed font-light text-sm">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {book.description}
                     </p>
                   </article>
@@ -194,28 +190,19 @@ const Resources = () => {
 
             {/* Blogs Section */}
             <section>
-              <div className="flex items-center gap-3 mb-12">
-                <Globe className="h-6 w-6 text-muted-foreground" />
-                <h2 className="text-2xl font-light tracking-tight">Recommended Blogs</h2>
-              </div>
+              <h2 className="text-xl font-medium mb-8">Blogs</h2>
               
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {blogs.map((blog, index) => (
                   <article 
                     key={blog.title}
-                    className="group animate-fade-in pb-8 border-b border-border/30 last:border-b-0"
-                    style={{ animationDelay: `${index * 0.05}s` }}
+                    className="pb-6 border-b border-border/20 last:border-b-0"
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-medium tracking-tight group-hover:text-primary smooth-transition">
-                            {blog.title}
-                          </h3>
-                          <span className="text-xs px-2 py-1 bg-muted rounded-md text-muted-foreground">
-                            {blog.category}
-                          </span>
-                        </div>
+                        <h3 className="font-medium mb-1">
+                          {blog.title}
+                        </h3>
                         <p className="text-sm text-muted-foreground">
                           {blog.author}
                         </p>
@@ -225,14 +212,13 @@ const Resources = () => {
                         href={blog.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground smooth-transition group/link"
+                        className="text-sm text-muted-foreground hover:text-foreground"
                       >
-                        <span className="mr-1">Visit</span>
-                        <ArrowUpRight className="h-3 w-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 smooth-transition" />
+                        <ExternalLink className="h-4 w-4" />
                       </a>
                     </div>
 
-                    <p className="text-muted-foreground leading-relaxed font-light text-sm">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {blog.description}
                     </p>
                   </article>
@@ -242,38 +228,31 @@ const Resources = () => {
 
             {/* Thinkers Section */}
             <section>
-              <div className="flex items-center gap-3 mb-12">
-                <User className="h-6 w-6 text-muted-foreground" />
-                <h2 className="text-2xl font-light tracking-tight">Featured Thinkers</h2>
-              </div>
+              <h2 className="text-xl font-medium mb-8">Thinkers</h2>
               
               {loading ? (
-                <div className="space-y-8">
+                <div className="space-y-6">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="space-y-4">
-                      <div className="h-6 bg-muted rounded w-48 animate-pulse"></div>
+                    <div key={i} className="space-y-3">
+                      <div className="h-5 bg-muted rounded w-48 animate-pulse"></div>
                       <div className="h-4 bg-muted rounded w-32 animate-pulse"></div>
-                      <div className="space-y-2">
-                        <div className="h-4 bg-muted rounded animate-pulse"></div>
-                        <div className="h-4 bg-muted rounded w-5/6 animate-pulse"></div>
-                      </div>
+                      <div className="h-4 bg-muted rounded animate-pulse"></div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="space-y-12">
+                <div className="space-y-8">
                   {thinkers.map((thinker, index) => (
                     <article 
                       key={thinker.id}
-                      className="group animate-fade-in pb-12 border-b border-border/30 last:border-b-0"
-                      style={{ animationDelay: `${index * 0.1}s` }}
+                      className="pb-8 border-b border-border/20 last:border-b-0"
                     >
-                      <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-start justify-between mb-2">
                         <div className="flex-1">
-                          <h3 className="text-xl font-medium tracking-tight mb-2 group-hover:text-primary smooth-transition">
+                          <h3 className="font-medium mb-1">
                             {thinker.name}
                           </h3>
-                          <p className="text-sm font-medium text-muted-foreground tracking-wide uppercase">
+                          <p className="text-sm text-muted-foreground">
                             {thinker.field_of_expertise}
                           </p>
                         </div>
@@ -283,35 +262,16 @@ const Resources = () => {
                             href={thinker.website_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground smooth-transition group/link"
+                            className="text-sm text-muted-foreground hover:text-foreground"
                           >
-                            <span className="mr-1">Website</span>
-                            <ArrowUpRight className="h-3 w-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 smooth-transition" />
+                            <ExternalLink className="h-4 w-4" />
                           </a>
                         )}
                       </div>
 
-                      <p className="text-muted-foreground leading-relaxed font-light text-[15px] mb-6">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
                         {thinker.bio}
                       </p>
-
-                      {thinker.key_works && thinker.key_works.length > 0 && (
-                        <div>
-                          <h4 className="text-sm font-medium text-muted-foreground tracking-wide uppercase mb-3">
-                            Notable Work
-                          </h4>
-                          <div className="space-y-2">
-                            {thinker.key_works.slice(0, 2).map((work, workIndex) => (
-                              <div 
-                                key={workIndex}
-                                className="text-sm text-muted-foreground/80 font-light italic"
-                              >
-                                {work}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
                     </article>
                   ))}
                 </div>

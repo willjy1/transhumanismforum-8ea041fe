@@ -66,8 +66,8 @@ export default {
 			},
 			fontFamily: {
 				sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
-				serif: ['"Crimson Text"', 'Georgia', 'Times', 'serif'],
-				display: ['"Playfair Display"', '"Crimson Text"', 'Georgia', 'Times', 'serif']
+				serif: ['"EB Garamond"', '"Crimson Text"', 'Georgia', 'Times', 'serif'],
+				display: ['"EB Garamond"', '"Crimson Text"', 'Georgia', 'Times', 'serif']
 			},
 			fontSize: {
 				'display': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '0.9', letterSpacing: '-0.025em' }],
