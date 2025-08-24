@@ -32,10 +32,10 @@ const Index = () => {
                 {/* Main headline with dramatic typography */}
                 <div className="space-y-8">
                   <h1 className="text-display font-light tracking-tight">
-                    The Future
+                    Beyond
                     <br />
                     <span className="relative">
-                      of Life
+                      Human
                       <div className="absolute -bottom-2 left-0 w-full h-0.5 bg-accent animate-scale-in" 
                            style={{ animationDelay: '0.8s', animationFillMode: 'both' }}>
                       </div>
@@ -43,9 +43,9 @@ const Index = () => {
                   </h1>
                   
                   <p className="text-xl max-w-2xl leading-relaxed font-light text-muted-foreground">
-                    A forum for rigorous discussion about biological enhancement, 
-                    consciousness research, artificial intelligence, and the forces 
-                    shaping the trajectory of life in the universe.
+                    A transhumanist forum for rigorous discussion about enhancement technologies, 
+                    consciousness expansion, artificial intelligence, and the transformation 
+                    of intelligent life throughout the cosmos.
                   </p>
                 </div>
                 
