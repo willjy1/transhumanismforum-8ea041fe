@@ -8,45 +8,44 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-/* Sophisticated design system with rich typography */
-    --background: 0 0% 99%;
-    --foreground: 220 18% 9%;
+/* Minimal design system with enhanced typography */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 18% 9%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 18% 9%;
+    --popover-foreground: 0 0% 9%;
 
-    --primary: 220 18% 9%;
+    --primary: 0 0% 9%;
     --primary-foreground: 0 0% 98%;
-    --primary-glow: 220 15% 25%;
+    --primary-glow: 0 0% 20%;
 
-    --secondary: 220 14% 96%;
-    --secondary-foreground: 220 18% 9%;
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 8% 46%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 262 100% 65%;
+    --accent: 0 0% 9%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 94%;
-    --ring: 262 100% 65%;
+    --border: 0 0% 90%;
+    --input: 0 0% 96%;
+    --ring: 0 0% 9%;
 
     --radius: 0rem;
 
-    /* Rich visual elements */
-    --gradient-primary: linear-gradient(135deg, hsl(262 100% 65%), hsl(262 100% 75%));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(262 100% 75%));
+    /* Subtle visual elements */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-subtle: 0 1px 3px 0 hsl(220 18% 9% / 0.1);
-    --shadow-medium: 0 4px 6px -1px hsl(220 18% 9% / 0.1), 0 2px 4px -1px hsl(220 18% 9% / 0.06);
-    --shadow-large: 0 10px 15px -3px hsl(220 18% 9% / 0.1), 0 4px 6px -2px hsl(220 18% 9% / 0.05);
+    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
+    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.1);
 
     /* Sidebar */
     --sidebar-background: 0 0% 100%;
@@ -64,43 +63,42 @@ All colors MUST be HSL.
   }
 
   .dark {
-    /* Rich dark theme with enhanced readability */
-    --background: 222 84% 4%;
-    --foreground: 210 40% 98%;
+    /* Minimal dark theme */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
 
-    --card: 222 84% 5%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222 84% 5%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
-    --primary-glow: 217 32% 80%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --primary-glow: 0 0% 80%;
 
-    --secondary: 217 32% 17%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 64%;
 
-    --accent: 262 100% 70%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 0 0% 98%;
+    --accent-foreground: 0 0% 9%;
 
-    --destructive: 0 90% 70%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 31%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 262 100% 70%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 0 0% 83%;
 
-    /* Rich visual elements for dark mode */
-    --gradient-primary: linear-gradient(135deg, hsl(262 100% 70%), hsl(262 100% 80%));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(262 100% 80%));
+    /* Subtle dark visual elements */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-subtle: 0 1px 3px 0 hsl(222 84% 4% / 0.5);
-    --shadow-medium: 0 4px 6px -1px hsl(222 84% 4% / 0.3), 0 2px 4px -1px hsl(222 84% 4% / 0.2);
-    --shadow-large: 0 10px 15px -3px hsl(222 84% 4% / 0.3), 0 4px 6px -2px hsl(222 84% 4% / 0.2);
+    --shadow-subtle: 0 1px 3px 0 hsl(0 0% 0% / 0.5);
+    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.3);
+    --shadow-large: 0 20px 25px -5px hsl(0 0% 0% / 0.4);
 
     /* Dark sidebar */
     --sidebar-background: 0 0% 3.9%;
@@ -149,40 +147,37 @@ All colors MUST be HSL.
     transition: var(--transition-smooth);
   }
 
-  /* Typography scale with optimal reading */
+  /* Enhanced typography with better hierarchy */
   .text-display {
-    font-size: clamp(2.5rem, 8vw, 7rem);
-    line-height: 1.02;
-    letter-spacing: -0.04em;
-    font-weight: 700;
-    font-variation-settings: "wght" 700;
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    font-weight: 300;
   }
 
   .text-hero {
-    font-size: clamp(2rem, 6vw, 4.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    font-weight: 600;
-    font-variation-settings: "wght" 600;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    font-weight: 400;
   }
 
   .text-large {
     font-size: clamp(1.75rem, 4vw, 3rem);
     line-height: 1.15;
-    letter-spacing: -0.02em;
-    font-weight: 500;
-    font-variation-settings: "wght" 500;
+    letter-spacing: -0.015em;
+    font-weight: 300;
   }
 
   .text-body {
     font-size: 1.125rem;
-    line-height: 1.7;
+    line-height: 1.65;
     font-weight: 400;
   }
 
   .text-caption {
     font-size: 0.875rem;
-    line-height: 1.6;
+    line-height: 1.5;
     font-weight: 500;
   }
 

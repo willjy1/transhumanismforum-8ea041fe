@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 const Concepts = () => {
   const concepts = [
+    'Abolitionism',
     'Artificial Intelligence',
     'Consciousness Research', 
     'Cosmism',
     'Human Enhancement',
     'Life Extension',
-    'Singularity',
-    'Abolitionism'
+    'Singularity'
   ];
 
   return (
