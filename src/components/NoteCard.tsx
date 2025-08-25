@@ -78,7 +78,8 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onLikeToggle, onDelete }) => 
 
   const handleReplyCreated = () => {
     setShowReplyComposer(false);
-    // Optionally refresh the parent component here
+    // Refresh notes to show the new reply
+    window.location.reload();
   };
 
   const formatTimeAgo = (timestamp: string) => {

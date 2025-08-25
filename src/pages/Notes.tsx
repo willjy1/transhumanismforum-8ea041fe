@@ -40,14 +40,16 @@ const Notes = () => {
         event: '*',
         schema: 'public',
         table: 'notes'
-      }, () => {
+      }, (payload) => {
+        console.log('Notes real-time update:', payload);
         fetchNotes();
       })
       .on('postgres_changes', {
         event: '*',
         schema: 'public', 
         table: 'note_likes'
-      }, () => {
+      }, (payload) => {
+        console.log('Note likes real-time update:', payload);
         fetchNotes();
       })
       .subscribe();
