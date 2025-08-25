@@ -426,25 +426,19 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          ip_address: string | null
           post_id: string
-          user_agent: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string
           id?: string
-          ip_address?: string | null
           post_id: string
-          user_agent?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string
           id?: string
-          ip_address?: string | null
           post_id?: string
-          user_agent?: string | null
           user_id?: string | null
         }
         Relationships: [
