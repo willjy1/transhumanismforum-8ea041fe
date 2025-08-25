@@ -248,6 +248,7 @@ const Notes = () => {
                   key={note.id}
                   note={note}
                   onLikeToggle={handleLikeToggle}
+                  onReplyCreated={fetchNotes}
                 />
               ))}
 

@@ -37,9 +37,10 @@ interface NoteCardProps {
   note: Note;
   onLikeToggle: (noteId: string, isLiked: boolean) => void;
   onDelete?: (noteId: string) => void;
+  onReplyCreated?: () => void;
 }
 
-const NoteCard: React.FC<NoteCardProps> = ({ note, onLikeToggle, onDelete }) => {
+const NoteCard: React.FC<NoteCardProps> = ({ note, onLikeToggle, onDelete, onReplyCreated }) => {
   const [showReplyComposer, setShowReplyComposer] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { user } = useAuth();
@@ -78,8 +79,10 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onLikeToggle, onDelete }) => 
 
   const handleReplyCreated = () => {
     setShowReplyComposer(false);
-    // Refresh notes to show the new reply
-    window.location.reload();
+    // Trigger refresh from parent component
+    if (onReplyCreated) {
+      onReplyCreated();
+    }
   };
 
   const formatTimeAgo = (timestamp: string) => {
