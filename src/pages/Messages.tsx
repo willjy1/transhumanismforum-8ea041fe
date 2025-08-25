@@ -251,8 +251,8 @@ const Messages = () => {
                               <button
                                 key={conversation.id}
                                 onClick={() => handleSelectConversation(conversation)}
-                                className={`relative w-full p-4 text-left hover:bg-accent transition-colors ${
-                                  selectedConversation?.id === conversation.other_user.id ? 'bg-accent' : ''
+                                className={`relative w-full p-4 text-left hover:bg-accent/50 transition-colors ${
+                                  selectedConversation?.id === conversation.other_user.id ? 'bg-accent/20' : ''
                                 }`}
                               >
                                 {selectedConversation?.id === conversation.other_user.id && (
@@ -301,6 +301,7 @@ const Messages = () => {
                   <MessageThread
                     recipientProfile={selectedConversation}
                     onBack={() => setSelectedConversation(null)}
+                    onMessageSent={() => fetchConversations()}
                   />
                 ) : (
                   <Card className="h-full flex items-center justify-center">

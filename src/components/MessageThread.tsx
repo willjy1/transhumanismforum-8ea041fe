@@ -28,9 +28,10 @@ interface Profile {
 interface MessageThreadProps {
   recipientProfile: Profile;
   onBack: () => void;
+  onMessageSent?: () => void;
 }
 
-const MessageThread: React.FC<MessageThreadProps> = ({ recipientProfile, onBack }) => {
+const MessageThread: React.FC<MessageThreadProps> = ({ recipientProfile, onBack, onMessageSent }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -124,6 +125,7 @@ const MessageThread: React.FC<MessageThreadProps> = ({ recipientProfile, onBack 
 
       if (error) throw error;
       setNewMessage('');
+      onMessageSent?.(); // Trigger conversation list refresh
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
