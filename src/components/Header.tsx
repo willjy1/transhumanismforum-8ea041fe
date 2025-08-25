@@ -69,7 +69,7 @@ const Header = () => {
   };
 
   return (
-    <header className="border-b border-border bg-card/95 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-border bg-card/60 backdrop-blur-md sticky top-0 z-50">
       <div className="flex h-20 items-center justify-between px-12 max-w-7xl mx-auto">
         {/* Logo with bold typography */}
         <Link to="/" className="text-xl font-semibold tracking-tight hover:text-accent crisp-transition">
