@@ -216,85 +216,24 @@ All colors MUST be HSL.
     margin-bottom: 1.25rem;
   }
 
-  /* Global neural network pattern - working version, slightly brighter, infinite */
-  .pattern-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  
-  .pattern-bg {
-    position: absolute;
-    top: -200px;
-    left: -200px;
-    width: calc(100% + 400px);
-    height: calc(100% + 400px);
-    background: 
-      radial-gradient(circle at 20% 50%, hsl(var(--muted) / 0.6) 0px, transparent 50%),
-      radial-gradient(circle at 80% 50%, hsl(var(--muted) / 0.5) 0px, transparent 50%),
-      radial-gradient(circle at 40% 40%, hsl(var(--muted) / 0.7) 0px, transparent 50%);
-    animation: float 20s ease-in-out infinite;
+  @keyframes patternFloat {
+    0%, 100% { 
+      transform: translateY(0px) scale(1);
+      opacity: 1;
+    }
+    50% { 
+      transform: translateY(-20px) scale(1.05);
+      opacity: 0.8;
+    }
   }
 
-  .neural-network {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background-image: 
-      linear-gradient(45deg, transparent 40%, hsl(var(--border) / 0.4) 41%, hsl(var(--border) / 0.4) 42%, transparent 43%),
-      linear-gradient(-45deg, transparent 40%, hsl(var(--border) / 0.3) 41%, hsl(var(--border) / 0.3) 42%, transparent 43%);
-    background-size: 100px 100px, 150px 150px;
-    background-position: 0 0, 25px 25px;
-    opacity: 0.6;
-    animation: drift 30s linear infinite;
-  }
-
-  .neural-network::before,
-  .neural-network::after {
-    content: '';
-    position: absolute;
-    width: 200px;
-    height: 200px;
-    border: 1px solid hsl(var(--border) / 0.6);
-    border-radius: 50%;
-    opacity: 0.4;
-    animation: pulse-grow 8s ease-in-out infinite;
-  }
-
-  .neural-network::before {
-    top: 20%;
-    left: 10%;
-    animation-delay: 0s;
-  }
-
-  .neural-network::after {
-    bottom: 20%;
-    right: 10%;
-    animation-delay: 4s;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    33% { transform: translateY(-20px) rotate(1deg); }
-    66% { transform: translateY(20px) rotate(-1deg); }
-  }
-
-  @keyframes pulse-grow {
-    0%, 100% { transform: scale(1); opacity: 0.4; }
-    50% { transform: scale(1.5); opacity: 0.2; }
-  }
-
-  @keyframes drift {
-    0% { background-position: 0 0, 25px 25px; }
-    100% { background-position: 200px 200px, 225px 225px; }
+  @keyframes patternDrift {
+    0% { 
+      background-position: 0 0, 0 0, 0 0, 0 0, 30px 60px, 15px 15px, 50px 25px, 0 0;
+    }
+    100% { 
+      background-position: 400px 400px, 600px 600px, 300px 300px, 100px 100px, 130px 160px, 95px 95px, 170px 145px, 60px 60px;
+    }
   }
 
   .text-shadow-lg {
