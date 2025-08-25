@@ -8,61 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Academic design system - high contrast, readable */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 13%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 13%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 13%;
-
-    --primary: 0 0% 13%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 0 0% 40%;
-
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 13%;
-
-    --muted: 0 0% 98%;
-    --muted-foreground: 0 0% 46%;
-
-    --accent: 220 13% 18%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 89%;
-    --input: 0 0% 96%;
-    --ring: 0 0% 13%;
-
-    --radius: 2px;
-
-    /* Minimal visual elements */
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
-    --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
-    --shadow-medium: 0 1px 3px 0 hsl(0 0% 0% / 0.1);
-    --shadow-large: 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-
-    /* Sidebar */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 3%;
-    --sidebar-primary: 0 0% 3%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 97%;
-    --sidebar-accent-foreground: 0 0% 3%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 0 0% 3%;
-
-    /* Animation */
-    --transition-crisp: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .dark {
-    /* Academic dark theme - high contrast for readability */
+    /* Dark academic design system - high contrast, readable */
     --background: 0 0% 7%;
     --foreground: 0 0% 95%;
 
@@ -92,12 +38,15 @@ All colors MUST be HSL.
     --input: 0 0% 11%;
     --ring: 0 0% 83%;
 
-    /* Dark theme shadows */
+    --radius: 2px;
+
+    /* Minimal visual elements */
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
     --shadow-subtle: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
     --shadow-medium: 0 1px 3px 0 hsl(0 0% 0% / 0.4);
     --shadow-large: 0 4px 6px -1px hsl(0 0% 0% / 0.5);
 
-    /* Dark sidebar */
+    /* Sidebar */
     --sidebar-background: 0 0% 3.9%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 0% 98%;
@@ -106,6 +55,10 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 14.9%;
     --sidebar-ring: 0 0% 83.1%;
+
+    /* Animation */
+    --transition-crisp: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
