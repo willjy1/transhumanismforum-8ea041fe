@@ -24,10 +24,10 @@ const Header = () => {
   const [userProfile, setUserProfile] = useState<{ username: string; avatar_url?: string } | null>(null);
 
   useEffect(() => {
-    if (user) {
+    if (user?.id && !userProfile) {
       fetchUserProfile();
     }
-  }, [user]);
+  }, [user?.id, userProfile]); // Only fetch if we don't have profile data
 
   const fetchUserProfile = async () => {
     if (!user) return;

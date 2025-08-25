@@ -29,18 +29,39 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("=== CONFIRMATION EMAIL FUNCTION STARTED ===");
+    console.log("Request method:", req.method);
+    console.log("Request headers:", Object.fromEntries(req.headers.entries()));
+    
     const payload: WebhookPayload = await req.json();
+    console.log("Raw payload received:", JSON.stringify(payload, null, 2));
+    
     const { user, email_data } = payload;
 
-    console.log("Sending confirmation email to:", user.email);
+    console.log("=== EMAIL DATA EXTRACTED ===");
+    console.log("User email:", user.email);
+    console.log("Email action type:", email_data.email_action_type);
+    console.log("Site URL:", email_data.site_url);
+    console.log("Redirect to:", email_data.redirect_to);
+    console.log("Token hash:", email_data.token_hash ? "Present" : "Missing");
+
+    // Check if Resend API key is available
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    console.log("Resend API key:", resendApiKey ? "Present" : "MISSING!");
+    
+    if (!resendApiKey) {
+      throw new Error("RESEND_API_KEY environment variable is not set");
+    }
 
     // Build the proper Supabase confirmation URL with correct domain
     const supabaseUrl = "https://tiqkfmokjrmoyytqmhat.supabase.co";
     const redirectTo = email_data.redirect_to || "https://thetranshumanistforum.lovable.app/";
     const confirmationUrl = `${supabaseUrl}/auth/v1/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${encodeURIComponent(redirectTo)}`;
 
-    console.log("Generated confirmation URL:", confirmationUrl);
+    console.log("=== CONFIRMATION URL GENERATED ===");
+    console.log("Confirmation URL:", confirmationUrl);
 
+    console.log("=== ATTEMPTING TO SEND EMAIL ===");
     const emailResponse = await resend.emails.send({
       from: "The Transhumanist Forum <noreply@resend.dev>",
       to: [user.email],
@@ -96,9 +117,14 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Confirmation email sent successfully:", emailResponse);
+    console.log("=== EMAIL SENT SUCCESSFULLY ===");
+    console.log("Email response:", JSON.stringify(emailResponse, null, 2));
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      emailId: emailResponse.data?.id,
+      recipient: user.email 
+    }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
@@ -106,9 +132,18 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
   } catch (error: any) {
-    console.error("Error sending confirmation email:", error);
+    console.error("=== EMAIL SENDING ERROR ===");
+    console.error("Error type:", error.constructor.name);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    console.error("Full error:", JSON.stringify(error, null, 2));
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        type: error.constructor.name,
+        timestamp: new Date().toISOString()
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

@@ -23,9 +23,14 @@ export const useNotifications = () => {
   useEffect(() => {
     if (user) {
       fetchNotifications();
-      setupRealtimeSubscription();
+      const cleanup = setupRealtimeSubscription();
+      return cleanup;
+    } else {
+      setNotifications([]);
+      setUnreadCount(0);
+      setLoading(false);
     }
-  }, [user]);
+  }, [user?.id]); // Only depend on user.id to avoid unnecessary re-runs
 
   const fetchNotifications = async () => {
     if (!user) return;
@@ -78,17 +83,13 @@ export const useNotifications = () => {
         },
         (payload) => {
           const updatedNotification = payload.new as Notification;
-          setNotifications(prev =>
-            prev.map(n => (n.id === updatedNotification.id ? updatedNotification : n))
-          );
           
-          // Recalculate unread count
-          setNotifications(current => {
-            const newUnreadCount = current.filter(n => 
-              n.id === updatedNotification.id ? !updatedNotification.is_read : !n.is_read
-            ).length;
+          // Update notifications and recalculate unread count efficiently in one operation
+          setNotifications(prev => {
+            const updated = prev.map(n => (n.id === updatedNotification.id ? updatedNotification : n));
+            const newUnreadCount = updated.filter(n => !n.is_read).length;
             setUnreadCount(newUnreadCount);
-            return current;
+            return updated;
           });
         }
       )
