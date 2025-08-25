@@ -275,9 +275,9 @@ const Resources = () => {
               </div>
             </section>
 
-            {/* Thinkers Section */}
+            {/* Leading Transhumanists Section */}
             <section>
-              <h2 className="text-xl font-medium mb-8">Thinkers</h2>
+              <h2 className="text-xl font-medium mb-8">Leading Transhumanists</h2>
               
               {loading ? (
                 <div className="space-y-6">
