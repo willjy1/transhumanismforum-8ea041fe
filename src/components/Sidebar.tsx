@@ -34,7 +34,7 @@ const Sidebar = () => {
   const isActive = (path: string) => location.pathname === path;
   
   // Check if any library routes are active to keep it open
-  const isLibraryActive = isActive('/library') || isActive('/resources');
+  const isLibraryActive = isActive('/concepts') || isActive('/resources');
 
   return (
     <div className="w-64 h-full bg-card/60 backdrop-blur-sm border-r flex flex-col">
@@ -76,9 +76,9 @@ const Sidebar = () => {
             </CollapsibleTrigger>
             <CollapsibleContent className="ml-4 space-y-1">
               <NavItem
-                to="/library"
+                to="/concepts"
                 label="Concepts"
-                isActive={isActive('/library')}
+                isActive={isActive('/concepts')}
               />
               <NavItem
                 to="/resources"

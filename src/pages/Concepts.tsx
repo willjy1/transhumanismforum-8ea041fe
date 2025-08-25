@@ -9,7 +9,7 @@ interface Category {
   color: string;
 }
 
-const Library = () => {
+const Concepts = () => {
   const [concepts, setConcepts] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -85,4 +85,4 @@ const Library = () => {
   );
 };
 
-export default Library;
+export default Concepts;

@@ -13,7 +13,7 @@ import CreatePost from "./pages/CreatePost";
 import CreatePostRich from "./components/CreatePostRich";
 import Bookmarks from "./pages/Bookmarks";
 import Messages from "./pages/Messages";
-import Library from "./pages/Library";
+import Concepts from "./pages/Concepts";
 import About from "./pages/About";
 import Community from "./pages/Community";
 import Events from "./pages/Events";
@@ -56,7 +56,7 @@ const App = () => (
               <Route path="/create-post-rich" element={<CreatePostRich />} />
               <Route path="/bookmarks" element={<Bookmarks />} />
               <Route path="/messages" element={<Messages />} />
-              <Route path="/library" element={<Library />} />
+              <Route path="/concepts" element={<Concepts />} />
               <Route path="/post/:id" element={<PostDetail />} />
               <Route path="/about" element={<About />} />
               <Route path="/community" element={<Community />} />
