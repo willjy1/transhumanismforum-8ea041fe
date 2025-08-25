@@ -115,7 +115,8 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
+    background: hsl(var(--background));
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-variant-numeric: oldstyle-nums proportional-nums;
     -webkit-font-smoothing: antialiased;
@@ -131,14 +132,14 @@ All colors MUST be HSL.
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
     background: 
-      radial-gradient(circle at 20% 30%, hsl(var(--primary) / 0.06) 0px, transparent 40%),
-      radial-gradient(circle at 80% 70%, hsl(var(--accent) / 0.08) 0px, transparent 50%),
+      radial-gradient(circle at 20% 30%, hsl(var(--primary) / 0.08) 0px, transparent 40%),
+      radial-gradient(circle at 80% 70%, hsl(var(--accent) / 0.12) 0px, transparent 50%),
       radial-gradient(circle at 60% 20%, hsl(var(--muted)) 0px, transparent 60%),
-      radial-gradient(circle at 30% 80%, hsl(var(--primary) / 0.04) 0px, transparent 45%),
-      radial-gradient(circle at 90% 40%, hsl(var(--accent) / 0.05) 0px, transparent 35%);
+      radial-gradient(circle at 30% 80%, hsl(var(--primary) / 0.06) 0px, transparent 45%),
+      radial-gradient(circle at 90% 40%, hsl(var(--accent) / 0.08) 0px, transparent 35%);
     animation: morphing 15s ease-in-out infinite;
   }
 
@@ -149,35 +150,41 @@ All colors MUST be HSL.
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
     background-image: 
-      radial-gradient(2px 2px at 20% 30%, hsl(var(--primary) / 0.2), transparent),
-      radial-gradient(2px 2px at 40% 70%, hsl(var(--accent) / 0.15), transparent),
-      radial-gradient(1px 1px at 60% 15%, hsl(var(--primary) / 0.25), transparent),
-      radial-gradient(1px 1px at 80% 50%, hsl(var(--accent) / 0.2), transparent),
-      radial-gradient(2px 2px at 90% 80%, hsl(var(--primary) / 0.15), transparent),
-      linear-gradient(45deg, transparent 49%, hsl(var(--border) / 0.3) 50%, transparent 52%),
-      linear-gradient(-45deg, transparent 49%, hsl(var(--border) / 0.2) 50%, transparent 52%);
+      radial-gradient(2px 2px at 20% 30%, hsl(var(--primary) / 0.25), transparent),
+      radial-gradient(2px 2px at 40% 70%, hsl(var(--accent) / 0.2), transparent),
+      radial-gradient(1px 1px at 60% 15%, hsl(var(--primary) / 0.3), transparent),
+      radial-gradient(1px 1px at 80% 50%, hsl(var(--accent) / 0.25), transparent),
+      radial-gradient(2px 2px at 90% 80%, hsl(var(--primary) / 0.2), transparent),
+      linear-gradient(45deg, transparent 49%, hsl(var(--border) / 0.4) 50%, transparent 52%),
+      linear-gradient(-45deg, transparent 49%, hsl(var(--border) / 0.3) 50%, transparent 52%);
     background-size: 
-      400px 400px,
+      600px 600px,
+      450px 450px,
       300px 300px,
-      200px 200px,
-      360px 360px,
-      440px 440px,
-      160px 160px,
-      240px 240px;
+      540px 540px,
+      660px 660px,
+      240px 240px,
+      360px 360px;
     background-position: 
-      -100px -100px,
-      -60px -40px,
-      -80px -80px,
-      -80px -120px,
-      -60px -120px,
-      -80px -80px,
-      -120px -90px;
+      -150px -150px,
+      -90px -60px,
+      -120px -120px,
+      -120px -180px,
+      -90px -180px,
+      -120px -120px,
+      -180px -135px;
     animation: 
       neural-flow 25s linear infinite,
       neural-pulse 8s ease-in-out infinite;
+  }
+
+  /* Ensure all content has higher z-index */
+  #root {
+    position: relative;
+    z-index: 1;
   }
 
   /* Enhanced design system components */
