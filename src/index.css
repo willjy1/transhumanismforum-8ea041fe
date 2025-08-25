@@ -141,8 +141,12 @@ All colors MUST be HSL.
       radial-gradient(circle at 30% 80%, rgba(100, 100, 100, 0.08) 0px, transparent 45%),
       radial-gradient(circle at 90% 40%, rgba(150, 150, 200, 0.09) 0px, transparent 35%),
       radial-gradient(circle at 45% 55%, rgba(130, 130, 160, 0.06) 0px, transparent 55%),
-      radial-gradient(circle at 10% 90%, rgba(110, 110, 140, 0.07) 0px, transparent 40%);
-    animation: morphing 15s ease-in-out infinite;
+      radial-gradient(circle at 10% 90%, rgba(110, 110, 140, 0.07) 0px, transparent 40%),
+      radial-gradient(circle at 70% 10%, rgba(140, 140, 180, 0.06) 0px, transparent 45%),
+      radial-gradient(circle at 15% 45%, rgba(120, 120, 170, 0.07) 0px, transparent 50%),
+      radial-gradient(circle at 85% 85%, rgba(110, 110, 160, 0.06) 0px, transparent 40%),
+      radial-gradient(circle at 50% 15%, rgba(130, 130, 150, 0.05) 0px, transparent 55%);
+    animation: morphing 18s ease-in-out infinite;
   }
 
   body::after {
@@ -164,41 +168,69 @@ All colors MUST be HSL.
       radial-gradient(1px 1px at 65% 35%, rgba(140, 140, 180, 0.16), transparent),
       radial-gradient(1px 1px at 5% 60%, rgba(110, 110, 150, 0.20), transparent),
       radial-gradient(1px 1px at 95% 20%, rgba(130, 130, 170, 0.18), transparent),
-      linear-gradient(45deg, transparent 49.5%, rgba(100, 100, 100, 0.06) 50%, transparent 50.5%),
-      linear-gradient(-45deg, transparent 49.5%, rgba(120, 120, 160, 0.05) 50%, transparent 50.5%),
-      linear-gradient(135deg, transparent 49.5%, rgba(110, 110, 140, 0.04) 50%, transparent 50.5%),
-      linear-gradient(-135deg, transparent 49.5%, rgba(130, 130, 150, 0.05) 50%, transparent 50.5%);
+      radial-gradient(1px 1px at 42% 78%, rgba(115, 115, 155, 0.19), transparent),
+      radial-gradient(1px 1px at 88% 62%, rgba(125, 125, 165, 0.17), transparent),
+      radial-gradient(1px 1px at 12% 38%, rgba(105, 105, 145, 0.20), transparent),
+      radial-gradient(2px 2px at 68% 88%, rgba(135, 135, 175, 0.14), transparent),
+      radial-gradient(2px 2px at 32% 12%, rgba(145, 145, 185, 0.15), transparent),
+      linear-gradient(45deg, transparent 49.8%, rgba(100, 100, 100, 0.06) 50%, transparent 50.2%),
+      linear-gradient(-45deg, transparent 49.8%, rgba(120, 120, 160, 0.05) 50%, transparent 50.2%),
+      linear-gradient(135deg, transparent 49.8%, rgba(110, 110, 140, 0.04) 50%, transparent 50.2%),
+      linear-gradient(-135deg, transparent 49.8%, rgba(130, 130, 150, 0.05) 50%, transparent 50.2%),
+      linear-gradient(22deg, transparent 49.8%, rgba(115, 115, 145, 0.04) 50%, transparent 50.2%),
+      linear-gradient(-22deg, transparent 49.8%, rgba(125, 125, 155, 0.03) 50%, transparent 50.2%),
+      linear-gradient(67deg, transparent 49.8%, rgba(108, 108, 138, 0.04) 50%, transparent 50.2%),
+      linear-gradient(-67deg, transparent 49.8%, rgba(118, 118, 148, 0.03) 50%, transparent 50.2%);
     background-size: 
+      1600px 1600px,
+      1200px 1200px,
       800px 800px,
-      600px 600px,
-      400px 400px,
+      1440px 1440px,
+      1760px 1760px,
+      640px 640px,
+      1040px 1040px,
       720px 720px,
-      880px 880px,
-      320px 320px,
-      520px 520px,
-      360px 360px,
-      480px 480px,
-      300px 300px,
-      450px 450px,
-      380px 380px,
-      540px 540px;
+      960px 960px,
+      860px 860px,
+      1180px 1180px,
+      680px 680px,
+      1320px 1320px,
+      900px 900px,
+      600px 600px,
+      900px 900px,
+      760px 760px,
+      1080px 1080px,
+      580px 580px,
+      820px 820px,
+      740px 740px,
+      940px 940px;
     background-position: 
-      -200px -200px,
-      -150px -100px,
-      -100px -200px,
+      -400px -400px,
+      -300px -200px,
+      -200px -400px,
+      -360px -720px,
+      -440px -880px,
+      -160px -320px,
+      -260px -520px,
       -180px -360px,
-      -220px -440px,
-      -80px -160px,
-      -130px -260px,
-      -90px -180px,
-      -120px -240px,
-      -150px -150px,
-      -225px -225px,
-      -95px -190px,
-      -135px -270px;
+      -240px -480px,
+      -215px -430px,
+      -295px -590px,
+      -170px -340px,
+      -330px -660px,
+      -225px -450px,
+      -300px -300px,
+      -450px -450px,
+      -190px -380px,
+      -270px -540px,
+      -145px -290px,
+      -205px -410px,
+      -185px -370px,
+      -235px -470px;
     animation: 
-      neural-flow 30s linear infinite,
-      neural-pulse 12s ease-in-out infinite;
+      neural-flow 35s linear infinite,
+      neural-pulse 14s ease-in-out infinite,
+      neural-drift 22s ease-in-out infinite;
   }
 
   /* Ensure all content has higher z-index */
@@ -445,5 +477,20 @@ All colors MUST be HSL.
   @keyframes neural-pulse {
     0%, 100% { opacity: 0.7; }
     50% { opacity: 1; }
+  }
+
+  @keyframes neural-drift {
+    0%, 100% { 
+      transform: translateX(0) translateY(0) rotate(0deg);
+    }
+    25% { 
+      transform: translateX(10px) translateY(-5px) rotate(1deg);
+    }
+    50% { 
+      transform: translateX(-8px) translateY(12px) rotate(-0.5deg);
+    }
+    75% { 
+      transform: translateX(15px) translateY(-8px) rotate(0.8deg);
+    }
   }
 }
