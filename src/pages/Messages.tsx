@@ -62,7 +62,7 @@ const Messages = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Set up real-time subscription for new messages
+    // Set up real-time subscription for new messages (both sent and received)
     const channel = supabase
       .channel('user-messages')
       .on('postgres_changes', {
@@ -70,6 +70,14 @@ const Messages = () => {
         schema: 'public',
         table: 'messages',
         filter: `recipient_id=eq.${user.id}`
+      }, () => {
+        fetchConversations();
+      })
+      .on('postgres_changes', {
+        event: 'INSERT', 
+        schema: 'public',
+        table: 'messages',
+        filter: `sender_id=eq.${user.id}`
       }, () => {
         fetchConversations();
       })
@@ -243,10 +251,13 @@ const Messages = () => {
                               <button
                                 key={conversation.id}
                                 onClick={() => handleSelectConversation(conversation)}
-                                className={`w-full p-4 text-left hover:bg-accent transition-colors ${
+                                className={`relative w-full p-4 text-left hover:bg-accent transition-colors ${
                                   selectedConversation?.id === conversation.other_user.id ? 'bg-accent' : ''
                                 }`}
                               >
+                                {selectedConversation?.id === conversation.other_user.id && (
+                                  <div className="absolute right-0 top-0 h-full w-1 bg-primary rounded-l-sm"></div>
+                                )}
                                 <div className="flex items-start gap-3">
                                   <Avatar className="h-10 w-10">
                                     <AvatarImage src={conversation.other_user.avatar_url || undefined} />
