@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface NavItemProps {
   to: string;
@@ -30,11 +28,7 @@ const NavItem: React.FC<NavItemProps> = ({ to, label, isActive }) => (
 const Sidebar = () => {
   const { user } = useAuth();
   const location = useLocation();
-  const [libraryOpen, setLibraryOpen] = useState(false);
   const isActive = (path: string) => location.pathname === path;
-  
-  // Check if any library routes are active to keep it open
-  const isLibraryActive = isActive('/concepts') || isActive('/resources');
 
   return (
     <div className="w-64 h-full bg-card/60 backdrop-blur-sm border-r flex flex-col">
@@ -59,34 +53,17 @@ const Sidebar = () => {
             isActive={isActive('/notes')}
           />
 
-          {/* Library Section - Collapsible */}
-          <Collapsible open={libraryOpen || isLibraryActive} onOpenChange={setLibraryOpen}>
-            <CollapsibleTrigger className={cn(
-              "flex items-center justify-between w-full px-3 py-2 rounded-md text-sm transition-colors",
-              isLibraryActive 
-                ? "bg-primary/10 text-primary" 
-                : "text-muted-foreground hover:text-foreground hover:bg-accent"
-            )}>
-              <span>Library</span>
-              {libraryOpen || isLibraryActive ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="ml-4 space-y-1">
-              <NavItem
-                to="/concepts"
-                label="Concepts"
-                isActive={isActive('/concepts')}
-              />
-              <NavItem
-                to="/resources"
-                label="Resources"
-                isActive={isActive('/resources')}
-              />
-            </CollapsibleContent>
-          </Collapsible>
+          <NavItem
+            to="/concepts"
+            label="Concepts"
+            isActive={isActive('/concepts')}
+          />
+
+          <NavItem
+            to="/resources"
+            label="Resources"
+            isActive={isActive('/resources')}
+          />
 
           <NavItem
             to="/community"
