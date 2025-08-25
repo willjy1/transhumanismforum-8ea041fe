@@ -146,7 +146,10 @@ All colors MUST be HSL.
       radial-gradient(circle at 15% 45%, rgba(85, 85, 85, 0.11) 0px, transparent 50%),
       radial-gradient(circle at 85% 85%, rgba(90, 90, 90, 0.10) 0px, transparent 40%),
       radial-gradient(circle at 50% 15%, rgba(80, 80, 80, 0.09) 0px, transparent 55%);
-    animation: morphing 18s ease-in-out infinite;
+    animation: 
+      morphing 18s ease-in-out infinite,
+      neural-breathe 25s ease-in-out infinite,
+      neural-shift 33s ease-in-out infinite;
   }
 
   body::after {
@@ -230,7 +233,9 @@ All colors MUST be HSL.
     animation: 
       neural-flow 35s linear infinite,
       neural-pulse 14s ease-in-out infinite,
-      neural-drift 22s ease-in-out infinite;
+      neural-drift 22s ease-in-out infinite,
+      neural-breathe 28s ease-in-out infinite,
+      neural-morph 45s ease-in-out infinite;
   }
 
   /* Ensure all content has higher z-index */
@@ -416,19 +421,28 @@ All colors MUST be HSL.
   @keyframes morphing {
     0%, 100% { 
       transform: translateY(0px) rotate(0deg) scale(1);
-      filter: blur(0px);
+      filter: blur(0px) hue-rotate(0deg);
+      opacity: 1;
     }
-    25% { 
-      transform: translateY(-30px) rotate(2deg) scale(1.05);
-      filter: blur(0.5px);
+    20% { 
+      transform: translateY(-25px) rotate(1.5deg) scale(1.08);
+      filter: blur(0.3px) hue-rotate(5deg);
+      opacity: 0.85;
     }
-    50% { 
-      transform: translateY(-10px) rotate(1deg) scale(1.1);
-      filter: blur(0px);
+    40% { 
+      transform: translateY(15px) rotate(-1deg) scale(0.92);
+      filter: blur(0px) hue-rotate(-3deg);
+      opacity: 1.1;
     }
-    75% { 
-      transform: translateY(20px) rotate(-1deg) scale(0.95);
-      filter: blur(0.3px);
+    60% { 
+      transform: translateY(-10px) rotate(2deg) scale(1.15);
+      filter: blur(0.5px) hue-rotate(8deg);
+      opacity: 0.9;
+    }
+    80% { 
+      transform: translateY(30px) rotate(-1.5deg) scale(0.88);
+      filter: blur(0.2px) hue-rotate(-5deg);
+      opacity: 1.05;
     }
   }
 
@@ -436,18 +450,32 @@ All colors MUST be HSL.
     0%, 100% { 
       transform: scale(1) translate(0, 0) rotate(0deg);
       opacity: 0.6;
+      filter: brightness(1);
     }
-    25% { 
-      transform: scale(1.3) translate(20px, -10px) rotate(90deg);
-      opacity: 0.3;
+    16% { 
+      transform: scale(1.4) translate(25px, -15px) rotate(60deg);
+      opacity: 0.2;
+      filter: brightness(1.3);
+    }
+    33% { 
+      transform: scale(1.8) translate(-20px, 35px) rotate(120deg);
+      opacity: 0.15;
+      filter: brightness(0.8);
     }
     50% { 
-      transform: scale(1.6) translate(-15px, 25px) rotate(180deg);
-      opacity: 0.2;
-    }
-    75% { 
-      transform: scale(1.1) translate(30px, -20px) rotate(270deg);
+      transform: scale(1.2) translate(40px, -25px) rotate(180deg);
       opacity: 0.4;
+      filter: brightness(1.2);
+    }
+    66% { 
+      transform: scale(2.1) translate(-30px, 20px) rotate(240deg);
+      opacity: 0.1;
+      filter: brightness(0.9);
+    }
+    83% { 
+      transform: scale(1.6) translate(35px, -40px) rotate(300deg);
+      opacity: 0.3;
+      filter: brightness(1.1);
     }
   }
 
@@ -475,22 +503,104 @@ All colors MUST be HSL.
   }
 
   @keyframes neural-pulse {
-    0%, 100% { opacity: 0.7; }
-    50% { opacity: 1; }
+    0%, 100% { 
+      opacity: 0.7;
+      filter: contrast(1) saturate(1);
+    }
+    25% { 
+      opacity: 1.2;
+      filter: contrast(1.1) saturate(1.2);
+    }
+    50% { 
+      opacity: 0.9;
+      filter: contrast(0.9) saturate(0.8);
+    }
+    75% { 
+      opacity: 1.1;
+      filter: contrast(1.05) saturate(1.1);
+    }
   }
 
   @keyframes neural-drift {
     0%, 100% { 
-      transform: translateX(0) translateY(0) rotate(0deg);
+      transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+    }
+    20% { 
+      transform: translateX(15px) translateY(-8px) rotate(2deg) scale(1.05);
+    }
+    40% { 
+      transform: translateX(-12px) translateY(18px) rotate(-1deg) scale(0.95);
+    }
+    60% { 
+      transform: translateX(22px) translateY(-12px) rotate(1.5deg) scale(1.08);
+    }
+    80% { 
+      transform: translateX(-8px) translateY(25px) rotate(-2deg) scale(0.92);
+    }
+  }
+
+  @keyframes neural-breathe {
+    0%, 100% { 
+      transform: scale(1) rotateX(0deg) rotateY(0deg);
+      opacity: 1;
+      filter: brightness(1) contrast(1);
     }
     25% { 
-      transform: translateX(10px) translateY(-5px) rotate(1deg);
+      transform: scale(1.12) rotateX(2deg) rotateY(1deg);
+      opacity: 0.8;
+      filter: brightness(1.1) contrast(1.05);
     }
     50% { 
-      transform: translateX(-8px) translateY(12px) rotate(-0.5deg);
+      transform: scale(0.88) rotateX(-1deg) rotateY(-2deg);
+      opacity: 1.15;
+      filter: brightness(0.95) contrast(1.1);
     }
     75% { 
-      transform: translateX(15px) translateY(-8px) rotate(0.8deg);
+      transform: scale(1.06) rotateX(1.5deg) rotateY(-1deg);
+      opacity: 0.9;
+      filter: brightness(1.05) contrast(0.95);
+    }
+  }
+
+  @keyframes neural-shift {
+    0%, 100% { 
+      background-position: 0% 0%;
+      transform: rotate(0deg);
+    }
+    25% { 
+      background-position: 25% 15%;
+      transform: rotate(0.5deg);
+    }
+    50% { 
+      background-position: -15% 30%;
+      transform: rotate(-0.8deg);
+    }
+    75% { 
+      background-position: 35% -10%;
+      transform: rotate(1.2deg);
+    }
+  }
+
+  @keyframes neural-morph {
+    0%, 100% { 
+      transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1);
+      filter: hue-rotate(0deg) brightness(1);
+    }
+    20% { 
+      transform: perspective(1000px) rotateX(1deg) rotateY(2deg) scale(1.03);
+      filter: hue-rotate(5deg) brightness(1.05);
+    }
+    40% { 
+      transform: perspective(1000px) rotateX(-2deg) rotateY(-1deg) scale(0.97);
+      filter: hue-rotate(-3deg) brightness(0.95);
+    }
+    60% { 
+      transform: perspective(1000px) rotateX(1.5deg) rotateY(-2deg) scale(1.02);
+      filter: hue-rotate(8deg) brightness(1.08);
+    }
+    80% { 
+      transform: perspective(1000px) rotateX(-1deg) rotateY(1.5deg) scale(0.98);
+      filter: hue-rotate(-5deg) brightness(0.92);
     }
   }
 }
