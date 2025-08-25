@@ -160,7 +160,7 @@ const CleanForum = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <div className="flex">
           <Sidebar />
           <main className="flex-1">
@@ -190,7 +190,7 @@ const CleanForum = () => {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex">
         <div className="flex-1 max-w-4xl">
