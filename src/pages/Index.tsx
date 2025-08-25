@@ -19,14 +19,14 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="flex">
+      <div className="flex min-h-screen">
         <Sidebar />
         
-        <div className="flex-1 relative overflow-hidden">
-          <div className="min-h-[90vh] flex items-center justify-center relative z-10">
-            <div className="max-w-2xl mx-auto px-8 text-center">
+        <div className="flex-1 relative">
+          <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
+            <div className="max-w-2xl mx-auto text-center">
               {/* Main title */}
-              <h1 className="font-display text-6xl font-medium mb-8 tracking-tight text-foreground leading-tight text-shadow-lg">
+              <h1 className="font-display text-4xl md:text-6xl font-medium mb-8 tracking-tight text-foreground leading-tight">
                 The Transhumanism Forum
               </h1>
             </div>
