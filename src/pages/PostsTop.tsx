@@ -12,7 +12,7 @@ interface Post {
   votes_score: number;
   view_count: number;
   created_at: string;
-  categories: { name: string; color: string } | null;
+  categories: { name: string; color: string }[];
   profiles: { username: string; full_name: string | null } | null;
   comment_count: number;
 }
@@ -29,7 +29,7 @@ const PostsTop = () => {
 
   const fetchTopPosts = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: posts, error } = await supabase
         .from('posts')
         .select(`
           id,
@@ -38,7 +38,6 @@ const PostsTop = () => {
           votes_score,
           view_count,
           created_at,
-          categories (name, color),
           profiles (username, full_name)
         `)
         .order('votes_score', { ascending: false })
@@ -46,21 +45,39 @@ const PostsTop = () => {
 
       if (error) throw error;
 
-      const postsWithCommentCount = await Promise.all(
-        (data || []).map(async (post) => {
+      // Fetch categories for each post
+      const postsWithCategories = await Promise.all(
+        (posts || []).map(async (post) => {
+          const { data: postCategories } = await supabase
+            .from('post_categories')
+            .select('category_id')
+            .eq('post_id', post.id);
+
+          const categoryIds = postCategories?.map(pc => pc.category_id) || [];
+          
+          let categoriesData = [];
+          if (categoryIds.length > 0) {
+            const { data: categoriesInfo } = await supabase
+              .from('categories')
+              .select('name, color')
+              .in('id', categoryIds);
+            categoriesData = categoriesInfo || [];
+          }
+
           const { count } = await supabase
             .from('comments')
             .select('*', { count: 'exact', head: true })
             .eq('post_id', post.id);
-          
+
           return {
             ...post,
+            categories: categoriesData,
             comment_count: count || 0
           };
         })
       );
 
-      setPosts(postsWithCommentCount);
+      setPosts(postsWithCategories);
     } catch (error) {
       console.error('Error fetching top posts:', error);
     } finally {

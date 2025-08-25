@@ -24,7 +24,7 @@ const About = () => {
               </h2>
               <div className="prose prose-lg max-w-none">
                 <p className="serif text-muted-foreground leading-relaxed mb-6">
-                  The Transhumanist Forum exists to advance rational discourse about humanity's technological future. 
+                  The Transhumanism Forum exists to advance rational discourse about humanity's technological future. 
                   We believe that through careful application of science, reason, and ethical consideration, 
                   we can overcome biological limitations and create a better world.
                 </p>

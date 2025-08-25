@@ -24,7 +24,7 @@ interface Post {
   categories?: {
     name: string;
     color: string;
-  };
+  }[];
 }
 
 interface PostCardProps {
@@ -95,19 +95,29 @@ const CleanPostCard = ({ post, commentCount = 0 }: PostCardProps) => {
                 </Badge>
               )}
               
-              {post.categories && (
-                <Badge 
-                  variant="outline" 
-                  className="border-opacity-50"
-                  style={{ 
-                    borderColor: post.categories.color,
-                    color: post.categories.color,
-                    backgroundColor: `${post.categories.color}10`
-                  }}
-                >
-                  <Hash className="h-3 w-3 mr-1" />
-                  {post.categories.name}
-                </Badge>
+              {post.categories && post.categories.length > 0 && (
+                <div className="flex gap-2">
+                  {post.categories.slice(0, 2).map((category, index) => (
+                    <Badge 
+                      key={index}
+                      variant="outline" 
+                      className="border-opacity-50"
+                      style={{ 
+                        borderColor: category.color,
+                        color: category.color,
+                        backgroundColor: `${category.color}10`
+                      }}
+                    >
+                      <Hash className="h-3 w-3 mr-1" />
+                      {category.name}
+                    </Badge>
+                  ))}
+                  {post.categories.length > 2 && (
+                    <Badge variant="outline" className="border-opacity-50">
+                      +{post.categories.length - 2}
+                    </Badge>
+                  )}
+                </div>
               )}
             </div>
 

@@ -73,7 +73,7 @@ const Header = () => {
       <div className="flex h-20 items-center justify-between px-12 max-w-7xl mx-auto">
         {/* Logo with bold typography */}
         <Link to="/" className="text-xl font-semibold tracking-tight hover:text-accent crisp-transition">
-          The Transhumanist Forum
+          The Transhumanism Forum
         </Link>
         
         {/* Search - Minimal and focused */}

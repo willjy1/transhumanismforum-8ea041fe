@@ -51,10 +51,6 @@ export const CategoryMultiSelect: React.FC<CategoryMultiSelectProps> = ({
               variant="secondary"
               className="flex items-center gap-1 px-2 py-1"
             >
-              <span
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: category.color }}
-              />
               {category.name}
               <button
                 type="button"
@@ -84,19 +80,10 @@ export const CategoryMultiSelect: React.FC<CategoryMultiSelectProps> = ({
               <div className="flex-1 min-w-0">
                 <label
                   htmlFor={`category-${category.id}`}
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex items-center gap-2"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                 >
-                  <span
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: category.color }}
-                  />
                   {category.name}
                 </label>
-                {category.description && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {category.description}
-                  </p>
-                )}
               </div>
             </div>
           );

@@ -27,7 +27,7 @@ const Index = () => {
             <div className="max-w-2xl mx-auto px-8 text-center">
               {/* Main title */}
               <h1 className="font-display text-6xl font-medium mb-8 tracking-tight text-foreground leading-tight">
-                The Transhumanist Forum
+                The Transhumanism Forum
               </h1>
             </div>
           </div>

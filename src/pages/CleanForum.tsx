@@ -27,7 +27,7 @@ interface Post {
   categories?: {
     name: string;
     color: string;
-  };
+  }[];
 }
 
 interface Category {
@@ -74,15 +74,24 @@ const CleanForum = () => {
           profiles:profiles!posts_author_id_fkey (
             username,
             full_name
-          ),
-          categories (
-            name,
-            color
           )
         `);
 
       if (selectedCategory !== 'all') {
-        query = query.eq('category_id', selectedCategory);
+        // Using junction table approach for categories
+        const { data: filteredPostIds } = await supabase
+          .from('post_categories')
+          .select('post_id')
+          .eq('category_id', selectedCategory);
+        
+        if (filteredPostIds && filteredPostIds.length > 0) {
+          query = query.in('id', filteredPostIds.map(item => item.post_id));
+        } else {
+          // No posts found with selected category
+          setPosts([]);
+          setLoading(false);
+          return;
+        }
       }
 
       switch (sortBy) {
@@ -103,7 +112,33 @@ const CleanForum = () => {
 
       if (error) throw error;
 
-      const sortedData = (data || []).sort((a, b) => {
+      // Fetch categories for each post
+      const postsWithCategories = await Promise.all(
+        (data || []).map(async (post) => {
+          const { data: postCategories } = await supabase
+            .from('post_categories')
+            .select('category_id')
+            .eq('post_id', post.id);
+
+          const categoryIds = postCategories?.map(pc => pc.category_id) || [];
+          
+          let categoriesData = [];
+          if (categoryIds.length > 0) {
+            const { data: categoriesInfo } = await supabase
+              .from('categories')
+              .select('name, color')
+              .in('id', categoryIds);
+            categoriesData = categoriesInfo || [];
+          }
+
+          return {
+            ...post,
+            categories: categoriesData
+          };
+        })
+      );
+
+      const sortedData = postsWithCategories.sort((a, b) => {
         if (a.is_pinned && !b.is_pinned) return -1;
         if (!a.is_pinned && b.is_pinned) return 1;
         return 0;

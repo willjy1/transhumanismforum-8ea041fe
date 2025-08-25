@@ -15,7 +15,7 @@ const BestOf = () => {
                 Best Of
               </h1>
               <p className="text-muted-foreground">
-                The most insightful discussions and valuable contributions to transhumanist discourse
+                The most insightful discussions and valuable contributions to transhumanism discourse
               </p>
             </div>
 

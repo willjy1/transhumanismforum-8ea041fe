@@ -138,7 +138,7 @@ const Resources = () => {
     {
       title: "H+ Magazine",
       author: "Humanity+ Editorial Team",
-      description: "The premier publication covering advances in science, technology, and society from a transhumanist perspective.",
+      description: "The premier publication covering advances in science, technology, and society from a transhumanism perspective.",
       url: "https://hplusmagazine.com",
       category: "Transhumanism"
     },

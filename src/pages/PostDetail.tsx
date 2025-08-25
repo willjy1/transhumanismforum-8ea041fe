@@ -33,7 +33,7 @@ interface Post {
   categories?: {
     name: string;
     color: string;
-  };
+  }[];
 }
 
 interface RelatedPost {
@@ -82,14 +82,34 @@ const PostDetail = () => {
         .from('posts')
         .select(`
           *,
-          profiles(username, full_name, bio),
-          categories(name, color)
+          profiles(username, full_name, bio)
         `)
         .eq('id', id)
         .single();
 
       if (error) throw error;
-      setPost(data);
+
+      // Fetch categories separately
+      const { data: postCategories } = await supabase
+        .from('post_categories')
+        .select('category_id')
+        .eq('post_id', id);
+
+      const categoryIds = postCategories?.map(pc => pc.category_id) || [];
+      
+      let categoriesData = [];
+      if (categoryIds.length > 0) {
+        const { data: categoriesInfo } = await supabase
+          .from('categories')
+          .select('name, color')
+          .in('id', categoryIds);
+        categoriesData = categoriesInfo || [];
+      }
+
+      setPost({
+        ...data,
+        categories: categoriesData
+      });
 
       // Update view count
       await supabase
@@ -331,17 +351,22 @@ const PostDetail = () => {
                       Pinned
                     </Badge>
                   )}
-                  {post.categories && (
-                    <Badge 
-                      variant="outline" 
-                      style={{ 
-                        borderColor: post.categories.color,
-                        color: post.categories.color,
-                        backgroundColor: `${post.categories.color}15`
-                      }}
-                    >
-                      {post.categories.name}
-                    </Badge>
+                  {post.categories && post.categories.length > 0 && (
+                    <div className="flex gap-2">
+                      {post.categories.map((category, index) => (
+                        <Badge 
+                          key={index}
+                          variant="outline" 
+                          style={{ 
+                            borderColor: category.color,
+                            color: category.color,
+                            backgroundColor: `${category.color}15`
+                          }}
+                        >
+                          {category.name}
+                        </Badge>
+                      ))}
+                    </div>
                   )}
                 </div>
 

@@ -153,7 +153,7 @@ const CreatePost = () => {
                 className="flex items-center text-muted-foreground hover:text-foreground mb-6 crisp-transition"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Forum
+                Back
               </button>
               
               <h1 className="text-3xl font-light tracking-tight mb-3">

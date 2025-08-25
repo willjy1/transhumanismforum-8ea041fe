@@ -44,7 +44,7 @@ interface Post {
   categories?: {
     name: string;
     color: string;
-  };
+  }[];
 }
 
 interface Note {
@@ -191,18 +191,44 @@ const UserProfile = () => {
 
   const fetchUserPosts = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data: posts, error } = await supabase
         .from('posts')
         .select(`
-          id, title, content, created_at, votes_score, view_count,
-          categories(name, color)
+          id, title, content, created_at, votes_score, view_count
         `)
         .eq('author_id', userId)
         .order('created_at', { ascending: false })
         .limit(10);
 
       if (error) throw error;
-      setPosts(data || []);
+
+      // Fetch categories for each post
+      const postsWithCategories = await Promise.all(
+        (posts || []).map(async (post) => {
+          const { data: postCategories } = await supabase
+            .from('post_categories')
+            .select('category_id')
+            .eq('post_id', post.id);
+
+          const categoryIds = postCategories?.map(pc => pc.category_id) || [];
+          
+          let categoriesData = [];
+          if (categoryIds.length > 0) {
+            const { data: categoriesInfo } = await supabase
+              .from('categories')
+              .select('name, color')
+              .in('id', categoryIds);
+            categoriesData = categoriesInfo || [];
+          }
+
+          return {
+            ...post,
+            categories: categoriesData
+          };
+        })
+      );
+
+      setPosts(postsWithCategories);
     } catch (error) {
       console.error('Error fetching user posts:', error);
     }
@@ -648,18 +674,28 @@ const UserProfile = () => {
                             </p>
                           </Link>
                           
-                          {post.categories && (
-                            <Badge 
-                              variant="outline" 
-                              className="text-base px-4 py-2"
-                              style={{ 
-                                borderColor: post.categories.color,
-                                color: post.categories.color,
-                                backgroundColor: `${post.categories.color}15`
-                              }}
-                            >
-                              {post.categories.name}
-                            </Badge>
+                          {post.categories && post.categories.length > 0 && (
+                            <div className="flex gap-2">
+                              {post.categories.slice(0, 3).map((category, index) => (
+                                <Badge 
+                                  key={index}
+                                  variant="outline" 
+                                  className="text-base px-4 py-2"
+                                  style={{ 
+                                    borderColor: category.color,
+                                    color: category.color,
+                                    backgroundColor: `${category.color}15`
+                                  }}
+                                >
+                                  {category.name}
+                                </Badge>
+                              ))}
+                              {post.categories.length > 3 && (
+                                <Badge variant="outline" className="text-base px-4 py-2">
+                                  +{post.categories.length - 3} more
+                                </Badge>
+                              )}
+                            </div>
                           )}
                         </div>
                         
