@@ -383,10 +383,19 @@ const UserProfile = () => {
   };
 
   const sendMessage = () => {
-    toast({
-      title: "Messages feature coming soon",
-      description: "Direct messaging will be available soon"
-    });
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "You must be signed in to send messages",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!profile) return;
+
+    // Navigate to messages page with the profile to start conversation
+    window.location.href = `/messages?start=${profile.username}`;
   };
 
   const handleLikeToggle = async (noteId: string, isLiked: boolean) => {
