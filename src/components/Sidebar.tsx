@@ -37,7 +37,7 @@ const Sidebar = () => {
   const isLibraryActive = isActive('/library') || isActive('/resources');
 
   return (
-    <div className="w-64 h-full bg-card border-r flex flex-col">
+    <div className="w-64 h-full bg-card/80 backdrop-blur-sm border-r flex flex-col">
       <div className="p-6 space-y-4">
         {/* Main Navigation */}
         <div className="space-y-1">

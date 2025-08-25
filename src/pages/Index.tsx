@@ -10,7 +10,7 @@ const Index = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-6 w-6 border-b border-foreground/20"></div>
       </div>
     );
