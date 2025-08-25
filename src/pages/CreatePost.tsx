@@ -4,7 +4,7 @@ import { ArrowLeft, Hash, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CategoryMultiSelect } from '@/components/CategoryMultiSelect';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,7 +22,7 @@ interface Category {
 const CreatePost = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ const CreatePost = () => {
         .insert({
           title: title.trim(),
           content: content.trim(),
-          category_id: categoryId || null,
+          category_ids: categoryIds,
           author_id: user.id,
         });
 
@@ -172,25 +172,12 @@ const CreatePost = () => {
                     </div>
                   </div>
 
-                  {/* Category */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium flex items-center gap-2">
-                      <Hash className="h-4 w-4" />
-                      Category
-                    </Label>
-                    <Select value={categoryId} onValueChange={setCategoryId}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category (optional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            <span>{category.name}</span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {/* Categories */}
+                  <CategoryMultiSelect
+                    categories={categories}
+                    selectedCategoryIds={categoryIds}
+                    onSelectionChange={setCategoryIds}
+                  />
 
                   {/* Content */}
                   <div className="space-y-2">

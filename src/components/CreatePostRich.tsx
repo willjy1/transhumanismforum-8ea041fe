@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Hash, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { CategoryMultiSelect } from '@/components/CategoryMultiSelect';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,7 +24,7 @@ interface Category {
 const CreatePostRich = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ const CreatePostRich = () => {
         .insert({
           title: title.trim(),
           content: content.trim(),
-          category_id: categoryId || null,
+          category_ids: categoryIds,
           author_id: user.id,
         })
         .select()
@@ -96,7 +96,7 @@ const CreatePostRich = () => {
       // Log activity
       await logActivity('post_created', 'post', post.id, {
         title: title.trim(),
-        category_id: categoryId || null
+        category_ids: categoryIds
       });
 
       toast({
@@ -183,24 +183,12 @@ const CreatePostRich = () => {
                     </div>
                   </div>
 
-                  {/* Category */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-medium">
-                      Category
-                    </Label>
-                    <Select value={categoryId} onValueChange={setCategoryId}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a category (optional)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  {/* Categories */}
+                  <CategoryMultiSelect
+                    categories={categories}
+                    selectedCategoryIds={categoryIds}
+                    onSelectionChange={setCategoryIds}
+                  />
 
                   {/* Rich Content Editor */}
                   <div className="space-y-2">

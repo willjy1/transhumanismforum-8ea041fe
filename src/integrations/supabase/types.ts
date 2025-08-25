@@ -454,7 +454,7 @@ export type Database = {
       posts: {
         Row: {
           author_id: string | null
-          category_id: string | null
+          category_ids: string[] | null
           content: string
           created_at: string | null
           id: string
@@ -466,7 +466,7 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
-          category_id?: string | null
+          category_ids?: string[] | null
           content: string
           created_at?: string | null
           id?: string
@@ -478,7 +478,7 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
-          category_id?: string | null
+          category_ids?: string[] | null
           content?: string
           created_at?: string | null
           id?: string
@@ -494,13 +494,6 @@ export type Database = {
             columns: ["author_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "posts_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "categories"
             referencedColumns: ["id"]
           },
         ]
