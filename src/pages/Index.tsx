@@ -31,7 +31,7 @@ const Index = () => {
           <div className="min-h-[90vh] flex items-center justify-center relative z-10">
             <div className="max-w-2xl mx-auto px-8 text-center">
               {/* Main title */}
-              <h1 className="font-display text-6xl font-medium mb-8 tracking-tight text-foreground leading-tight backdrop-blur-sm bg-background/80 p-6 rounded-lg">
+              <h1 className="font-display text-6xl font-medium mb-8 tracking-tight text-foreground leading-tight text-shadow-lg">
                 The Transhumanism Forum
               </h1>
             </div>
