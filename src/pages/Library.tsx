@@ -58,12 +58,9 @@ const Library = () => {
         <Sidebar />
         <main className="flex-1">
           <div className="max-w-2xl mx-auto px-8 py-16">
-            <h1 className="text-3xl font-light tracking-tight mb-3">
+            <h1 className="text-3xl font-light tracking-tight mb-8">
               Concepts
             </h1>
-            <p className="text-muted-foreground mb-8">
-              Core concepts in transhumanism and human enhancement
-            </p>
           </div>
 
           {/* Clean Concepts List */}
@@ -78,11 +75,6 @@ const Library = () => {
                   <h2 className="text-xl font-light tracking-tight hover:text-accent crisp-transition cursor-pointer py-2">
                     {concept.name}
                   </h2>
-                  {concept.description && (
-                    <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
-                      {concept.description}
-                    </p>
-                  )}
                 </div>
               ))}
             </div>
