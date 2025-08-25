@@ -111,7 +111,7 @@ const Index = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               <Card>
                 <CardContent className="p-6 text-center">
                   <Plus className="h-8 w-8 mx-auto mb-2 text-primary" />
@@ -141,6 +141,17 @@ const Index = () => {
                   <p className="text-sm text-muted-foreground mb-4">Share quick thoughts and observations</p>
                   <Button asChild size="sm">
                     <Link to="/notes">Create Note</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <Users className="h-8 w-8 mx-auto mb-2 text-primary" />
+                  <h3 className="font-semibold mb-2">Community</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Connect with like-minded thinkers</p>
+                  <Button asChild size="sm">
+                    <Link to="/community">Explore</Link>
                   </Button>
                 </CardContent>
               </Card>
