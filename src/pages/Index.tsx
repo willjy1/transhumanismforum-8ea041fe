@@ -128,7 +128,7 @@ const Index = () => {
                   <MessageSquare className="h-8 w-8 mx-auto mb-2 text-primary" />
                   <h3 className="font-semibold mb-2">Browse Posts</h3>
                   <p className="text-sm text-muted-foreground mb-4">Explore community discussions</p>
-                  <Button asChild variant="outline" size="sm">
+                  <Button asChild size="sm">
                     <Link to="/forum">Browse</Link>
                   </Button>
                 </CardContent>
@@ -139,7 +139,7 @@ const Index = () => {
                   <Users className="h-8 w-8 mx-auto mb-2 text-primary" />
                   <h3 className="font-semibold mb-2">Community</h3>
                   <p className="text-sm text-muted-foreground mb-4">Connect with like-minded thinkers</p>
-                  <Button asChild variant="outline" size="sm">
+                  <Button asChild size="sm">
                     <Link to="/community">Explore</Link>
                   </Button>
                 </CardContent>
