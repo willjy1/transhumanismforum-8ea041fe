@@ -18,7 +18,7 @@ interface PostCardProps {
     votes_score: number;
     view_count: number;
     created_at: string;
-    categories: { name: string; color: string } | null;
+    categories: { name: string; color: string }[];
     profiles: { username: string; full_name: string | null } | null;
     comment_count: number;
   };
@@ -57,18 +57,28 @@ const PostCard: React.FC<PostCardProps> = ({ post, onVote, compact = false }) =>
           <div className="flex-1 p-4">
             {/* Category and Metadata */}
             <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
-              {post.categories && (
-                <Badge 
-                  variant="outline" 
-                  className="text-xs"
-                  style={{ 
-                    borderColor: post.categories.color + '40',
-                    color: post.categories.color,
-                    backgroundColor: post.categories.color + '10'
-                  }}
-                >
-                  {post.categories.name}
-                </Badge>
+              {post.categories && post.categories.length > 0 && (
+                <div className="flex gap-1">
+                  {post.categories.slice(0, 3).map((category, index) => (
+                    <Badge 
+                      key={index}
+                      variant="outline" 
+                      className="text-xs"
+                      style={{ 
+                        borderColor: category.color + '40',
+                        color: category.color,
+                        backgroundColor: category.color + '10'
+                      }}
+                    >
+                      {category.name}
+                    </Badge>
+                  ))}
+                  {post.categories.length > 3 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{post.categories.length - 3} more
+                    </Badge>
+                  )}
+                </div>
               )}
               <span>•</span>
               <span>{post.profiles?.username || 'Anonymous'}</span>

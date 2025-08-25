@@ -378,6 +378,27 @@ export type Database = {
           },
         ]
       }
+      post_categories: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          post_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          post_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+        }
+        Relationships: []
+      }
       post_reports: {
         Row: {
           created_at: string
@@ -454,7 +475,7 @@ export type Database = {
       posts: {
         Row: {
           author_id: string | null
-          category_ids: string[] | null
+          category_id: string | null
           content: string
           created_at: string | null
           id: string
@@ -466,7 +487,7 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
-          category_ids?: string[] | null
+          category_id?: string | null
           content: string
           created_at?: string | null
           id?: string
@@ -478,7 +499,7 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
-          category_ids?: string[] | null
+          category_id?: string | null
           content?: string
           created_at?: string | null
           id?: string

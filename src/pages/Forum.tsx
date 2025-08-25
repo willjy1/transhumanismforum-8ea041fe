@@ -22,7 +22,7 @@ interface Post {
   votes_score: number;
   view_count: number;
   created_at: string;
-  categories: { name: string; color: string } | null;
+  categories: { name: string; color: string }[];
   profiles: { username: string; full_name: string | null } | null;
   comment_count: number;
 }
@@ -62,13 +62,7 @@ const Forum = () => {
       let query = supabase
         .from('posts')
         .select(`
-          id,
-          title,
-          content,
-          votes_score,
-          view_count,
-          created_at,
-          categories (name, color),
+          *,
           profiles (username, full_name)
         `);
 
@@ -77,9 +71,21 @@ const Forum = () => {
         query = query.or(`title.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`);
       }
 
-      // Apply category filters
+      // Apply category filters - now using junction table
       if (selectedCategories.length > 0) {
-        query = query.in('category_id', selectedCategories);
+        const { data: filteredPostIds } = await supabase
+          .from('post_categories')
+          .select('post_id')
+          .in('category_id', selectedCategories);
+        
+        if (filteredPostIds && filteredPostIds.length > 0) {
+          query = query.in('id', filteredPostIds.map(item => item.post_id));
+        } else {
+          // No posts found with selected categories
+          setPosts([]);
+          setLoading(false);
+          return;
+        }
       }
 
       // Apply time filter
@@ -129,12 +135,29 @@ const Forum = () => {
           query = query.order('created_at', { ascending: false });
       }
 
-      const { data, error } = await query.limit(50);
-
+      const { data: posts, error } = await query.limit(50);
       if (error) throw error;
 
-      const postsWithCommentCount = await Promise.all(
-        (data || []).map(async (post) => {
+      // Fetch categories for each post
+      const postsWithCategories = await Promise.all(
+        (posts || []).map(async (post) => {
+          // Fetch categories separately using a direct query
+          const { data: postCategories } = await supabase
+            .from('post_categories')
+            .select('category_id')
+            .eq('post_id', post.id);
+
+          const categoryIds = postCategories?.map(pc => pc.category_id) || [];
+          
+          let categoriesData = [];
+          if (categoryIds.length > 0) {
+            const { data: categoriesInfo } = await supabase
+              .from('categories')
+              .select('name, color')
+              .in('id', categoryIds);
+            categoriesData = categoriesInfo || [];
+          }
+
           const { count } = await supabase
             .from('comments')
             .select('*', { count: 'exact', head: true })
@@ -142,6 +165,7 @@ const Forum = () => {
           
           return {
             ...post,
+            categories: categoriesData,
             comment_count: count || 0
           };
         })
@@ -149,10 +173,10 @@ const Forum = () => {
 
       // Sort by comment count if needed
       if (sortBy === 'discussed') {
-        postsWithCommentCount.sort((a, b) => b.comment_count - a.comment_count);
+        postsWithCategories.sort((a, b) => b.comment_count - a.comment_count);
       }
 
-      setPosts(postsWithCommentCount);
+      setPosts(postsWithCategories);
     } catch (error) {
       console.error('Error fetching posts:', error);
     } finally {

@@ -19,8 +19,9 @@ interface BookmarkedPost {
     votes_score: number;
     view_count: number;
     created_at: string;
-    categories: { name: string; color: string } | null;
+    categories: { name: string; color: string }[];
     profiles: { username: string; full_name: string | null } | null;
+    comment_count: number;
   };
 }
 
@@ -53,7 +54,6 @@ const Bookmarks = () => {
             votes_score,
             view_count,
             created_at,
-            categories(name, color),
             profiles(username, full_name)
           )
         `)
@@ -62,27 +62,44 @@ const Bookmarks = () => {
 
       if (error) throw error;
 
-      // Add comment counts
-      const bookmarksWithComments = await Promise.all(
-        (data || []).map(async (bookmark) => {
-          if (!bookmark.posts) return bookmark;
+      // Fetch categories for each post and filter out null posts
+      const validBookmarks = (data || []).filter(bookmark => bookmark.posts);
+      
+      const bookmarksWithCategories = await Promise.all(
+        validBookmarks.map(async (bookmark) => {
+          const { data: postCategories } = await supabase
+            .from('post_categories')
+            .select('category_id')
+            .eq('post_id', bookmark.posts!.id);
+
+          const categoryIds = postCategories?.map(pc => pc.category_id) || [];
+          
+          let categoriesData = [];
+          if (categoryIds.length > 0) {
+            const { data: categoriesInfo } = await supabase
+              .from('categories')
+              .select('name, color')
+              .in('id', categoryIds);
+            categoriesData = categoriesInfo || [];
+          }
 
           const { count } = await supabase
             .from('comments')
             .select('*', { count: 'exact', head: true })
-            .eq('post_id', bookmark.posts.id);
+            .eq('post_id', bookmark.posts!.id);
 
           return {
             ...bookmark,
             posts: {
-              ...bookmark.posts,
+              ...bookmark.posts!,
+              categories: categoriesData,
               comment_count: count || 0
             }
           };
         })
       );
 
-      setBookmarks(bookmarksWithComments);
+      setBookmarks(bookmarksWithCategories);
     } catch (error) {
       console.error('Error fetching bookmarks:', error);
     } finally {
@@ -148,15 +165,13 @@ const Bookmarks = () => {
             {/* Bookmarks List */}
             <div className="space-y-4">
               {bookmarks.length > 0 ? (
-                bookmarks
-                  .filter(bookmark => bookmark.posts) // Filter out null posts
-                  .map((bookmark) => (
-                    <PostCard
-                      key={bookmark.id}
-                      post={bookmark.posts as any}
-                      onVote={handleVote}
-                    />
-                  ))
+                bookmarks.map((bookmark) => (
+                  <PostCard
+                    key={bookmark.id}
+                    post={bookmark.posts}
+                    onVote={handleVote}
+                  />
+                ))
               ) : (
                 <Card>
                   <CardContent className="p-12 text-center">

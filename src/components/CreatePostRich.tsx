@@ -85,13 +85,29 @@ const CreatePostRich = () => {
         .insert({
           title: title.trim(),
           content: content.trim(),
-          category_ids: categoryIds,
+          category_id: categoryIds.length > 0 ? categoryIds[0] : null, // Keep backward compatibility
           author_id: user.id,
         })
         .select()
         .single();
 
       if (error) throw error;
+
+      // Insert post-category relationships
+      if (categoryIds.length > 0) {
+        const postCategoryRelations = categoryIds.map(categoryId => ({
+          post_id: post.id,
+          category_id: categoryId
+        }));
+
+        const { error: categoryError } = await supabase
+          .from('post_categories')
+          .insert(postCategoryRelations);
+
+        if (categoryError) {
+          console.warn('Error linking categories:', categoryError);
+        }
+      }
 
       // Log activity
       await logActivity('post_created', 'post', post.id, {
