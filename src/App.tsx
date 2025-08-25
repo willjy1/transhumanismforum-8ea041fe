@@ -29,7 +29,6 @@ import NotFound from "./pages/NotFound";
 import EditProfile from "./pages/EditProfile";
 import UserManagementPage from "./pages/UserManagement";
 import ArtPreview from "./pages/ArtPreview";
-import PatternBackground from "./components/PatternBackground";
 
 const queryClient = new QueryClient();
 
@@ -47,7 +46,6 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
-              <PatternBackground />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
