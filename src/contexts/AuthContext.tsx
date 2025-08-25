@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -67,6 +67,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           variant: "destructive",
         });
         return { error };
+      }
+
+      // Send signup notification email
+      if (data.user) {
+        try {
+          await supabase.functions.invoke('send-signup-notification', {
+            body: {
+              userEmail: email,
+              username: username || email.split('@')[0],
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send signup notification:', emailError);
+          // Don't fail the signup if email notification fails
+        }
       }
       
       toast({

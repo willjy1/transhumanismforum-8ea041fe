@@ -54,8 +54,16 @@ const MessageThread: React.FC<MessageThreadProps> = ({ recipientProfile, onBack,
         filter: `or(and(sender_id.eq.${user?.id}, recipient_id.eq.${recipientProfile.id}), and(sender_id.eq.${recipientProfile.id}, recipient_id.eq.${user?.id}))`
       }, (payload) => {
         console.log('Real-time message received in thread:', payload);
-        setMessages(prev => [...prev, payload.new as Message]);
-        scrollToBottom();
+        const newMessage = payload.new as Message;
+        
+        // Only add if it's not already in our messages (avoid duplicates)
+        setMessages(prev => {
+          const exists = prev.some(msg => msg.id === newMessage.id);
+          if (exists) return prev;
+          return [...prev, newMessage];
+        });
+        
+        setTimeout(scrollToBottom, 100);
       })
       .subscribe();
 
@@ -116,15 +124,22 @@ const MessageThread: React.FC<MessageThreadProps> = ({ recipientProfile, onBack,
 
     setSending(true);
     try {
-      const { error } = await supabase
+      const messageData = {
+        content: newMessage.trim(),
+        sender_id: user.id,
+        recipient_id: recipientProfile.id
+      };
+
+      const { data, error } = await supabase
         .from('messages')
-        .insert({
-          content: newMessage.trim(),
-          sender_id: user.id,
-          recipient_id: recipientProfile.id
-        });
+        .insert(messageData)
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Immediately add the message to local state for instant feedback
+      setMessages(prev => [...prev, data]);
       setNewMessage('');
       onMessageSent?.(); // Trigger conversation list refresh
     } catch (error) {
