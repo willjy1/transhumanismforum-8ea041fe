@@ -87,6 +87,20 @@ const Resources = () => {
 
   const blogs: Blog[] = [
     {
+      title: "Qualia Computing",
+      author: "Andres Gomez Emilsson & QRI Team",
+      description: "Research on consciousness, psychedelics, and the mathematical structure of subjective experience. Leading work on the computational theory of consciousness.",
+      url: "https://qualiacomputing.com",
+      category: "Consciousness Research"
+    },
+    {
+      title: "Max More's Substack",
+      author: "Max More",
+      description: "Insights from the founder of Extropy Institute on transhumanism, life extension, cryonics, and rational optimism for the future.",
+      url: "https://maxmore.substack.com",
+      category: "Transhumanism"
+    },
+    {
       title: "Gwern.net",
       author: "Gwern Branwen",
       description: "Deep statistical analysis and research on psychology, technology, genetics, and self-experimentation.",
@@ -98,28 +112,56 @@ const Resources = () => {
       author: "Rationality Community",
       description: "A community blog focused on rationality, AI alignment, and effective altruism with discussions on human enhancement and existential risks.",
       url: "https://www.lesswrong.com",
-      category: "Community"
+      category: "Artificial General Intelligence"
     },
     {
       title: "Marginal Revolution",
       author: "Tyler Cowen & Alex Tabarrok",
       description: "Economics blog that frequently covers technological progress, human enhancement, and societal implications of emerging technologies.",
       url: "https://marginalrevolution.com",
-      category: "Economics"
+      category: "Human Enhancement"
     },
     {
       title: "Overcoming Bias",
       author: "Robin Hanson",
       description: "Blog exploring cognitive biases, social dynamics, and unconventional thinking about human nature and society.",
       url: "http://www.overcomingbias.com",
-      category: "Psychology"
+      category: "Posthumanism"
+    },
+    {
+      title: "Slate Star Codex",
+      author: "Scott Alexander",
+      description: "Rationality, medicine, philosophy, politics, and speculative fiction. Now continued as Astral Codex Ten.",
+      url: "https://astralcodexten.substack.com",
+      category: "Bioethics"
+    },
+    {
+      title: "H+ Magazine",
+      author: "Humanity+ Editorial Team",
+      description: "The premier publication covering advances in science, technology, and society from a transhumanist perspective.",
+      url: "https://hplusmagazine.com",
+      category: "Transhumanism"
+    },
+    {
+      title: "Next Big Future",
+      author: "Brian Wang",
+      description: "Technology forecasting and future technology news with focus on breakthrough technologies and their implications.",
+      url: "https://www.nextbigfuture.com",
+      category: "Technological Singularity"
+    },
+    {
+      title: "Alcor Life Extension Foundation Blog",
+      author: "Alcor Team",
+      description: "Latest developments in cryonics research, case studies, and the scientific pursuit of indefinite life extension.",
+      url: "https://www.alcor.org/blog/",
+      category: "Cryonics"
     },
     {
       title: "William Joy",
       author: "William Joy",
       description: "Reflections on the human mind and technology.",
       url: "https://williamjoy.ca",
-      category: "Technology"
+      category: "Cybernetics"
     }
   ];
 
