@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import ThemeToggle from './ThemeToggle';
+
 import NotificationCenter from '@/components/NotificationCenter';
 
 const Header = () => {
@@ -87,7 +87,6 @@ const Header = () => {
 
         {/* Right Actions - Clean and modern */}
         <div className="flex items-center gap-4">
-          <ThemeToggle />
           {user ? (
             <>
               <NotificationCenter />
