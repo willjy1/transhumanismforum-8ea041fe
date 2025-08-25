@@ -9,12 +9,24 @@ const PatternBackground = () => {
         left: 0,
         width: '100vw',
         height: '100vh',
-        zIndex: -1,
+        zIndex: 999,
         pointerEvents: 'none',
-        background: 'radial-gradient(circle at 30% 40%, rgba(100, 100, 100, 0.1) 0px, transparent 50%), radial-gradient(circle at 70% 60%, rgba(120, 120, 120, 0.08) 0px, transparent 60%)',
-        opacity: 1
+        backgroundColor: 'rgba(255, 0, 0, 0.1)',
+        border: '2px solid red'
       }}
-    />
+    >
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        color: 'red',
+        fontSize: '24px',
+        fontWeight: 'bold'
+      }}>
+        PATTERN TEST - Can you see this?
+      </div>
+    </div>
   );
 };
 
