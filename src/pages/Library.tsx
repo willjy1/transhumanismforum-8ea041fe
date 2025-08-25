@@ -35,7 +35,7 @@ const Library = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <div className="flex">
           <Sidebar />
           <main className="flex-1">
@@ -53,7 +53,7 @@ const Library = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <div className="flex">
         <Sidebar />
         <main className="flex-1">

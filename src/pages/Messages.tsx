@@ -3,7 +3,7 @@ import Sidebar from '@/components/Sidebar';
 
 const Messages = () => {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen">
       <Sidebar />
       <main className="flex-1">
         <div className="max-w-4xl mx-auto p-6">
