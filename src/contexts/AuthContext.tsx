@@ -51,6 +51,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const redirectUrl = `${window.location.origin}/`;
       
+      // First attempt normal signup
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -69,6 +70,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
 
+      // Always send our custom confirmation email
+      try {
+        await supabase.functions.invoke('send-confirmation', {
+          body: {
+            user: { email },
+            email_data: {
+              token: 'custom-token',
+              token_hash: 'custom-hash', 
+              redirect_to: redirectUrl,
+              email_action_type: 'signup',
+              site_url: window.location.origin
+            }
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send custom confirmation:', emailError);
+      }
+
       // Send signup notification email
       if (data.user) {
         try {
@@ -80,7 +99,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         } catch (emailError) {
           console.error('Failed to send signup notification:', emailError);
-          // Don't fail the signup if email notification fails
         }
       }
       
