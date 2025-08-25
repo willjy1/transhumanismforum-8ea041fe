@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import Sidebar from '@/components/Sidebar';
 
@@ -72,9 +73,11 @@ const Concepts = () => {
                   className="animate-fade-in border-l-2 border-l-transparent hover:border-l-primary/50 crisp-transition pl-4 -ml-4"
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
-                  <h2 className="text-xl font-light tracking-tight hover:text-accent crisp-transition cursor-pointer py-2">
-                    {concept.name}
-                  </h2>
+                  <Link to={`/concepts/${concept.id}`}>
+                    <h2 className="text-xl font-light tracking-tight hover:text-accent crisp-transition cursor-pointer py-2">
+                      {concept.name}
+                    </h2>
+                  </Link>
                 </div>
               ))}
             </div>
