@@ -21,7 +21,7 @@ const Header = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [userProfile, setUserProfile] = useState<{ username: string } | null>(null);
+  const [userProfile, setUserProfile] = useState<{ username: string; avatar_url?: string } | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -35,7 +35,7 @@ const Header = () => {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('username')
+        .select('username, avatar_url')
         .eq('id', user.id)
         .maybeSingle();
 
@@ -100,6 +100,13 @@ const Header = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-8 w-8">
+                      {userProfile?.avatar_url && (
+                        <img 
+                          src={userProfile.avatar_url} 
+                          alt="Profile" 
+                          className="h-8 w-8 rounded-full object-cover"
+                        />
+                      )}
                       <AvatarFallback className="text-sm font-medium">
                         {user.email?.charAt(0).toUpperCase()}
                       </AvatarFallback>
