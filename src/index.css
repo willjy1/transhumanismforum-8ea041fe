@@ -216,168 +216,88 @@ All colors MUST be HSL.
     margin-bottom: 1.25rem;
   }
 
-  /* Pattern animations */
-  @keyframes floatPattern {
-    0%, 100% { 
-      transform: translateY(0px) scale(1);
-    }
-    33% { 
-      transform: translateY(-15px) scale(1.02);
-    }
-    66% { 
-      transform: translateY(10px) scale(0.98);
-    }
-  }
-
-  @keyframes movePattern {
-    0% { 
-      background-position: 0 0, 30px 40px, 15px 15px, 50px 25px;
-    }
-    100% { 
-      background-position: 150px 150px, 180px 190px, 135px 135px, 200px 175px;
-    }
-  }
-
-  /* Dynamic neural network pattern - brighter and global */
+  /* Global neural network pattern - working version, slightly brighter, infinite */
   .pattern-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1;
+    z-index: -1;
     pointer-events: none;
     overflow: hidden;
   }
   
   .pattern-bg {
     position: absolute;
-    top: -100px;
-    left: -100px;
-    width: calc(100% + 200px);
-    height: calc(100% + 200px);
+    top: -200px;
+    left: -200px;
+    width: calc(100% + 400px);
+    height: calc(100% + 400px);
     background: 
-      radial-gradient(circle at 20% 30%, hsl(var(--muted) / 0.8) 0px, transparent 50%),
-      radial-gradient(circle at 80% 70%, hsl(var(--muted) / 0.6) 0px, transparent 60%),
-      radial-gradient(circle at 60% 20%, hsl(var(--border) / 1) 0px, transparent 40%),
-      radial-gradient(circle at 30% 80%, hsl(var(--muted) / 0.5) 0px, transparent 55%),
-      radial-gradient(circle at 90% 40%, hsl(var(--border) / 0.7) 0px, transparent 45%);
-    animation: morphing 20s ease-in-out infinite;
+      radial-gradient(circle at 20% 50%, hsl(var(--muted) / 0.6) 0px, transparent 50%),
+      radial-gradient(circle at 80% 50%, hsl(var(--muted) / 0.5) 0px, transparent 50%),
+      radial-gradient(circle at 40% 40%, hsl(var(--muted) / 0.7) 0px, transparent 50%);
+    animation: float 20s ease-in-out infinite;
   }
 
   .neural-network {
     position: absolute;
-    top: -50px;
-    left: -50px;
-    width: calc(100% + 100px);
-    height: calc(100% + 100px);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
+    background-image: 
+      linear-gradient(45deg, transparent 40%, hsl(var(--border) / 0.4) 41%, hsl(var(--border) / 0.4) 42%, transparent 43%),
+      linear-gradient(-45deg, transparent 40%, hsl(var(--border) / 0.3) 41%, hsl(var(--border) / 0.3) 42%, transparent 43%);
+    background-size: 100px 100px, 150px 150px;
+    background-position: 0 0, 25px 25px;
+    opacity: 0.6;
+    animation: drift 30s linear infinite;
   }
 
   .neural-network::before,
   .neural-network::after {
     content: '';
     position: absolute;
-    border: 1px solid hsl(var(--border) / 0.8);
+    width: 200px;
+    height: 200px;
+    border: 1px solid hsl(var(--border) / 0.6);
     border-radius: 50%;
-    opacity: 0.7;
+    opacity: 0.4;
+    animation: pulse-grow 8s ease-in-out infinite;
   }
 
   .neural-network::before {
-    width: 200px;
-    height: 200px;
     top: 20%;
     left: 10%;
-    animation: pulse-drift 15s ease-in-out infinite;
-    box-shadow: 0 0 20px hsl(var(--border) / 0.2);
+    animation-delay: 0s;
   }
 
   .neural-network::after {
-    width: 150px;
-    height: 150px;
-    bottom: 30%;
-    right: 20%;
-    animation: pulse-drift 12s ease-in-out infinite reverse;
-    animation-delay: 8s;
-    box-shadow: 0 0 15px hsl(var(--border) / 0.15);
+    bottom: 20%;
+    right: 10%;
+    animation-delay: 4s;
   }
 
-  .neural-network {
-    background-image: 
-      radial-gradient(2px 2px at 25% 35%, hsl(var(--border) / 0.6), transparent),
-      radial-gradient(1px 1px at 45% 75%, hsl(var(--border) / 0.5), transparent),
-      radial-gradient(2px 2px at 65% 25%, hsl(var(--border) / 0.4), transparent),
-      radial-gradient(1px 1px at 85% 55%, hsl(var(--border) / 0.3), transparent),
-      linear-gradient(45deg, transparent 49.5%, hsl(var(--border) / 0.4) 50%, transparent 50.5%),
-      linear-gradient(-45deg, transparent 49.5%, hsl(var(--border) / 0.3) 50%, transparent 50.5%);
-    background-size: 
-      150px 150px,
-      100px 100px,
-      120px 120px,
-      80px 80px,
-      60px 60px,
-      90px 90px;
-    background-position: 
-      0 0,
-      30px 40px,
-      15px 15px,
-      50px 25px,
-      0 0,
-      45px 22px;
-    animation: 
-      neural-flow 30s linear infinite,
-      neural-pulse 10s ease-in-out infinite;
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-20px) rotate(1deg); }
+    66% { transform: translateY(20px) rotate(-1deg); }
   }
+
+  @keyframes pulse-grow {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.5); opacity: 0.2; }
+  }
+
+  @keyframes drift {
+    0% { background-position: 0 0, 25px 25px; }
+    100% { background-position: 200px 200px, 225px 225px; }
+  }
+
   .text-shadow-lg {
     text-shadow: 2px 2px 4px hsl(var(--background) / 0.8);
-  }
-
-  @keyframes morphing {
-    0%, 100% { 
-      transform: translateY(0px) rotate(0deg) scale(1);
-    }
-    33% { 
-      transform: translateY(-15px) rotate(1deg) scale(1.02);
-    }
-    66% { 
-      transform: translateY(10px) rotate(-0.5deg) scale(0.98);
-    }
-  }
-
-  @keyframes pulse-drift {
-    0%, 100% { 
-      transform: scale(1) translate(0, 0) rotate(0deg);
-      opacity: 0.5;
-    }
-    50% { 
-      transform: scale(1.2) translate(10px, -5px) rotate(180deg);
-      opacity: 0.3;
-    }
-  }
-
-  @keyframes neural-flow {
-    0% { 
-      background-position: 
-        0 0,
-        30px 40px,
-        15px 15px,
-        50px 25px,
-        0 0,
-        45px 22px;
-    }
-    100% { 
-      background-position: 
-        150px 150px,
-        180px 190px,
-        135px 135px,
-        200px 175px,
-        60px 60px,
-        135px 112px;
-    }
-  }
-
-  @keyframes neural-pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 0.8; }
   }
 }
