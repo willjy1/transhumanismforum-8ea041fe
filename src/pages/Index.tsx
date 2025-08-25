@@ -108,9 +108,6 @@ const Index = () => {
               <h1 className="font-display text-3xl md:text-4xl font-medium mb-4 text-foreground">
                 Welcome to The Transhumanism Forum
               </h1>
-              <p className="text-muted-foreground">
-                Explore ideas about humanity's technological evolution
-              </p>
             </div>
 
             {/* Quick Actions */}
@@ -193,7 +190,6 @@ const Index = () => {
                 ) : (
                   <div className="text-center py-8">
                     <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground mb-4">No posts yet. Be the first to start a discussion!</p>
                     <Button asChild>
                       <Link to="/create-post">Create First Post</Link>
                     </Button>
