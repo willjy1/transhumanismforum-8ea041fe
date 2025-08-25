@@ -53,6 +53,7 @@ const MessageThread: React.FC<MessageThreadProps> = ({ recipientProfile, onBack,
         table: 'messages',
         filter: `or(and(sender_id.eq.${user?.id}, recipient_id.eq.${recipientProfile.id}), and(sender_id.eq.${recipientProfile.id}, recipient_id.eq.${user?.id}))`
       }, (payload) => {
+        console.log('Real-time message received in thread:', payload);
         setMessages(prev => [...prev, payload.new as Message]);
         scrollToBottom();
       })

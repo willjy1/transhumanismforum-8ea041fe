@@ -70,15 +70,22 @@ const Messages = () => {
         schema: 'public',
         table: 'messages',
         filter: `recipient_id=eq.${user.id}`
-      }, () => {
+      }, (payload) => {
+        console.log('New message received:', payload);
         fetchConversations();
+        // Show a notification
+        toast({
+          title: "New message",
+          description: "You have received a new message",
+        });
       })
       .on('postgres_changes', {
         event: 'INSERT', 
         schema: 'public',
         table: 'messages',
         filter: `sender_id=eq.${user.id}`
-      }, () => {
+      }, (payload) => {
+        console.log('Message sent:', payload);
         fetchConversations();
       })
       .subscribe();
