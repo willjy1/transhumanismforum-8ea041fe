@@ -23,11 +23,6 @@ const Index = () => {
         <Sidebar />
         
         <div className="flex-1 relative overflow-hidden">
-          {/* Dynamic pattern background */}
-          <div className="absolute inset-0 pattern-bg">
-            <div className="neural-network"></div>
-          </div>
-          
           <div className="min-h-[90vh] flex items-center justify-center relative z-10">
             <div className="max-w-2xl mx-auto px-8 text-center">
               {/* Main title */}
