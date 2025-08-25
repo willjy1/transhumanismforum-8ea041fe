@@ -216,6 +216,28 @@ All colors MUST be HSL.
     margin-bottom: 1.25rem;
   }
 
+  /* Pattern animations */
+  @keyframes floatPattern {
+    0%, 100% { 
+      transform: translateY(0px) scale(1);
+    }
+    33% { 
+      transform: translateY(-15px) scale(1.02);
+    }
+    66% { 
+      transform: translateY(10px) scale(0.98);
+    }
+  }
+
+  @keyframes movePattern {
+    0% { 
+      background-position: 0 0, 30px 40px, 15px 15px, 50px 25px;
+    }
+    100% { 
+      background-position: 150px 150px, 180px 190px, 135px 135px, 200px 175px;
+    }
+  }
+
   /* Dynamic neural network pattern - brighter and global */
   .pattern-overlay {
     position: fixed;
