@@ -212,14 +212,22 @@ async function checkRateLimit(supabase: any, userId: string, action: string) {
 }
 
 function sanitizeContent(content: string): string {
+  // Enhanced server-side sanitization
   return content
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/javascript:/gi, '')
-    .replace(/on\w+\s*=/gi, '')
-    .replace(/data:.*base64/gi, '')
+    .replace(/data:/gi, '')
     .replace(/vbscript:/gi, '')
+    .replace(/on\w+\s*=/gi, '')
+    .replace(/<iframe\b[^>]*>/gi, '')
+    .replace(/<object\b[^>]*>/gi, '')
+    .replace(/<embed\b[^>]*>/gi, '')
+    .replace(/<form\b[^>]*>/gi, '')
+    .replace(/<input\b[^>]*>/gi, '')
     .replace(/expression\s*\(/gi, '')
     .replace(/eval\s*\(/gi, '')
     .replace(/alert\s*\(/gi, '')
+    .replace(/document\./gi, '')
+    .replace(/window\./gi, '')
     .trim();
 }

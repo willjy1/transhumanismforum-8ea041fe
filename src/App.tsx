@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { useSecurityHeaders } from "@/hooks/useSecurityHeaders";
+import { useSecurityMiddleware } from "@/hooks/useSecurityMiddleware";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Thinkers from "./pages/Thinkers";
@@ -33,6 +35,41 @@ import ArtPreview from "./pages/ArtPreview";
 
 const queryClient = new QueryClient();
 
+const AppWithSecurity = () => {
+  // Initialize security features
+  useSecurityHeaders();
+  useSecurityMiddleware();
+
+  return (
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/auth" element={<Auth />} />
+      <Route path="/forum" element={<Forum />} />
+      <Route path="/profile/:username" element={<UserProfile />} />
+      <Route path="/thinkers" element={<Thinkers />} />
+      <Route path="/create-post" element={<CreatePost />} />
+      <Route path="/create-post-rich" element={<CreatePostRich />} />
+      <Route path="/bookmarks" element={<Bookmarks />} />
+      <Route path="/messages" element={<Messages />} />
+      <Route path="/concepts" element={<Concepts />} />
+      <Route path="/concepts/:conceptId" element={<ConceptPosts />} />
+      <Route path="/post/:id" element={<PostDetail />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/notes" element={<Notes />} />
+      <Route path="/edit-profile" element={<EditProfile />} />
+      <Route path="/user-management" element={<UserManagementPage />} />
+      <Route path="/events" element={<Events />} />
+      <Route path="/best-of" element={<BestOf />} />
+      <Route path="/resources" element={<Resources />} />
+      <Route path="/posts/top" element={<PostsTop />} />
+      <Route path="/posts/latest" element={<PostsLatest />} />
+      <Route path="/art-preview" element={<ArtPreview />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <HelmetProvider>
@@ -47,33 +84,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <AuthProvider>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/forum" element={<Forum />} />
-              <Route path="/profile/:username" element={<UserProfile />} />
-              <Route path="/thinkers" element={<Thinkers />} />
-              <Route path="/create-post" element={<CreatePost />} />
-              <Route path="/create-post-rich" element={<CreatePostRich />} />
-              <Route path="/bookmarks" element={<Bookmarks />} />
-              <Route path="/messages" element={<Messages />} />
-              <Route path="/concepts" element={<Concepts />} />
-              <Route path="/concepts/:conceptId" element={<ConceptPosts />} />
-              <Route path="/post/:id" element={<PostDetail />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/notes" element={<Notes />} />
-              <Route path="/edit-profile" element={<EditProfile />} />
-              <Route path="/user-management" element={<UserManagementPage />} />
-              <Route path="/events" element={<Events />} />
-              <Route path="/best-of" element={<BestOf />} />
-              <Route path="/resources" element={<Resources />} />
-              <Route path="/posts/top" element={<PostsTop />} />
-              <Route path="/posts/latest" element={<PostsLatest />} />
-              <Route path="/art-preview" element={<ArtPreview />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+              <AppWithSecurity />
             </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>

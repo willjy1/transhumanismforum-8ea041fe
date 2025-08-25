@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useActivityFeed } from '@/hooks/useActivityFeed';
 import { formatDistanceToNow } from 'date-fns';
 import EnhancedVoteButtons from '@/components/EnhancedVoteButtons';
+import { SecurityUtils } from '@/lib/security';
 
 interface Comment {
   id: string;
@@ -111,7 +112,12 @@ const CommentItem = ({ comment, depth = 0 }: { comment: Comment; depth?: number 
               <time>{timeAgo}</time>
             </div>
 
-            <p className="text-sm leading-relaxed">{comment.content}</p>
+            <div 
+              className="text-sm leading-relaxed"
+              dangerouslySetInnerHTML={{ 
+                __html: SecurityUtils.sanitizeHtml(comment.content)
+              }}
+            />
 
             <div className="flex items-center gap-2">
               <Button

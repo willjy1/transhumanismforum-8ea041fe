@@ -9,6 +9,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
 import EnhancedVoteButtons from '@/components/EnhancedVoteButtons';
 import BookmarkButton from '@/components/BookmarkButton';
+import { SecurityUtils } from '@/lib/security';
 
 interface PostCardProps {
   post: {
@@ -101,9 +102,12 @@ const PostCard: React.FC<PostCardProps> = ({ post, onVote, compact = false }) =>
 
             {/* Content Preview */}
             {!compact && (
-              <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-                {truncateContent(post.content)}
-              </p>
+              <div 
+                className="text-sm text-muted-foreground mb-3 leading-relaxed"
+                dangerouslySetInnerHTML={{ 
+                  __html: SecurityUtils.sanitizeHtml(truncateContent(post.content))
+                }}
+              />
             )}
 
             {/* Engagement Metrics */}
