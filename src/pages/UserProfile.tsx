@@ -102,33 +102,59 @@ const UserProfile = () => {
       checkFollowStatus();
     }
 
-    // Set up real-time subscription for notes
+    // Set up real-time subscription for notes with error handling
     if (profile) {
-      const channel = supabase
-        .channel('profile-notes-changes')
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public',
-          table: 'notes',
-          filter: `author_id=eq.${profile.id}`
-        }, () => {
-          if (profile) {
-            fetchUserNotes(profile.id);
+      let channel: ReturnType<typeof supabase.channel> | null = null;
+      
+      const canUseRealtime =
+        typeof window !== 'undefined' &&
+        'WebSocket' in window &&
+        window.WebSocket != null;
+
+      const setupRealtime = () => {
+        try {
+          if (!canUseRealtime) {
+            console.log('[UserProfile] WebSocket not available, skipping realtime');
+            return;
           }
-        })
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public', 
-          table: 'note_likes'
-        }, () => {
-          if (profile) {
-            fetchUserNotes(profile.id);
-          }
-        })
-        .subscribe();
+
+          channel = supabase
+            .channel('profile-notes-changes')
+            .on('postgres_changes', {
+              event: '*',
+              schema: 'public',
+              table: 'notes',
+              filter: `author_id=eq.${profile.id}`
+            }, () => {
+              if (profile) {
+                fetchUserNotes(profile.id);
+              }
+            })
+            .on('postgres_changes', {
+              event: '*',
+              schema: 'public', 
+              table: 'note_likes'
+            }, () => {
+              if (profile) {
+                fetchUserNotes(profile.id);
+              }
+            })
+            .subscribe();
+        } catch (err) {
+          console.warn('[UserProfile] Realtime not available:', err);
+        }
+      };
+
+      setupRealtime();
 
       return () => {
-        supabase.removeChannel(channel);
+        if (channel) {
+          try {
+            supabase.removeChannel(channel);
+          } catch (err) {
+            console.warn('[UserProfile] Error removing channel:', err);
+          }
+        }
       };
     }
   }, [profile, user]);
