@@ -34,30 +34,50 @@ const NotificationCenter: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      fetchNotifications();
-      
-      // Set up real-time subscription for new notifications
-      const channel = supabase
-        .channel('notifications')
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'notifications',
-            filter: `user_id=eq.${user.id}`
-          },
-          () => {
-            fetchNotifications();
-          }
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
+    if (!user) {
+      setLoading(false);
+      return;
     }
+
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
+    const setupNotifications = async () => {
+      try {
+        await fetchNotifications();
+        
+        // Set up real-time subscription for new notifications
+        channel = supabase
+          .channel('notifications')
+          .on(
+            'postgres_changes',
+            {
+              event: 'INSERT',
+              schema: 'public',
+              table: 'notifications',
+              filter: `user_id=eq.${user.id}`
+            },
+            () => {
+              fetchNotifications().catch(console.error);
+            }
+          )
+          .subscribe();
+      } catch (error) {
+        console.error('Error setting up notifications:', error);
+        setLoading(false);
+      }
+    };
+
+    setupNotifications();
+
+    return () => {
+      if (channel) {
+        try {
+          supabase.removeChannel(channel);
+        } catch (error) {
+          console.error('Error removing notification channel:', error);
+        }
+      }
+    };
   }, [user]);
 
   const fetchNotifications = async () => {
