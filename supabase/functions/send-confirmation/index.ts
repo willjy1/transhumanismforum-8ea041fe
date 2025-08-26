@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "npm:resend@2.0.0";
 
@@ -53,17 +54,18 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("RESEND_API_KEY environment variable is not set");
     }
 
-    // Build the proper Supabase confirmation URL with correct domain
+    // Build the proper Supabase confirmation URL with correct domain and correct query param
     const supabaseUrl = "https://tiqkfmokjrmoyytqmhat.supabase.co";
-    const redirectTo = email_data.redirect_to || "https://thetranshumanistforum.lovable.app/";
-    const confirmationUrl = `${supabaseUrl}/auth/v1/verify?token=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${encodeURIComponent(redirectTo)}`;
+    const redirectTo = email_data.redirect_to || "https://thetranshumanismforum.lovable.app/";
+    // IMPORTANT: Use token_hash param name (not 'token')
+    const confirmationUrl = `${supabaseUrl}/auth/v1/verify?token_hash=${email_data.token_hash}&type=${email_data.email_action_type}&redirect_to=${encodeURIComponent(redirectTo)}`;
 
     console.log("=== CONFIRMATION URL GENERATED ===");
     console.log("Confirmation URL:", confirmationUrl);
 
     console.log("=== ATTEMPTING TO SEND EMAIL ===");
     const emailResponse = await resend.emails.send({
-      from: "The Transhumanist Forum <noreply@resend.dev>",
+      from: "Transhumanism Forum <onboarding@resend.dev>",
       to: [user.email],
       subject: "Welcome to The Transhumanist Forum - Confirm Your Account",
       html: `

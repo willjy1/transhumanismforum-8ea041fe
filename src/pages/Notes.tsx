@@ -31,31 +31,70 @@ const Notes = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    fetchNotes();
-    
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('notes-changes')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'notes'
-      }, (payload) => {
-        console.log('Notes real-time update:', payload);
-        fetchNotes();
-      })
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public', 
-        table: 'note_likes'
-      }, (payload) => {
-        console.log('Note likes real-time update:', payload);
-        fetchNotes();
-      })
-      .subscribe();
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+    let intervalId: number | null = null;
+
+    const canUseRealtime =
+      typeof window !== 'undefined' &&
+      // Some sandboxed iframes disable WebSocket, which throws synchronously
+      'WebSocket' in window &&
+      window.WebSocket != null;
+
+    const setupRealtime = () => {
+      try {
+        console.log('[Notes] Setting up realtime subscription. canUseRealtime=', canUseRealtime);
+        if (!canUseRealtime) {
+          throw new Error('WebSocket not available in this environment');
+        }
+
+        channel = supabase
+          .channel('notes-changes')
+          .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'notes'
+          }, (payload) => {
+            console.log('Notes real-time update:', payload);
+            fetchNotes();
+          })
+          .on('postgres_changes', {
+            event: '*',
+            schema: 'public', 
+            table: 'note_likes'
+          }, (payload) => {
+            console.log('Note likes real-time update:', payload);
+            fetchNotes();
+          })
+          .subscribe();
+      } catch (err) {
+        console.warn('[Notes] Realtime not available, falling back to polling:', err);
+        // Poll as a safe fallback to avoid blank state and keep data fresh
+        intervalId = window.setInterval(() => {
+          fetchNotes();
+        }, 30000);
+      }
+    };
+
+    const cleanup = () => {
+      try {
+        if (channel) {
+          supabase.removeChannel(channel);
+          channel = null;
+        }
+      } catch (err) {
+        console.warn('[Notes] Error during realtime cleanup:', err);
+      }
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
+
+    // Initial fetch and then setup realtime/polling
+    fetchNotes().finally(setupRealtime);
 
     return () => {
-      supabase.removeChannel(channel);
+      cleanup();
     };
   }, [filter, user]);
 
@@ -87,7 +126,7 @@ const Notes = () => {
       if (error) throw error;
 
       // Fetch profile data for each note
-      let notesWithProfiles = [];
+      let notesWithProfiles: any[] = [];
       if (notesData && notesData.length > 0) {
         const authorIds = notesData.map(note => note.author_id);
         const { data: profilesData } = await supabase
@@ -96,7 +135,7 @@ const Notes = () => {
           .in('id', authorIds);
 
         const profilesMap = new Map();
-        profilesData?.forEach(profile => {
+        profilesData?.forEach((profile: any) => {
           profilesMap.set(profile.id, profile);
         });
 

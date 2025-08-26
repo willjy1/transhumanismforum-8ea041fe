@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -10,6 +11,8 @@ interface AuthContextType {
   signUp: (email: string, password: string, username?: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<{ error: any }>;
+  // Optional helper to resend confirmation email
+  resendConfirmation?: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -51,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      // First attempt normal signup
+      // Normal signup; our Edge webhook handles the branded email
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -70,25 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error };
       }
 
-      // Always send our custom confirmation email
-      try {
-        await supabase.functions.invoke('send-confirmation', {
-          body: {
-            user: { email },
-            email_data: {
-              token: 'custom-token',
-              token_hash: 'custom-hash', 
-              redirect_to: redirectUrl,
-              email_action_type: 'signup',
-              site_url: window.location.origin
-            }
-          }
-        });
-      } catch (emailError) {
-        console.error('Failed to send custom confirmation:', emailError);
-      }
-
-      // Send signup notification email
+      // Send signup notification email (admin)
       if (data.user) {
         try {
           await supabase.functions.invoke('send-signup-notification', {
@@ -104,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       toast({
         title: "Verification Required",
-        description: "Please check your email to verify your account.",
+        description: "We’ve sent a branded confirmation email. Please check your inbox to verify your account.",
       });
       
       return { error: null };
@@ -167,6 +152,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Optional helper to resend branded confirmation
+  const resendConfirmation = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+        }
+      });
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+        return { error };
+      }
+      toast({
+        title: "Email sent",
+        description: "We’ve re-sent the verification email.",
+      });
+      return { error: null };
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+      return { error };
+    }
+  };
+
   const value = {
     user,
     session,
@@ -174,6 +192,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signUp,
     signIn,
     signOut,
+    resendConfirmation,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
