@@ -62,37 +62,57 @@ const Messages = () => {
   useEffect(() => {
     if (!user) return;
 
-    // Set up real-time subscription for new messages (both sent and received)
-    const channel = supabase
-      .channel('user-messages')
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `recipient_id=eq.${user.id}`
-      }, (payload) => {
-        console.log('New message received:', payload);
-        fetchConversations();
-        // Show a notification
-        toast({
-          title: "New message",
-          description: "You have received a new message",
-        });
-      })
-      .on('postgres_changes', {
-        event: 'INSERT', 
-        schema: 'public',
-        table: 'messages',
-        filter: `sender_id=eq.${user.id}`
-      }, (payload) => {
-        console.log('Message sent:', payload);
-        fetchConversations();
-      })
-      .subscribe();
+    // Check if WebSocket is available before setting up realtime
+    const canUseRealtime =
+      typeof window !== 'undefined' &&
+      'WebSocket' in window &&
+      window.WebSocket != null;
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    if (!canUseRealtime) {
+      console.log('[Messages] WebSocket not available, skipping realtime');
+      return;
+    }
+
+    try {
+      // Set up real-time subscription for new messages (both sent and received)
+      const channel = supabase
+        .channel('user-messages')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `recipient_id=eq.${user.id}`
+        }, (payload) => {
+          console.log('New message received:', payload);
+          fetchConversations();
+          // Show a notification
+          toast({
+            title: "New message",
+            description: "You have received a new message",
+          });
+        })
+        .on('postgres_changes', {
+          event: 'INSERT', 
+          schema: 'public',
+          table: 'messages',
+          filter: `sender_id=eq.${user.id}`
+        }, (payload) => {
+          console.log('Message sent:', payload);
+          fetchConversations();
+        })
+        .subscribe();
+
+      return () => {
+        try {
+          supabase.removeChannel(channel);
+        } catch (err) {
+          console.warn('[Messages] Error removing channel:', err);
+        }
+      };
+    } catch (err) {
+      console.warn('[Messages] Realtime not available:', err);
+      return;
+    }
   }, [user]);
 
   const fetchConversations = async () => {

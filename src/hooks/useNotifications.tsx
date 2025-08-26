@@ -57,47 +57,67 @@ export const useNotifications = () => {
   const setupRealtimeSubscription = () => {
     if (!user) return;
 
-    const channel = supabase
-      .channel('notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          const newNotification = payload.new as Notification;
-          setNotifications(prev => [newNotification, ...prev]);
-          setUnreadCount(prev => prev + 1);
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          const updatedNotification = payload.new as Notification;
-          
-          // Update notifications and recalculate unread count efficiently in one operation
-          setNotifications(prev => {
-            const updated = prev.map(n => (n.id === updatedNotification.id ? updatedNotification : n));
-            const newUnreadCount = updated.filter(n => !n.is_read).length;
-            setUnreadCount(newUnreadCount);
-            return updated;
-          });
-        }
-      )
-      .subscribe();
+    // Check if WebSocket is available
+    const canUseRealtime =
+      typeof window !== 'undefined' &&
+      'WebSocket' in window &&
+      window.WebSocket != null;
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    if (!canUseRealtime) {
+      console.log('[useNotifications] WebSocket not available, skipping realtime');
+      return;
+    }
+
+    try {
+      const channel = supabase
+        .channel('notifications')
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            const newNotification = payload.new as Notification;
+            setNotifications(prev => [newNotification, ...prev]);
+            setUnreadCount(prev => prev + 1);
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'notifications',
+            filter: `user_id=eq.${user.id}`,
+          },
+          (payload) => {
+            const updatedNotification = payload.new as Notification;
+            
+            // Update notifications and recalculate unread count efficiently in one operation
+            setNotifications(prev => {
+              const updated = prev.map(n => (n.id === updatedNotification.id ? updatedNotification : n));
+              const newUnreadCount = updated.filter(n => !n.is_read).length;
+              setUnreadCount(newUnreadCount);
+              return updated;
+            });
+          }
+        )
+        .subscribe();
+
+      return () => {
+        try {
+          supabase.removeChannel(channel);
+        } catch (err) {
+          console.warn('[useNotifications] Error removing channel:', err);
+        }
+      };
+    } catch (err) {
+      console.warn('[useNotifications] Realtime not available:', err);
+      return;
+    }
   };
 
   const markAsRead = async (notificationId: string) => {
